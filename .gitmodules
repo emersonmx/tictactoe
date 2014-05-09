@@ -1,0 +1,3 @@
+[submodule "mxgame"]
+	path = mxgame
+	url = git@github.com:emersonmx/mxgame.git

@@ -21,8 +21,10 @@
 #define TICTACTOE_GAME_TICTACTOE_HPP_
 
 #include <string>
+#include <list>
 
 #include <tictactoe/game/player.hpp>
+#include <tictactoe/game/tictactoe_listener.hpp>
 
 namespace tictactoe {
 
@@ -54,27 +56,50 @@ class TicTacToe {
 
         void Finalize();
 
-        void SetupGame();
+        void AddListener(TicTacToeListener* listener);
+
+        void RemoveListener(TicTacToeListener* listener);
+
+        const unsigned kBoardWidth;
+        const unsigned kBoardHeight;
 
     private:
+        typedef std::list<TicTacToeListener*> Listeners;
+
         inline const unsigned index_mark(const unsigned i,
                                          const unsigned j) const {
 
             return i + j * kBoardWidth;
         }
 
-        void CheckPlayerConfiguration();
-
         void CleanBoard();
+
+        void CheckPlayerConfiguration();
 
         void ChangePlayer();
 
         const Player::Mark CheckVictory() const;
 
-        const unsigned kBoardWidth;
-        const unsigned kBoardHeight;
+        void FireMarked(const Player& player, const unsigned i,
+                        const unsigned j);
+
+        void FireGameWinner(const Player& player);
+
+        void FireGameDraw();
+
+        void FireCurrentPlayerChanged(const Player& player);
+
+        void FireInvalidPosition(const unsigned i, const unsigned j);
+
+        void FirePositionIsNotEmpty(const unsigned i, const unsigned j);
+
+        void FireInvalidConfiguration(const Player& player_1,
+                                      const Player& player_2);
+
         Player::Mark* board_;
         unsigned mark_count_;
+        bool game_done_;
+        bool invalid_;
 
         const int kWinnerO;
         const int kWinnerX;
@@ -84,6 +109,8 @@ class TicTacToe {
         Player* current_player_;
         Player* last_winner_;
         Player::Mark current_mark_;
+
+        Listeners listeners_;
 };
 
 } /* namespace tictactoe */

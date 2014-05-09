@@ -19,9 +19,10 @@
 
 #include <tictactoe/game/tictactoe.hpp>
 
-#include <iostream>
 #include <cstdlib>
-#include <cassert>
+
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int_distribution.hpp>
 
 namespace tictactoe {
 
@@ -29,46 +30,72 @@ TicTacToe::TicTacToe() : kBoardWidth(3), kBoardHeight(3), board_(NULL),
     kWinnerO(-3), kWinnerX(3) {}
 
 void TicTacToe::set_mark(const unsigned i, const unsigned j) {
-    using namespace std;
+    if (invalid_) {
+        return;
+    }
+
+    if (game_done_) {
+        FireGameWinner(*last_winner_);
+        return;
+    }
 
     if ((i >= kBoardHeight) || (j >= kBoardWidth)) {
-        cout << "Out\n";
-        // Notify invalid position
+        FireInvalidPosition(i, j);
         return;
     }
 
     const Player::Mark board_mark = mark(i, j);
-
     if (board_mark == Player::kNoMark) {
         board_[index_mark(i, j)] = current_player_->mark();
         mark_count_++;
+
+        FireMarked(*current_player_, i, j);
+
         Player::Mark winner_mark = CheckVictory();
         if (winner_mark != Player::kNoMark) {
             const Player& winner = Player::ByMark(player_1_, player_2_,
                 winner_mark);
-            // Notify winner
-            cout << "Winner " << winner.name() << endl;
+            last_winner_ = current_player_;
+            FireGameWinner(winner);
             return;
         } else {
             if (mark_count_ == kBoardWidth * kBoardHeight) {
-                // Notify draw
-                cout << "Draw\n";
+                FireGameDraw();
                 return;
             }
         }
+
         ChangePlayer();
     } else {
-        // Notify invalid position
-        cout << "Invalid\n";
+        FirePositionIsNotEmpty(i, j);
     }
 }
 
 void TicTacToe::Initialize() {
     board_ = new Player::Mark[kBoardWidth * kBoardHeight];
-    SetupGame();
-    current_player_ = &player_1_; // TODO: Random player
+    game_done_ = false;
+    mark_count_ = 0;
+    invalid_ = false;
+
+    CleanBoard();
+    CheckPlayerConfiguration();
+
+    if (invalid_) {
+        return;
+    }
+
+    boost::random::mt19937 generator(time(0));
+    boost::random::uniform_int_distribution<> distribution(0, 1);
+    if (distribution(generator) == 0) {
+        current_player_ = &player_1_;
+    } else {
+        current_player_ = &player_2_;
+    }
+
     last_winner_ = current_player_;
     current_mark_ = current_player_->mark();
+
+    FireCurrentPlayerChanged(*current_player_);
 }
 
 void TicTacToe::Finalize() {
@@ -76,26 +103,40 @@ void TicTacToe::Finalize() {
     board_ = NULL;
 }
 
-void TicTacToe::SetupGame() {
-    CleanBoard();
-    CheckPlayerConfiguration();
-    mark_count_ = 0;
+void TicTacToe::AddListener(TicTacToeListener* listener) {
+    if (listener != NULL) {
+        listeners_.push_back(listener);
+    }
 }
 
-void TicTacToe::CheckPlayerConfiguration() {
-    assert(player_1_.name() != "");
-    assert(player_2_.name() != "");
-    assert(player_1_.name() != player_2_.name());
-
-    assert(player_1_.mark() != Player::kNoMark);
-    assert(player_2_.mark() != Player::kNoMark);
-    assert(player_1_.mark() != player_2_.mark());
+void TicTacToe::RemoveListener(TicTacToeListener* listener) {
+    if (listener != NULL) {
+        listeners_.remove(listener);
+    }
 }
 
 void TicTacToe::CleanBoard() {
     const unsigned size = kBoardWidth * kBoardHeight;
     for (unsigned i = 0; i < size; ++i) {
         board_[i] = Player::kNoMark;
+    }
+}
+
+void TicTacToe::CheckPlayerConfiguration() {
+    if ((player_1_.name() == "") || (player_2_.name() == "")) {
+        FireInvalidConfiguration(player_1_, player_2_);
+        invalid_ = true;
+    } else if (player_1_.name() == player_2_.name()) {
+        FireInvalidConfiguration(player_1_, player_2_);
+        invalid_ = true;
+    } else if ((player_1_.mark() == Player::kNoMark) ||
+            (player_2_.mark() == Player::kNoMark)) {
+
+        FireInvalidConfiguration(player_1_, player_2_);
+        invalid_ = true;
+    } else if (player_1_.mark() == player_2_.mark()) {
+        FireInvalidConfiguration(player_1_, player_2_);
+        invalid_ = true;
     }
 }
 
@@ -107,6 +148,7 @@ void TicTacToe::ChangePlayer() {
     }
 
     current_mark_ = current_player_->mark();
+    FireCurrentPlayerChanged(*current_player_);
 }
 
 const Player::Mark TicTacToe::CheckVictory() const {
@@ -166,6 +208,67 @@ const Player::Mark TicTacToe::CheckVictory() const {
     }
 
     return Player::kNoMark;
+}
+
+void TicTacToe::FireMarked(const Player& player, const unsigned i,
+                           const unsigned j) {
+
+    for (Listeners::iterator it = listeners_.begin();
+            it != listeners_.end(); ++it) {
+
+        (*it)->Marked(player, i, j);
+    }
+}
+
+void TicTacToe::FireGameWinner(const Player& player) {
+    for (Listeners::iterator it = listeners_.begin();
+            it != listeners_.end(); ++it) {
+
+        (*it)->GameWinner(player);
+    }
+}
+
+void TicTacToe::FireGameDraw() {
+    for (Listeners::iterator it = listeners_.begin();
+            it != listeners_.end(); ++it) {
+
+        (*it)->GameDraw();
+    }
+}
+
+void TicTacToe::FireCurrentPlayerChanged(const Player& player) {
+    for (Listeners::iterator it = listeners_.begin();
+            it != listeners_.end(); ++it) {
+
+        (*it)->CurrentPlayerChanged(player);
+    }
+}
+
+void TicTacToe::FireInvalidPosition(const unsigned i, const unsigned j) {
+    for (Listeners::iterator it = listeners_.begin();
+            it != listeners_.end(); ++it) {
+
+        (*it)->InvalidPosition(i, j);
+    }
+}
+
+void TicTacToe::FirePositionIsNotEmpty(const unsigned i, const unsigned j) {
+    for (Listeners::iterator it = listeners_.begin();
+            it != listeners_.end(); ++it) {
+
+        (*it)->PositionIsNotEmpty(i, j);
+    }
+}
+
+
+void TicTacToe::FireInvalidConfiguration(const Player& player_1,
+                                         const Player& player_2) {
+
+    for (Listeners::iterator it = listeners_.begin();
+            it != listeners_.end(); ++it) {
+
+        (*it)->InvalidConfiguration(player_1_, player_2_);
+    }
 }
 
 } /* namespace tictactoe */
