@@ -35,7 +35,11 @@ void TicTacToe::set_mark(const unsigned i, const unsigned j) {
     }
 
     if (game_done_) {
-        FireGameWinner(*last_winner_);
+        if (mark_count_ == kBoardWidth * kBoardHeight) {
+            FireGameDraw();
+        } else {
+            FireGameWinner(*last_winner_);
+        }
         return;
     }
 
@@ -56,13 +60,15 @@ void TicTacToe::set_mark(const unsigned i, const unsigned j) {
             const Player& winner = Player::ByMark(player_1_, player_2_,
                 winner_mark);
             last_winner_ = current_player_;
+            game_done_ = true;
             FireGameWinner(winner);
             return;
-        } else {
-            if (mark_count_ == kBoardWidth * kBoardHeight) {
-                FireGameDraw();
-                return;
-            }
+        }
+
+        if (mark_count_ == kBoardWidth * kBoardHeight) {
+            game_done_ = true;
+            FireGameDraw();
+            return;
         }
 
         ChangePlayer();
