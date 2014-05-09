@@ -99,7 +99,7 @@ class TicTacToe {
         Player::Mark* board_;
         unsigned mark_count_;
         bool game_done_;
-        bool invalid_;
+        bool invalid_configuration_;
 
         const int kWinnerO;
         const int kWinnerX;

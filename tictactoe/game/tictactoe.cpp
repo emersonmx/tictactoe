@@ -30,7 +30,7 @@ TicTacToe::TicTacToe() : kBoardWidth(3), kBoardHeight(3), board_(NULL),
     kWinnerO(-3), kWinnerX(3) {}
 
 void TicTacToe::set_mark(const unsigned i, const unsigned j) {
-    if (invalid_) {
+    if (invalid_configuration_) {
         return;
     }
 
@@ -75,12 +75,12 @@ void TicTacToe::Initialize() {
     board_ = new Player::Mark[kBoardWidth * kBoardHeight];
     game_done_ = false;
     mark_count_ = 0;
-    invalid_ = false;
+    invalid_configuration_ = false;
 
     CleanBoard();
     CheckPlayerConfiguration();
 
-    if (invalid_) {
+    if (invalid_configuration_) {
         return;
     }
 
@@ -125,18 +125,18 @@ void TicTacToe::CleanBoard() {
 void TicTacToe::CheckPlayerConfiguration() {
     if ((player_1_.name() == "") || (player_2_.name() == "")) {
         FireInvalidConfiguration(player_1_, player_2_);
-        invalid_ = true;
+        invalid_configuration_ = true;
     } else if (player_1_.name() == player_2_.name()) {
         FireInvalidConfiguration(player_1_, player_2_);
-        invalid_ = true;
+        invalid_configuration_ = true;
     } else if ((player_1_.mark() == Player::kNoMark) ||
             (player_2_.mark() == Player::kNoMark)) {
 
         FireInvalidConfiguration(player_1_, player_2_);
-        invalid_ = true;
+        invalid_configuration_ = true;
     } else if (player_1_.mark() == player_2_.mark()) {
         FireInvalidConfiguration(player_1_, player_2_);
-        invalid_ = true;
+        invalid_configuration_ = true;
     }
 }
 
