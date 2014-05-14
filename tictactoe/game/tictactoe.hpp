@@ -61,13 +61,11 @@ class TicTacToe {
 
         inline const Player* winner() const { return winner_; }
 
-        inline const Player* last_winner() const { return last_winner_; }
-
         void Initialize();
 
-        void Mark(const unsigned i, const unsigned j);
-
         void Finalize();
+
+        void Restart();
 
         void AddListener(TicTacToeListener* listener);
 
@@ -84,6 +82,10 @@ class TicTacToe {
         }
 
         void Reset();
+
+        void RandomPlayer();
+
+        void Setup();
 
         void CleanBoard();
 
@@ -120,7 +122,6 @@ class TicTacToe {
         Player player_2_;
         Player* current_player_;
         Player* winner_;
-        Player* last_winner_;
         Player::Mark current_mark_;
 
         Listeners listeners_;

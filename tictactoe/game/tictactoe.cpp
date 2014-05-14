@@ -66,7 +66,6 @@ void TicTacToe::set_mark(const unsigned i, const unsigned j) {
         Player::Mark winner_mark = CheckVictory();
         if (winner_mark != Player::kNoMark) {
             winner_ = Player::ByMark(player_1_, player_2_, winner_mark);
-            last_winner_ = current_player_;
             game_done_ = true;
             FireGameWinner();
             return;
@@ -88,26 +87,9 @@ void TicTacToe::Initialize() {
     board_ = new Player::Mark[kBoardWidth * kBoardHeight];
     Reset();
 
-    CleanBoard();
-    CheckPlayerConfiguration();
+    RandomPlayer();
 
-    if (invalid_configuration_) {
-        return;
-    }
-
-    boost::random::mt19937 generator(time(0));
-    boost::random::uniform_int_distribution<> distribution(0, 1);
-    if (distribution(generator) == 0) {
-        current_player_ = &player_1_;
-    } else {
-        current_player_ = &player_2_;
-    }
-
-    last_winner_ = current_player_;
-    current_mark_ = current_player_->mark();
-
-    FireCurrentPlayerChanged();
-    FireGameStarted();
+    Setup();
 }
 
 void TicTacToe::Finalize() {
@@ -115,6 +97,22 @@ void TicTacToe::Finalize() {
 
     delete [] board_;
     board_ = NULL;
+}
+
+void TicTacToe::Restart() {
+    FireGameOver();
+
+    mark_count_ = 0;
+    game_done_ = false;
+    invalid_configuration_ = false;
+
+    if (winner_ != NULL) {
+        current_player_ = winner_;
+    } else {
+        RandomPlayer();
+    }
+
+    Setup();
 }
 
 void TicTacToe::AddListener(TicTacToeListener* listener) {
@@ -133,8 +131,33 @@ void TicTacToe::Reset() {
     mark_count_ = 0;
     game_done_ = false;
     invalid_configuration_ = false;
-    current_player_ = winner_ = last_winner_ = NULL;
+    current_player_ = winner_ = NULL;
     current_mark_ = Player::kNoMark;
+}
+
+void TicTacToe::RandomPlayer() {
+    boost::random::mt19937 generator(time(0));
+    boost::random::uniform_int_distribution<> distribution(0, 1);
+    if (distribution(generator) == 0) {
+        current_player_ = &player_1_;
+    } else {
+        current_player_ = &player_2_;
+    }
+}
+
+void TicTacToe::Setup() {
+    CleanBoard();
+    CheckPlayerConfiguration();
+
+    if (invalid_configuration_) {
+        return;
+    }
+
+    current_mark_ = current_player_->mark();
+    winner_ = NULL;
+
+    FireCurrentPlayerChanged();
+    FireGameStarted();
 }
 
 void TicTacToe::CleanBoard() {
