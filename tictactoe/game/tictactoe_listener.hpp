@@ -24,23 +24,27 @@
 
 namespace tictactoe {
 
+class TicTacToeEvent;
+
 class TicTacToeListener {
     public:
-        virtual void Marked(const Player& player, const unsigned i,
-                            const unsigned j) = 0;
+        virtual void GameStarted(const TicTacToeEvent& event) = 0;
 
-        virtual void GameWinner(const Player& player) = 0;
+        virtual void GameOver(const TicTacToeEvent& event) = 0;
 
-        virtual void GameDraw() = 0;
+        virtual void Marked(const TicTacToeEvent& event) = 0;
 
-        virtual void CurrentPlayerChanged(const Player& player) = 0;
+        virtual void GameWinner(const TicTacToeEvent& event) = 0;
 
-        virtual void InvalidPosition(const unsigned i, const unsigned j) = 0;
+        virtual void GameDraw(const TicTacToeEvent& event) = 0;
 
-        virtual void PositionIsNotEmpty(const unsigned i, const unsigned j) = 0;
+        virtual void CurrentPlayerChanged(const TicTacToeEvent& event) = 0;
 
-        virtual void InvalidConfiguration(const Player& player_1,
-                                          const Player& player_2) = 0;
+        virtual void InvalidPosition(const TicTacToeEvent& event) = 0;
+
+        virtual void PositionIsNotEmpty(const TicTacToeEvent& event) = 0;
+
+        virtual void InvalidConfiguration(const TicTacToeEvent& event) = 0;
 };
 
 } /* namespace tictactoe */

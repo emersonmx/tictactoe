@@ -30,15 +30,20 @@ namespace tictactoe {
 
 class TicTacToe {
     public:
+        static const unsigned kBoardWidth;
+        static const unsigned kBoardHeight;
+
         TicTacToe();
 
         inline const Player::Mark mark(const unsigned i,
-                                       const unsigned j) const {
+                const unsigned j) const {
 
             return board_[index_mark(i, j)];
         }
 
         void set_mark(const unsigned i, const unsigned j);
+
+        inline const Player::Mark* board() const { return board_; }
 
         inline const Player& player_1() const { return player_1_; }
 
@@ -52,7 +57,15 @@ class TicTacToe {
             player_2_ = player_2;
         }
 
+        inline const Player* current_player() const { return current_player_; }
+
+        inline const Player* winner() const { return winner_; }
+
+        inline const Player* last_winner() const { return last_winner_; }
+
         void Initialize();
+
+        void Mark(const unsigned i, const unsigned j);
 
         void Finalize();
 
@@ -60,17 +73,17 @@ class TicTacToe {
 
         void RemoveListener(TicTacToeListener* listener);
 
-        const unsigned kBoardWidth;
-        const unsigned kBoardHeight;
-
     private:
         typedef std::list<TicTacToeListener*> Listeners;
 
-        inline const unsigned index_mark(const unsigned i,
-                                         const unsigned j) const {
+        static const int kWinnerO;
+        static const int kWinnerX;
 
-            return i + j * kBoardWidth;
+        static const unsigned index_mark(const unsigned i, const unsigned j) {
+            return i + j * TicTacToe::kBoardWidth;
         }
+
+        void Reset();
 
         void CleanBoard();
 
@@ -80,33 +93,33 @@ class TicTacToe {
 
         const Player::Mark CheckVictory() const;
 
-        void FireMarked(const Player& player, const unsigned i,
-                        const unsigned j);
+        void FireGameStarted();
 
-        void FireGameWinner(const Player& player);
+        void FireGameOver();
+
+        void FireMarked();
+
+        void FireGameWinner();
 
         void FireGameDraw();
 
-        void FireCurrentPlayerChanged(const Player& player);
+        void FireCurrentPlayerChanged();
 
-        void FireInvalidPosition(const unsigned i, const unsigned j);
+        void FireInvalidPosition();
 
-        void FirePositionIsNotEmpty(const unsigned i, const unsigned j);
+        void FirePositionIsNotEmpty();
 
-        void FireInvalidConfiguration(const Player& player_1,
-                                      const Player& player_2);
+        void FireInvalidConfiguration();
 
         Player::Mark* board_;
         unsigned mark_count_;
         bool game_done_;
         bool invalid_configuration_;
 
-        const int kWinnerO;
-        const int kWinnerX;
-
         Player player_1_;
         Player player_2_;
         Player* current_player_;
+        Player* winner_;
         Player* last_winner_;
         Player::Mark current_mark_;
 

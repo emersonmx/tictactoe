@@ -24,10 +24,18 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 
+#include <tictactoe/game/tictactoe_event.hpp>
+
 namespace tictactoe {
 
-TicTacToe::TicTacToe() : kBoardWidth(3), kBoardHeight(3), board_(NULL),
-    kWinnerO(-3), kWinnerX(3) {}
+const unsigned TicTacToe::kBoardWidth = 3;
+const unsigned TicTacToe::kBoardHeight = 3;
+const int TicTacToe::kWinnerO = -3;
+const int TicTacToe::kWinnerX = 3;
+
+TicTacToe::TicTacToe() : board_(NULL) {
+    Reset();
+}
 
 void TicTacToe::set_mark(const unsigned i, const unsigned j) {
     if (invalid_configuration_) {
@@ -38,13 +46,13 @@ void TicTacToe::set_mark(const unsigned i, const unsigned j) {
         if (mark_count_ == kBoardWidth * kBoardHeight) {
             FireGameDraw();
         } else {
-            FireGameWinner(*last_winner_);
+            FireGameWinner();
         }
         return;
     }
 
     if ((i >= kBoardHeight) || (j >= kBoardWidth)) {
-        FireInvalidPosition(i, j);
+        FireInvalidPosition();
         return;
     }
 
@@ -53,15 +61,14 @@ void TicTacToe::set_mark(const unsigned i, const unsigned j) {
         board_[index_mark(i, j)] = current_player_->mark();
         mark_count_++;
 
-        FireMarked(*current_player_, i, j);
+        FireMarked();
 
         Player::Mark winner_mark = CheckVictory();
         if (winner_mark != Player::kNoMark) {
-            const Player& winner = Player::ByMark(player_1_, player_2_,
-                winner_mark);
+            winner_ = Player::ByMark(player_1_, player_2_, winner_mark);
             last_winner_ = current_player_;
             game_done_ = true;
-            FireGameWinner(winner);
+            FireGameWinner();
             return;
         }
 
@@ -73,15 +80,13 @@ void TicTacToe::set_mark(const unsigned i, const unsigned j) {
 
         ChangePlayer();
     } else {
-        FirePositionIsNotEmpty(i, j);
+        FirePositionIsNotEmpty();
     }
 }
 
 void TicTacToe::Initialize() {
     board_ = new Player::Mark[kBoardWidth * kBoardHeight];
-    game_done_ = false;
-    mark_count_ = 0;
-    invalid_configuration_ = false;
+    Reset();
 
     CleanBoard();
     CheckPlayerConfiguration();
@@ -101,10 +106,13 @@ void TicTacToe::Initialize() {
     last_winner_ = current_player_;
     current_mark_ = current_player_->mark();
 
-    FireCurrentPlayerChanged(*current_player_);
+    FireCurrentPlayerChanged();
+    FireGameStarted();
 }
 
 void TicTacToe::Finalize() {
+    FireGameOver();
+
     delete [] board_;
     board_ = NULL;
 }
@@ -121,6 +129,14 @@ void TicTacToe::RemoveListener(TicTacToeListener* listener) {
     }
 }
 
+void TicTacToe::Reset() {
+    mark_count_ = 0;
+    game_done_ = false;
+    invalid_configuration_ = false;
+    current_player_ = winner_ = last_winner_ = NULL;
+    current_mark_ = Player::kNoMark;
+}
+
 void TicTacToe::CleanBoard() {
     const unsigned size = kBoardWidth * kBoardHeight;
     for (unsigned i = 0; i < size; ++i) {
@@ -130,18 +146,18 @@ void TicTacToe::CleanBoard() {
 
 void TicTacToe::CheckPlayerConfiguration() {
     if ((player_1_.name() == "") || (player_2_.name() == "")) {
-        FireInvalidConfiguration(player_1_, player_2_);
+        FireInvalidConfiguration();
         invalid_configuration_ = true;
     } else if (player_1_.name() == player_2_.name()) {
-        FireInvalidConfiguration(player_1_, player_2_);
+        FireInvalidConfiguration();
         invalid_configuration_ = true;
     } else if ((player_1_.mark() == Player::kNoMark) ||
             (player_2_.mark() == Player::kNoMark)) {
 
-        FireInvalidConfiguration(player_1_, player_2_);
+        FireInvalidConfiguration();
         invalid_configuration_ = true;
     } else if (player_1_.mark() == player_2_.mark()) {
-        FireInvalidConfiguration(player_1_, player_2_);
+        FireInvalidConfiguration();
         invalid_configuration_ = true;
     }
 }
@@ -154,7 +170,7 @@ void TicTacToe::ChangePlayer() {
     }
 
     current_mark_ = current_player_->mark();
-    FireCurrentPlayerChanged(*current_player_);
+    FireCurrentPlayerChanged();
 }
 
 const Player::Mark TicTacToe::CheckVictory() const {
@@ -216,64 +232,85 @@ const Player::Mark TicTacToe::CheckVictory() const {
     return Player::kNoMark;
 }
 
-void TicTacToe::FireMarked(const Player& player, const unsigned i,
-                           const unsigned j) {
-
+void TicTacToe::FireGameStarted() {
+    const TicTacToeEvent event(this);
     for (Listeners::iterator it = listeners_.begin();
             it != listeners_.end(); ++it) {
 
-        (*it)->Marked(player, i, j);
+        (*it)->GameStarted(event);
     }
 }
 
-void TicTacToe::FireGameWinner(const Player& player) {
+void TicTacToe::FireGameOver() {
+    const TicTacToeEvent event(this);
     for (Listeners::iterator it = listeners_.begin();
             it != listeners_.end(); ++it) {
 
-        (*it)->GameWinner(player);
+        (*it)->GameOver(event);
+    }
+}
+
+void TicTacToe::FireMarked() {
+    const TicTacToeEvent event(this);
+    for (Listeners::iterator it = listeners_.begin();
+            it != listeners_.end(); ++it) {
+
+        (*it)->Marked(event);
+    }
+}
+
+void TicTacToe::FireGameWinner() {
+    const TicTacToeEvent event(this);
+    for (Listeners::iterator it = listeners_.begin();
+            it != listeners_.end(); ++it) {
+
+        (*it)->GameWinner(event);
     }
 }
 
 void TicTacToe::FireGameDraw() {
+    const TicTacToeEvent event(this);
     for (Listeners::iterator it = listeners_.begin();
             it != listeners_.end(); ++it) {
 
-        (*it)->GameDraw();
+        (*it)->GameDraw(event);
     }
 }
 
-void TicTacToe::FireCurrentPlayerChanged(const Player& player) {
+void TicTacToe::FireCurrentPlayerChanged() {
+    const TicTacToeEvent event(this);
     for (Listeners::iterator it = listeners_.begin();
             it != listeners_.end(); ++it) {
 
-        (*it)->CurrentPlayerChanged(player);
+        (*it)->CurrentPlayerChanged(event);
     }
 }
 
-void TicTacToe::FireInvalidPosition(const unsigned i, const unsigned j) {
+void TicTacToe::FireInvalidPosition() {
+    const TicTacToeEvent event(this);
     for (Listeners::iterator it = listeners_.begin();
             it != listeners_.end(); ++it) {
 
-        (*it)->InvalidPosition(i, j);
+        (*it)->InvalidPosition(event);
     }
 }
 
-void TicTacToe::FirePositionIsNotEmpty(const unsigned i, const unsigned j) {
+void TicTacToe::FirePositionIsNotEmpty() {
+    const TicTacToeEvent event(this);
     for (Listeners::iterator it = listeners_.begin();
             it != listeners_.end(); ++it) {
 
-        (*it)->PositionIsNotEmpty(i, j);
+        (*it)->PositionIsNotEmpty(event);
     }
 }
 
 
-void TicTacToe::FireInvalidConfiguration(const Player& player_1,
-                                         const Player& player_2) {
-
+void TicTacToe::FireInvalidConfiguration() {
+    const TicTacToeEvent event(this);
     for (Listeners::iterator it = listeners_.begin();
             it != listeners_.end(); ++it) {
 
-        (*it)->InvalidConfiguration(player_1_, player_2_);
+        (*it)->InvalidConfiguration(event);
     }
 }
 

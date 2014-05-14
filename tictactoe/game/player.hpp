@@ -28,14 +28,14 @@ class Player {
     public:
         enum Mark { kNoMark, kMarkO, kMarkX };
 
-        static const Player& ByMark(const Player& player_1,
-                const Player& player_2, const Mark mark) {
+        static Player* ByMark(Player& player_1, Player& player_2,
+                const Mark mark) {
 
             if (player_1.mark() == mark) {
-                return player_1;
+                return &player_1;
             }
 
-            return player_2;
+            return &player_2;
         }
 
         Player() : name_(""), mark_(kNoMark) {}
