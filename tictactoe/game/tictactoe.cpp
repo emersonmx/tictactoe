@@ -38,48 +38,41 @@ TicTacToe::TicTacToe() : board_(NULL) {
 }
 
 void TicTacToe::set_mark(const unsigned i, const unsigned j) {
-    if (invalid_configuration_) {
-        return;
-    }
-
-    if (game_done_) {
-        if (mark_count_ == kBoardWidth * kBoardHeight) {
-            FireGameDraw();
+    if (!invalid_configuration_) {
+        if (game_done_) {
+            if (mark_count_ == kBoardWidth * kBoardHeight) {
+                FireGameDraw();
+            } else {
+                FireGameWinner();
+            }
         } else {
-            FireGameWinner();
+            if ((i >= kBoardHeight) || (j >= kBoardWidth)) {
+                FireInvalidPosition();
+            } else {
+                const Player::Mark board_mark = mark(i, j);
+                if (board_mark == Player::kNoMark) {
+                    board_[index_mark(i, j)] = current_player_->mark();
+                    mark_count_++;
+
+                    FireMarked();
+
+                    Player::Mark winner_mark = CheckVictory();
+                    if (winner_mark != Player::kNoMark) {
+                        winner_ = Player::ByMark(player_1_, player_2_,
+                            winner_mark);
+                        game_done_ = true;
+                        FireGameWinner();
+                    } else if (mark_count_ == kBoardWidth * kBoardHeight) {
+                        game_done_ = true;
+                        FireGameDraw();
+                    } else {
+                        ChangePlayer();
+                    }
+                } else {
+                    FirePositionIsNotEmpty();
+                }
+            }
         }
-        return;
-    }
-
-    if ((i >= kBoardHeight) || (j >= kBoardWidth)) {
-        FireInvalidPosition();
-        return;
-    }
-
-    const Player::Mark board_mark = mark(i, j);
-    if (board_mark == Player::kNoMark) {
-        board_[index_mark(i, j)] = current_player_->mark();
-        mark_count_++;
-
-        FireMarked();
-
-        Player::Mark winner_mark = CheckVictory();
-        if (winner_mark != Player::kNoMark) {
-            winner_ = Player::ByMark(player_1_, player_2_, winner_mark);
-            game_done_ = true;
-            FireGameWinner();
-            return;
-        }
-
-        if (mark_count_ == kBoardWidth * kBoardHeight) {
-            game_done_ = true;
-            FireGameDraw();
-            return;
-        }
-
-        ChangePlayer();
-    } else {
-        FirePositionIsNotEmpty();
     }
 }
 
@@ -149,15 +142,13 @@ void TicTacToe::Setup() {
     CleanBoard();
     CheckPlayerConfiguration();
 
-    if (invalid_configuration_) {
-        return;
+    if (!invalid_configuration_) {
+        current_mark_ = current_player_->mark();
+        winner_ = NULL;
+
+        FireCurrentPlayerChanged();
+        FireGameStarted();
     }
-
-    current_mark_ = current_player_->mark();
-    winner_ = NULL;
-
-    FireCurrentPlayerChanged();
-    FireGameStarted();
 }
 
 void TicTacToe::CleanBoard() {
