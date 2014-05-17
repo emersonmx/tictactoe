@@ -23,5 +23,5 @@ check_PROGRAMS = $(TICTACTOE_TESTS)
 
 test_game_test_SOURCES = \
 	test/game_test.cpp \
-	./tictactoe/game/tictactoe.cpp
+	tictactoe/game/game.cpp
 # }}} Tests #

@@ -17,23 +17,23 @@
   along with tictactoe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TICTACTOE_GAME_TICTACTOE_HPP_
-#define TICTACTOE_GAME_TICTACTOE_HPP_
+#ifndef TICTACTOE_GAME_GAME_HPP_
+#define TICTACTOE_GAME_GAME_HPP_
 
 #include <string>
 #include <list>
 
 #include <tictactoe/game/player.hpp>
-#include <tictactoe/game/tictactoe_listener.hpp>
+#include <tictactoe/game/game_listener.hpp>
 
 namespace tictactoe {
 
-class TicTacToe {
+class Game {
     public:
         static const unsigned kBoardWidth;
         static const unsigned kBoardHeight;
 
-        TicTacToe();
+        Game();
 
         inline const Player::Mark mark(const unsigned i,
                 const unsigned j) const {
@@ -67,18 +67,18 @@ class TicTacToe {
 
         void Restart();
 
-        void AddListener(TicTacToeListener* listener);
+        void AddListener(GameListener* listener);
 
-        void RemoveListener(TicTacToeListener* listener);
+        void RemoveListener(GameListener* listener);
 
     private:
-        typedef std::list<TicTacToeListener*> Listeners;
+        typedef std::list<GameListener*> Listeners;
 
         static const int kWinnerO;
         static const int kWinnerX;
 
         static const unsigned index_mark(const unsigned i, const unsigned j) {
-            return i + j * TicTacToe::kBoardWidth;
+            return i + j * Game::kBoardWidth;
         }
 
         void Reset();
@@ -128,5 +128,5 @@ class TicTacToe {
 };
 
 } /* namespace tictactoe */
-#endif /* TICTACTOE_GAME_TICTACTOE_HPP_ */
+#endif /* TICTACTOE_GAME_GAME_HPP_ */
 

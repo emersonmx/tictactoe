@@ -17,23 +17,23 @@
   along with tictactoe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TICTACTOE_GAME_TICTACTOE_EVENT_HPP_
-#define TICTACTOE_GAME_TICTACTOE_EVENT_HPP_
+#ifndef TICTACTOE_GAME_GAME_EVENT_HPP_
+#define TICTACTOE_GAME_GAME_EVENT_HPP_
 
 namespace tictactoe {
 
 class Player;
 
-class TicTacToeEvent {
+class GameEvent {
     public:
-        TicTacToeEvent(const TicTacToe* source) : source_(source) {}
+        GameEvent(const Game* source) : source_(source) {}
 
-        inline const TicTacToe* source() const { return source_; }
+        inline const Game* source() const { return source_; }
 
     private:
-        const TicTacToe* source_;
+        const Game* source_;
 };
 
 } /* namespace tictactoe */
-#endif /* TICTACTOE_GAME_TICTACTOE_EVENT_HPP_ */
+#endif /* TICTACTOE_GAME_GAME_EVENT_HPP_ */
 

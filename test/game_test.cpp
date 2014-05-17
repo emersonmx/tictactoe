@@ -1,17 +1,17 @@
 #include <iostream>
-#include <tictactoe/game/tictactoe.hpp>
-#include <tictactoe/game/tictactoe_event.hpp>
+#include <tictactoe/game/game.hpp>
+#include <tictactoe/game/game_event.hpp>
 
 using namespace std;
 using namespace tictactoe;
 
-class TestListener : public TicTacToeListener {
+class TestListener : public GameListener {
     public:
-        static void DrawBoard(const TicTacToe* source) {
+        static void DrawBoard(const Game* source) {
             cout << "+---+---+---+\n";
-            for (unsigned i = 0; i < TicTacToe::kBoardHeight; ++i) {
+            for (unsigned i = 0; i < Game::kBoardHeight; ++i) {
                 cout << "| ";
-                for (unsigned j = 0; j < TicTacToe::kBoardWidth; ++j) {
+                for (unsigned j = 0; j < Game::kBoardWidth; ++j) {
                     const Player::Mark mark = source->mark(i, j);
                     if (mark == Player::kNoMark) {
                         cout << " ";
@@ -26,20 +26,20 @@ class TestListener : public TicTacToeListener {
             }
         }
 
-        virtual void GameStarted(const TicTacToeEvent& event) {
-            const TicTacToe* source = event.source();
+        virtual void GameStarted(const GameEvent& event) {
+            const Game* source = event.source();
 
             DrawBoard(source);
 
             cout << "Game start!\n\n";
         }
 
-        virtual void GameOver(const TicTacToeEvent& event) {
+        virtual void GameOver(const GameEvent& event) {
             cout << "The game is over!\n";
         }
 
-        virtual void Marked(const TicTacToeEvent& event) {
-            const TicTacToe* source = event.source();
+        virtual void Marked(const GameEvent& event) {
+            const Game* source = event.source();
             const Player* player = source->current_player();
 
             DrawBoard(source);
@@ -48,42 +48,42 @@ class TestListener : public TicTacToeListener {
                  << ((player->mark() == Player::kMarkO) ? "O" : "X") << endl;
         }
 
-        virtual void GameWinner(const TicTacToeEvent& event) {
-            const TicTacToe* source = event.source();
+        virtual void GameWinner(const GameEvent& event) {
+            const Game* source = event.source();
             const Player* player = source->current_player();
 
             cout << "Winner \"" << player->name() << "\" Mark "
                  << ((player->mark() == Player::kMarkO) ? "O" : "X") << endl;
         }
 
-        virtual void GameDraw(const TicTacToeEvent& event) {
+        virtual void GameDraw(const GameEvent& event) {
             cout << "\nGame draw!\n";
         }
 
-        virtual void CurrentPlayerChanged(const TicTacToeEvent& event) {
-            const TicTacToe* source = event.source();
+        virtual void CurrentPlayerChanged(const GameEvent& event) {
+            const Game* source = event.source();
             const Player* player = source->current_player();
 
             cout << "\nCurrent player is \"" << player->name() << "\" with mark "
                  << ((player->mark() == Player::kMarkO) ? "O" : "X") << endl;
         }
 
-        virtual void InvalidPosition(const TicTacToeEvent& event) {
+        virtual void InvalidPosition(const GameEvent& event) {
             cout << "Invalid Position\n";
         }
 
-        virtual void PositionIsNotEmpty(const TicTacToeEvent& event) {
+        virtual void PositionIsNotEmpty(const GameEvent& event) {
             cout << "Position is not empty\n";
         }
 
-        virtual void InvalidConfiguration(const TicTacToeEvent& event) {
+        virtual void InvalidConfiguration(const GameEvent& event) {
             cout << "Invalid configuration!\n";
         }
 };
 
 int main() {
     TestListener t;
-    TicTacToe game;
+    Game game;
     game.set_player_1(Player("Player 1", Player::kMarkO));
     game.set_player_2(Player("Player 2", Player::kMarkX));
     game.AddListener(&t);
