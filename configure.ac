@@ -1,6 +1,7 @@
 # Prelude
 AC_INIT([tictactoe], [0.1], [emersonmx@gmail.com], [],
         [https://github.com/emersonmx/tictactoe])
+AC_PREREQ(2.5)
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([1.11 -Wall foreign subdir-objects silent-rules])
@@ -9,7 +10,7 @@ AM_SILENT_RULES([yes])
 # Checks for programs.
 # AC_PROG_CC
 AC_PROG_CXX
-# LT_INIT
+LT_INIT
 
 # Guess the operating system of the user.
 case "$host" in
@@ -28,6 +29,9 @@ case "$host" in
 esac
 
 # Checks for libraries.
+PKG_CHECK_MODULES([GLFW], [glfw3 >= 3.0.3], [
+    AC_DEFINE([HAVE_GLFW], [1], [Define to 1 if you have the GLFW installed.])
+])
 
 # Checks for header files.
 

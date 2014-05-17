@@ -14,6 +14,23 @@ AM_LDFLAGS = \
 	-Lmxgame/
 # }}} Global configuration #
 
+# Game {{{ #
+bin_PROGRAMS = ttt
+
+ttt_SOURCES = \
+	tictactoe/game/main.cpp \
+	tictactoe/game/application.cpp \
+	tictactoe/game/game.cpp
+
+ttt_CPPFLAGS = \
+	$(GLFW_CFLAGS)
+
+ttt_LDADD = \
+	-lGL \
+	-lGLU \
+	$(GLFW_LIBS)
+# }}} Game #
+
 # Tests {{{ #
 TICTACTOE_TESTS = \
 	test/game_test
