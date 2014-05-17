@@ -28,7 +28,6 @@ class TestListener : public TicTacToeListener {
 
         virtual void GameStarted(const TicTacToeEvent& event) {
             const TicTacToe* source = event.source();
-            const Player* player = source->current_player();
 
             DrawBoard(source);
 

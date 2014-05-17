@@ -36,7 +36,7 @@ esac
 # Checks for library functions.
 
 # Output files.
-AC_CONFIG_HEADERS([source/config.h])
-# AC_CONFIG_SUBDIRS([subdirs])
+AC_CONFIG_HEADERS([tictactoe/config.h])
+AC_CONFIG_SUBDIRS([mxgame])
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

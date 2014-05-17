@@ -19,6 +19,36 @@
 *.exe
 *.out
 *.app
+test/game_test
+
+# Vim files
+.vimproject
+.ycm_extra_conf.py
+.ycm_extra_conf.pyc
+tags
 
 # Project files
-.vimproject
+autom4te.cache/
+configure
+aclocal.m4
+m4/
+build-aux/
+config.log
+config.status
+config.guess
+libtool
+stamp-h1
+config.h*
+*.deps/
+*.libs/
+Makefile
+Makefile.in*
+.dirstamp
+*.pc
+
+# Packages
+*.tar.gz
+
+# Miscellaneous
+*.log
+*.trs
