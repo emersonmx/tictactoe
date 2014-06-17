@@ -30,13 +30,13 @@ public class Application implements ApplicationListener {
     @Override
     public void dispose() {
     }
-    
+
     public void events() {
     }
-    
+
     public void logic() {
     }
-    
+
     public void draw() {
     }
 

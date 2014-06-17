@@ -28,6 +28,9 @@ android/gen/
 out/
 com_crashlytics_export_strings.xml
 
+# Vim
+.vimproject
+
 ## Eclipse
 .classpath
 .project
@@ -54,5 +57,9 @@ nbactions.xml
 nb-configuration.xml
 
 ## Gradle
+
 .gradle
 build/
+
+## OS Specific
+.DS_Store

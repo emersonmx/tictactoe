@@ -2,7 +2,7 @@ package com.gmail.emersonmx.tictactoe.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.gmail.emersonmx.tictactoe.TicTacToeGame;
+import com.gmail.emersonmx.tictactoe.TicTacToe;
 
 public class DesktopLauncher {
 
@@ -11,7 +11,7 @@ public class DesktopLauncher {
         config.title = "TicTacToe";
         config.width = 240;
         config.width = 320;
-        new LwjglApplication(new TicTacToeGame(), config);
+        new LwjglApplication(new TicTacToe(), config);
     }
 
 }
