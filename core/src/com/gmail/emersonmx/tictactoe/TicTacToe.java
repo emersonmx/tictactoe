@@ -5,25 +5,26 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class TicTacToe extends Application {
 
-    public static final int WIDTH = 240;
-    public static final int HEIGHT = 320;
+    public static final int WIDTH = 480;
+    public static final int HEIGHT = 640;
 
     OrthographicCamera camera;
     SpriteBatch batch;
     AssetManager manager;
+    TextureAtlas atlas;
 
+    Texture background;
     Sprite blackboard;
-    Texture blackboardImage;
-    Sprite gameBoard;
-    Texture gameBoardImage;
-    Sprite collision;
-    Texture collisionImage;
-    Texture[] textures;
+    Sprite score;
+    Sprite[] hashLineHorizontal;
+    Sprite[] hashLineVertical;
 
     @Override
     public void create() {
@@ -37,11 +38,35 @@ public class TicTacToe extends Application {
 
     public void loadResources() {
         manager = new AssetManager();
-        manager.load("blackboard.png", Texture.class);
-        manager.load("game_board.png", Texture.class);
-        manager.load("collision.png", Texture.class);
-        manager.load("square.png", Texture.class);
+        manager.load("game.atlas", TextureAtlas.class);
+        manager.load("background.png", Texture.class);
         manager.finishLoading();
+
+        background = manager.get("background.png");
+        background.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+
+        atlas = manager.get("game.atlas", TextureAtlas.class);
+
+        blackboard = atlas.createSprite("board");
+        score = atlas.createSprite("score");
+        score.setPosition(38, 46);
+
+        hashLineHorizontal = new Sprite[2];
+        for (int i = 0; i < hashLineHorizontal.length; ++i) {
+            hashLineHorizontal[i] = atlas.createSprite("hash_line_horizontal");
+        }
+        float hashLineCenterX = (WIDTH / 2 -
+            hashLineHorizontal[0].getWidth() / 2);
+        hashLineHorizontal[0].setPosition(hashLineCenterX, 462);
+        hashLineHorizontal[1].setPosition(hashLineCenterX, 340);
+
+        hashLineVertical = new Sprite[2];
+        for (int i = 0; i < hashLineVertical.length; ++i) {
+            hashLineVertical[i] = atlas.createSprite("hash_line_vertical");
+        }
+        float hashLineVerticalCenter = 224;
+        hashLineVertical[0].setPosition(171, hashLineVerticalCenter);
+        hashLineVertical[1].setPosition(293, hashLineVerticalCenter);
     }
 
     public void setupSystem() {
@@ -53,12 +78,6 @@ public class TicTacToe extends Application {
     }
 
     public void setupScene() {
-        blackboard = new Sprite(manager.get("blackboard.png", Texture.class));
-        blackboard.setBounds(WIDTH / 2.f - HEIGHT / 2.f, 0.f, HEIGHT, HEIGHT);
-        gameBoard = new Sprite(manager.get("game_board.png", Texture.class));
-        gameBoard.setBounds(0, HEIGHT - WIDTH, WIDTH, WIDTH);
-        collision = new Sprite(manager.get("collision.png", Texture.class));
-        collision.setBounds(0, HEIGHT - WIDTH, WIDTH, WIDTH);
     }
 
     public void events() {
@@ -73,10 +92,17 @@ public class TicTacToe extends Application {
         camera.update();
 
         batch.setProjectionMatrix(camera.combined);
+
         batch.begin();
+        batch.draw(background, 0, 0, WIDTH, HEIGHT, 0, 0, 5, 5);
         blackboard.draw(batch);
-        collision.draw(batch);
-        gameBoard.draw(batch);
+        score.draw(batch);
+        for (int i = 0; i < hashLineHorizontal.length; ++i) {
+           hashLineHorizontal[i].draw(batch);
+        }
+        for (int i = 0; i < hashLineVertical.length; ++i) {
+           hashLineVertical[i].draw(batch);
+        }
         batch.end();
     }
 
