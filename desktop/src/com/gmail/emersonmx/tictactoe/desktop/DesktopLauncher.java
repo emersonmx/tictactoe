@@ -15,7 +15,7 @@ public class DesktopLauncher {
         TexturePacker.process(settings, "../../images/game", ".", "game");
 
         new LwjglApplication(new TicTacToe(), "TicTacToe",
-                             TicTacToe.WIDTH, TicTacToe.HEIGHT);
+                             TicTacToe.WINDOW_WIDTH, TicTacToe.WINDOW_HEIGHT);
     }
 
 }
