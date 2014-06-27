@@ -53,6 +53,7 @@ public class TicTacToe extends Application {
     public void logic() {
     }
 
+    @Override
     public void draw() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
