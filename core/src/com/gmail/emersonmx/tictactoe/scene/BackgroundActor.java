@@ -12,7 +12,7 @@ public class BackgroundActor extends Actor {
 
     public BackgroundActor(Texture background) {
         this.background = background;
-        this.background.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+        background.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
         setName("background");
     }

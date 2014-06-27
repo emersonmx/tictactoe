@@ -2,15 +2,18 @@ package com.gmail.emersonmx.tictactoe;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.gmail.emersonmx.tictactoe.scene.BackgroundActor;
 import com.gmail.emersonmx.tictactoe.scene.BlackboardActor;
-import com.gmail.emersonmx.tictactoe.scene.HashBoardActor;
+import com.gmail.emersonmx.tictactoe.scene.BoardActor;
+import com.gmail.emersonmx.tictactoe.scene.BottomGroupActor;
 import com.gmail.emersonmx.tictactoe.scene.ScoreActor;
 
 
@@ -26,11 +29,7 @@ public class TicTacToe extends Application {
     @Override
     public void create() {
         loadResources();
-        setupSystem();
-        setupScene();
-
-        Gdx.graphics.setContinuousRendering(false);
-        Gdx.graphics.requestRendering();
+        setup();
     }
 
     public void loadResources() {
@@ -42,31 +41,40 @@ public class TicTacToe extends Application {
         atlas = manager.get("game.atlas");
     }
 
-    public void setupSystem() {
-        stage = new Stage(new ScreenViewport());
+    public void setup() {
+        stage = new Stage(new StretchViewport(WINDOW_WIDTH, WINDOW_HEIGHT));
         Gdx.input.setInputProcessor(stage);
-        stage.getViewport().update(WINDOW_WIDTH, WINDOW_HEIGHT, true);
 
         Texture background = manager.get("background.png", Texture.class);
         stage.addActor(new BackgroundActor(background));
+        Sprite blackboard = atlas.createSprite("blackboard");
+        stage.addActor(new BlackboardActor(blackboard));
 
-        Sprite board = atlas.createSprite("board");
-        stage.addActor(new BlackboardActor(board));
-
-        Sprite[] hashLines = new Sprite[4];
-        for (int i = 0; i < hashLines.length; ++i) {
-            hashLines[i] = atlas.createSprite("hash_line");
+        Sprite[] lines = new Sprite[4];
+        for (int i = 0; i < lines.length; ++i) {
+            lines[i] = atlas.createSprite("board_line");
         }
-        stage.addActor(new HashBoardActor(hashLines));
+        stage.addActor(new BoardActor(lines));
 
-        Sprite line = atlas.createSprite("line");
-        Sprite divide = atlas.createSprite("divide");
-        stage.addActor(new ScoreActor(line, divide));
+        Sprite line = atlas.createSprite("score_line");
+        Sprite[] separators = new Sprite[] {
+            atlas.createSprite("separator"), atlas.createSprite("separator")
+        };
+        Array<Sprite> scoreArray = atlas.createSprites("number");
+        Sprite menu = atlas.createSprite("menu");
+        BottomGroupActor bottomGroupActor =
+            new BottomGroupActor(line, separators, scoreArray, menu);
+
+        ScoreActor scoreActor =
+            (ScoreActor) bottomGroupActor.findActor("score");
+        scoreActor.setColor(ScoreActor.PLAYER_1, new Color(0x8080ffff));
+        scoreActor.setColor(ScoreActor.PLAYER_2, new Color(0xff8080ff));
+        stage.addActor(bottomGroupActor);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
-    }
 
-    public void setupScene() {
+        Gdx.graphics.setContinuousRendering(false);
+        Gdx.graphics.requestRendering();
     }
 
     public void events() {
@@ -85,6 +93,11 @@ public class TicTacToe extends Application {
     public void dispose() {
         stage.dispose();
         manager.dispose();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
     }
 
 }

@@ -10,7 +10,7 @@ public class BlackboardActor extends Actor {
 
     public BlackboardActor(Sprite blackboard) {
         this.blackboard = blackboard;
-        this.blackboard.setPosition(0, 0);
+        blackboard.setPosition(0, 0);
 
         setName("blackboard");
     }

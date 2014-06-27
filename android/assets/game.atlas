@@ -1,125 +1,132 @@
 
 game.png
-size: 498,981
+size: 498,1003
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-board
+blackboard
   rotate: false
-  xy: 2, 341
+  xy: 2, 363
   size: 480, 640
   orig: 480, 640
   offset: 0, 0
   index: -1
-debug_area
+board_line
   rotate: false
-  xy: 2, 202
-  size: 122, 122
-  orig: 122, 122
-  offset: 0, 0
-  index: -1
-divide
-  rotate: false
-  xy: 484, 540
-  size: 12, 89
-  orig: 12, 89
-  offset: 0, 0
-  index: -1
-hash_line
-  rotate: false
-  xy: 484, 631
+  xy: 484, 653
   size: 14, 350
   orig: 14, 350
   offset: 0, 0
   index: -1
-line
+debug_area
   rotate: false
-  xy: 2, 326
-  size: 405, 13
-  orig: 405, 13
+  xy: 2, 224
+  size: 122, 122
+  orig: 122, 122
   offset: 0, 0
   index: -1
 mark_o
   rotate: false
-  xy: 126, 254
+  xy: 2, 62
   size: 69, 70
   orig: 69, 70
   offset: 0, 0
   index: -1
 mark_x
   rotate: false
-  xy: 2, 128
+  xy: 126, 274
   size: 68, 72
   orig: 68, 72
   offset: 0, 0
   index: -1
+menu
+  rotate: false
+  xy: 2, 134
+  size: 94, 88
+  orig: 94, 88
+  offset: 0, 0
+  index: -1
 number
   rotate: false
-  xy: 2, 62
+  xy: 196, 282
   size: 42, 64
   orig: 42, 64
   offset: 0, 0
   index: 7
 number
   rotate: false
-  xy: 72, 142
+  xy: 2, 2
   size: 43, 58
   orig: 43, 58
   offset: 0, 0
   index: 5
 number
   rotate: false
-  xy: 197, 269
+  xy: 240, 291
   size: 42, 55
   orig: 42, 55
   offset: 0, 0
   index: 6
 number
   rotate: false
-  xy: 2, 2
+  xy: 284, 288
   size: 35, 58
   orig: 35, 58
   offset: 0, 0
   index: 9
 number
   rotate: false
-  xy: 241, 271
+  xy: 321, 293
   size: 35, 53
   orig: 35, 53
   offset: 0, 0
   index: 3
 number
   rotate: false
-  xy: 278, 270
+  xy: 358, 292
   size: 34, 54
   orig: 34, 54
   offset: 0, 0
   index: 4
 number
   rotate: false
-  xy: 314, 266
-  size: 32, 58
-  orig: 32, 58
-  offset: 0, 0
-  index: 8
-number
-  rotate: false
-  xy: 126, 208
+  xy: 126, 228
   size: 41, 44
   orig: 41, 44
   offset: 0, 0
   index: 2
 number
   rotate: false
-  xy: 348, 280
-  size: 38, 44
-  orig: 38, 44
+  xy: 98, 170
+  size: 32, 52
+  orig: 32, 52
   offset: 0, 0
-  index: 0
+  index: 8
 number
   rotate: false
-  xy: 46, 75
+  xy: 132, 175
   size: 30, 51
   orig: 30, 51
   offset: 0, 0
   index: 1
+number
+  rotate: false
+  xy: 169, 228
+  size: 38, 44
+  orig: 38, 44
+  offset: 0, 0
+  index: 0
+score_line
+  rotate: false
+  xy: 2, 348
+  size: 405, 13
+  orig: 405, 13
+  offset: 0, 0
+  index: -1
+separator
+  rotate: false
+  xy: 484, 562
+  size: 12, 89
+  orig: 12, 89
+  offset: 0, 0
+  index: -1
