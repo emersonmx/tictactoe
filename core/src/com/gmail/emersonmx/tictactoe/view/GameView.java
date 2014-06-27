@@ -2,6 +2,7 @@ package com.gmail.emersonmx.tictactoe.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -15,6 +16,9 @@ import com.gmail.emersonmx.tictactoe.view.scene.BoardActor;
 import com.gmail.emersonmx.tictactoe.view.scene.BottomActor;
 
 public class GameView implements View {
+
+    public static final Color PLAYER_1_COLOR = new Color(0x8080ffff);
+    public static final Color PLAYER_2_COLOR = new Color(0xff8080ff);
 
     private Stage stage;
 
