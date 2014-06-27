@@ -1,6 +1,5 @@
 package com.gmail.emersonmx.tictactoe.view.scene;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -13,7 +12,6 @@ public class ScoreActor extends Actor {
     private Array<Sprite> scoreArray;
     private Sprite[] scoreSprites;
     private int[] scores;
-    private Color[] colors;
 
     public ScoreActor(Array<Sprite> scoreArray) {
         this.scoreArray = scoreArray;
@@ -35,14 +33,6 @@ public class ScoreActor extends Actor {
 
     public int getScore(int player) {
         return scores[player];
-    }
-
-    public void setColor(int player, Color color) {
-        this.colors[player] = color;
-    }
-
-    public Color getColor(int player) {
-        return colors[player];
     }
 
     @Override
