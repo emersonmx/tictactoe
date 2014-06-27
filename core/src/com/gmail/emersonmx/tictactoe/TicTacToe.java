@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gmail.emersonmx.tictactoe.scene.BackgroundActor;
 import com.gmail.emersonmx.tictactoe.scene.BlackboardActor;
 import com.gmail.emersonmx.tictactoe.scene.BoardActor;
-import com.gmail.emersonmx.tictactoe.scene.BottomGroupActor;
+import com.gmail.emersonmx.tictactoe.scene.BottomActor;
 import com.gmail.emersonmx.tictactoe.scene.ScoreActor;
 
 
@@ -62,8 +62,8 @@ public class TicTacToe extends Application {
         };
         Array<Sprite> scoreArray = atlas.createSprites("number");
         Sprite menu = atlas.createSprite("menu");
-        BottomGroupActor bottomGroupActor =
-            new BottomGroupActor(line, separators, scoreArray, menu);
+        BottomActor bottomGroupActor =
+            new BottomActor(line, separators, scoreArray, menu);
 
         ScoreActor scoreActor =
             (ScoreActor) bottomGroupActor.findActor("score");

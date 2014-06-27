@@ -8,14 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Array;
 import com.gmail.emersonmx.tictactoe.Point;
 
-public class BottomGroupActor extends Group {
+public class BottomActor extends Group {
 
     private ScoreActor scoreActor;
     private MenuActor menuActor;
     private Sprite line;
     private Sprite[] separators;
 
-    public BottomGroupActor(Sprite line, Sprite[] separators,
+    public BottomActor(Sprite line, Sprite[] separators,
             Array<Sprite> scoreArray, Sprite menu) {
 
         this.line = line;
