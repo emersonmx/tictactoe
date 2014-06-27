@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gmail.emersonmx.tictactoe.scene.BackgroundActor;
 import com.gmail.emersonmx.tictactoe.scene.BlackboardActor;
 import com.gmail.emersonmx.tictactoe.scene.BoardActor;
@@ -42,7 +42,7 @@ public class TicTacToe extends Application {
     }
 
     public void setup() {
-        stage = new Stage(new StretchViewport(WINDOW_WIDTH, WINDOW_HEIGHT));
+        stage = new Stage(new FitViewport(WINDOW_WIDTH, WINDOW_HEIGHT));
         Gdx.input.setInputProcessor(stage);
 
         Texture background = manager.get("background.png", Texture.class);

@@ -16,8 +16,7 @@ public class MenuActor extends Actor {
         this.menu.setCenter(240, 87);
 
         setTouchable(Touchable.enabled);
-        setBounds(this.menu.getX(), this.menu.getY(),
-                  this.menu.getWidth(), this.menu.getHeight());
+        setBounds(193, 43, 95, 88);
 
         setName("menu");
     }
