@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gmail.emersonmx.tictactoe.application.TicTacToe;
+import com.gmail.emersonmx.tictactoe.util.SpriteNode;
 import com.gmail.emersonmx.tictactoe.view.scene.BackgroundActor;
-import com.gmail.emersonmx.tictactoe.view.scene.BlackboardActor;
 import com.gmail.emersonmx.tictactoe.view.scene.BoardActor;
 import com.gmail.emersonmx.tictactoe.view.scene.BottomActor;
 
@@ -35,11 +35,14 @@ public class GameView implements View {
     }
 
     protected void setupScene(AssetManager manager, TextureAtlas atlas) {
+        // TODO Usar a classe SpriteNode para criar a cena.
         Texture background = manager.get("background.png", Texture.class);
         stage.addActor(new BackgroundActor(background));
 
         Sprite blackboard = atlas.createSprite("blackboard");
-        stage.addActor(new BlackboardActor(blackboard));
+        SpriteNode blackboardNode = new SpriteNode("blackboard", blackboard);
+        blackboardNode.setPosition(0, 0);
+        stage.addActor(blackboardNode);
 
         Sprite[] lines = new Sprite[4];
         for (int i = 0; i < lines.length; ++i) {
