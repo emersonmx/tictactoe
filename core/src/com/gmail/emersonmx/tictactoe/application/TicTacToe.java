@@ -45,7 +45,7 @@ public class TicTacToe extends Application {
     }
 
     public void events() {
-        if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+        if (Gdx.input.isKeyPressed(Keys.Q)) {
             Gdx.app.exit();
         }
     }
