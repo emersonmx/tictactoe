@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.gmail.emersonmx.tictactoe.system.TicTacToe;
+import com.gmail.emersonmx.tictactoe.application.TicTacToe;
 
 public class AndroidLauncher extends AndroidApplication {
 

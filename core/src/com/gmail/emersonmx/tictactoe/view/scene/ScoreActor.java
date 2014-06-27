@@ -5,11 +5,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
+import com.gmail.emersonmx.tictactoe.application.TicTacToe;
 
 public class ScoreActor extends Actor {
-
-    public static final int PLAYER_1 = 0;
-    public static final int PLAYER_2 = 1;
 
     private Array<Sprite> scoreArray;
     private Sprite[] scoreSprites;
@@ -26,7 +24,6 @@ public class ScoreActor extends Actor {
         }
 
         scores = new int[] { 0, 0 };
-        colors = new Color[] { null, null };
 
         setName("score");
     }
@@ -49,15 +46,17 @@ public class ScoreActor extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        scoreSprites[PLAYER_1] = scoreArray.get(scores[PLAYER_1]);
-        scoreSprites[PLAYER_1].setCenter(118, 87);
-        scoreSprites[PLAYER_1].setColor(colors[PLAYER_1]);
-        scoreSprites[PLAYER_1].draw(batch, parentAlpha);
+        scoreSprites[TicTacToe.PLAYER_1] =
+            scoreArray.get(scores[TicTacToe.PLAYER_1]);
+        scoreSprites[TicTacToe.PLAYER_1].setCenter(118, 87);
+        scoreSprites[TicTacToe.PLAYER_1].setColor(TicTacToe.PLAYER_1_COLOR);
+        scoreSprites[TicTacToe.PLAYER_1].draw(batch, parentAlpha);
 
-        scoreSprites[PLAYER_2] = scoreArray.get(scores[PLAYER_2]);
-        scoreSprites[PLAYER_2].setCenter(362, 87);
-        scoreSprites[PLAYER_2].setColor(colors[PLAYER_2]);
-        scoreSprites[PLAYER_2].draw(batch, parentAlpha);
+        scoreSprites[TicTacToe.PLAYER_2] =
+            scoreArray.get(scores[TicTacToe.PLAYER_2]);
+        scoreSprites[TicTacToe.PLAYER_2].setCenter(362, 87);
+        scoreSprites[TicTacToe.PLAYER_2].setColor(TicTacToe.PLAYER_2_COLOR);
+        scoreSprites[TicTacToe.PLAYER_2].draw(batch, parentAlpha);
     }
 
 }
