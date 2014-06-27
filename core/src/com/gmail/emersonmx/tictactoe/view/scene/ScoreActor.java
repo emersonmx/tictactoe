@@ -1,4 +1,4 @@
-package com.gmail.emersonmx.tictactoe.scene;
+package com.gmail.emersonmx.tictactoe.view.scene;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;

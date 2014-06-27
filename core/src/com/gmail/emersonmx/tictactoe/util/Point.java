@@ -1,4 +1,4 @@
-package com.gmail.emersonmx.tictactoe;
+package com.gmail.emersonmx.tictactoe.util;
 
 public class Point {
     public float x;

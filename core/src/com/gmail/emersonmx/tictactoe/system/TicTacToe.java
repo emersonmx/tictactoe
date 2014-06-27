@@ -1,4 +1,4 @@
-package com.gmail.emersonmx.tictactoe;
+package com.gmail.emersonmx.tictactoe.system;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -10,11 +10,11 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.gmail.emersonmx.tictactoe.scene.BackgroundActor;
-import com.gmail.emersonmx.tictactoe.scene.BlackboardActor;
-import com.gmail.emersonmx.tictactoe.scene.BoardActor;
-import com.gmail.emersonmx.tictactoe.scene.BottomActor;
-import com.gmail.emersonmx.tictactoe.scene.ScoreActor;
+import com.gmail.emersonmx.tictactoe.view.scene.BackgroundActor;
+import com.gmail.emersonmx.tictactoe.view.scene.BlackboardActor;
+import com.gmail.emersonmx.tictactoe.view.scene.BoardActor;
+import com.gmail.emersonmx.tictactoe.view.scene.BottomActor;
+import com.gmail.emersonmx.tictactoe.view.scene.ScoreActor;
 
 
 public class TicTacToe extends Application {

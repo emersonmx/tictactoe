@@ -1,10 +1,10 @@
-package com.gmail.emersonmx.tictactoe.scene;
+package com.gmail.emersonmx.tictactoe.view.scene;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.gmail.emersonmx.tictactoe.TicTacToe;
+import com.gmail.emersonmx.tictactoe.system.TicTacToe;
 
 public class BackgroundActor extends Actor {
 

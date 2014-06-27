@@ -1,4 +1,4 @@
-package com.gmail.emersonmx.tictactoe.scene;
+package com.gmail.emersonmx.tictactoe.view.scene;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Array;
-import com.gmail.emersonmx.tictactoe.Point;
+import com.gmail.emersonmx.tictactoe.util.Point;
 
 public class BottomActor extends Group {
 

@@ -1,4 +1,4 @@
-package com.gmail.emersonmx.tictactoe;
+package com.gmail.emersonmx.tictactoe.system;
 
 import com.badlogic.gdx.ApplicationListener;
 
