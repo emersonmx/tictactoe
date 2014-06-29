@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gmail.emersonmx.tictactoe.application.TicTacToe;
-import com.gmail.emersonmx.tictactoe.util.SpriteNode;
+import com.gmail.emersonmx.tictactoe.util.SpriteActor;
 import com.gmail.emersonmx.tictactoe.view.scene.BackgroundActor;
 import com.gmail.emersonmx.tictactoe.view.scene.BoardActor;
 import com.gmail.emersonmx.tictactoe.view.scene.BottomActor;
@@ -40,7 +40,7 @@ public class GameView implements View {
         stage.addActor(new BackgroundActor(background));
 
         Sprite blackboard = atlas.createSprite("blackboard");
-        SpriteNode blackboardNode = new SpriteNode("blackboard", blackboard);
+        SpriteActor blackboardNode = new SpriteActor("blackboard", blackboard);
         blackboardNode.setPosition(0, 0);
         stage.addActor(blackboardNode);
 
