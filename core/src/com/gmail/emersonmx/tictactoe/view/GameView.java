@@ -52,6 +52,7 @@ public class GameView implements View {
         stage.addActor(createSeparator());
         stage.addActor(createMenu());
         stage.addActor(createScoreActor());
+        //stage.addActor(createPlaces());
     }
 
     public Actor createBackground() {
@@ -154,6 +155,10 @@ public class GameView implements View {
     public Actor createScoreActor() {
         Array<Sprite> scoreArray = atlas.createSprites("number");
         return new ScoreActor(scoreArray);
+    }
+
+    public Actor createPlaces() {
+        return new Group();
     }
 
     @Override
