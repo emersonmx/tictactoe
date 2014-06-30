@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gmail.emersonmx.tictactoe.application.TicTacToe;
-import com.gmail.emersonmx.tictactoe.util.Point;
 import com.gmail.emersonmx.tictactoe.util.SpriteActor;
 import com.gmail.emersonmx.tictactoe.view.scene.BackgroundActor;
 import com.gmail.emersonmx.tictactoe.view.scene.ScoreActor;
@@ -73,11 +73,11 @@ public class GameView implements View {
         for (int i = 0; i < lines.length; ++i) {
             lines[i] = atlas.createSprite("board_line");
         }
-        Point[] layout = new Point[] {
-            new Point(179, 401), new Point(240, 462),
-            new Point(301, 401), new Point(240, 340)
+        GridPoint2[] layout = new GridPoint2[] {
+            new GridPoint2(179, 401), new GridPoint2(240, 462),
+            new GridPoint2(301, 401), new GridPoint2(240, 340)
         };
-        Point point = null;
+        GridPoint2 point = null;
 
         Group group = new Group();
         group.setName("board");
@@ -106,14 +106,14 @@ public class GameView implements View {
     }
 
     public Actor createSeparator() {
-        Point[] layout = new Point[] {
-            new Point(192, 87), new Point(288, 87)
+        GridPoint2[] layout = new GridPoint2[] {
+            new GridPoint2(192, 87), new GridPoint2(288, 87)
         };
         Sprite[] separators = new Sprite[] {
             atlas.createSprite("separator"), atlas.createSprite("separator")
         };
 
-        Point point = null;
+        GridPoint2 point = null;
         Sprite sprite = null;
         Group group = new Group();
         group.setName("separators");
