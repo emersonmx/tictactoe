@@ -30,6 +30,8 @@ com_crashlytics_export_strings.xml
 
 # Vim
 .vimproject
+*.swp
+*.swo
 
 ## Eclipse
 .classpath
@@ -39,7 +41,6 @@ com_crashlytics_export_strings.xml
 tmp/
 *.tmp
 *.bak
-*.swp
 *~.nib
 local.properties
 .settings/

@@ -11,18 +11,18 @@ blackboard
   orig: 480, 640
   offset: 0, 0
   index: -1
-board_line
-  rotate: false
-  xy: 484, 670
-  size: 14, 350
-  orig: 14, 350
-  offset: 0, 0
-  index: -1
 debug_area
   rotate: false
   xy: 2, 255
   size: 108, 108
   orig: 108, 108
+  offset: 0, 0
+  index: -1
+hash_line
+  rotate: false
+  xy: 484, 670
+  size: 14, 350
+  orig: 14, 350
   offset: 0, 0
   index: -1
 mark_o
@@ -46,76 +46,6 @@ menu
   orig: 70, 63
   offset: 0, 0
   index: -1
-number
-  rotate: false
-  xy: 2, 115
-  size: 42, 64
-  orig: 42, 64
-  offset: 0, 0
-  index: 7
-number
-  rotate: false
-  xy: 255, 305
-  size: 43, 58
-  orig: 43, 58
-  offset: 0, 0
-  index: 5
-number
-  rotate: false
-  xy: 2, 58
-  size: 42, 55
-  orig: 42, 55
-  offset: 0, 0
-  index: 6
-number
-  rotate: false
-  xy: 72, 195
-  size: 35, 58
-  orig: 35, 58
-  offset: 0, 0
-  index: 9
-number
-  rotate: false
-  xy: 300, 310
-  size: 35, 53
-  orig: 35, 53
-  offset: 0, 0
-  index: 3
-number
-  rotate: false
-  xy: 2, 2
-  size: 34, 54
-  orig: 34, 54
-  offset: 0, 0
-  index: 4
-number
-  rotate: false
-  xy: 337, 319
-  size: 41, 44
-  orig: 41, 44
-  offset: 0, 0
-  index: 2
-number
-  rotate: false
-  xy: 46, 127
-  size: 32, 52
-  orig: 32, 52
-  offset: 0, 0
-  index: 8
-number
-  rotate: false
-  xy: 46, 74
-  size: 30, 51
-  orig: 30, 51
-  offset: 0, 0
-  index: 1
-number
-  rotate: false
-  xy: 112, 247
-  size: 38, 44
-  orig: 38, 44
-  offset: 0, 0
-  index: 0
 score_line
   rotate: false
   xy: 2, 365
@@ -123,7 +53,77 @@ score_line
   orig: 405, 13
   offset: 0, 0
   index: -1
-separator
+score_number
+  rotate: false
+  xy: 2, 115
+  size: 42, 64
+  orig: 42, 64
+  offset: 0, 0
+  index: 7
+score_number
+  rotate: false
+  xy: 255, 305
+  size: 43, 58
+  orig: 43, 58
+  offset: 0, 0
+  index: 5
+score_number
+  rotate: false
+  xy: 2, 58
+  size: 42, 55
+  orig: 42, 55
+  offset: 0, 0
+  index: 6
+score_number
+  rotate: false
+  xy: 72, 195
+  size: 35, 58
+  orig: 35, 58
+  offset: 0, 0
+  index: 9
+score_number
+  rotate: false
+  xy: 300, 310
+  size: 35, 53
+  orig: 35, 53
+  offset: 0, 0
+  index: 3
+score_number
+  rotate: false
+  xy: 2, 2
+  size: 34, 54
+  orig: 34, 54
+  offset: 0, 0
+  index: 4
+score_number
+  rotate: false
+  xy: 337, 319
+  size: 41, 44
+  orig: 41, 44
+  offset: 0, 0
+  index: 2
+score_number
+  rotate: false
+  xy: 46, 127
+  size: 32, 52
+  orig: 32, 52
+  offset: 0, 0
+  index: 8
+score_number
+  rotate: false
+  xy: 46, 74
+  size: 30, 51
+  orig: 30, 51
+  offset: 0, 0
+  index: 1
+score_number
+  rotate: false
+  xy: 112, 247
+  size: 38, 44
+  orig: 38, 44
+  offset: 0, 0
+  index: 0
+score_separator
   rotate: false
   xy: 484, 579
   size: 12, 89

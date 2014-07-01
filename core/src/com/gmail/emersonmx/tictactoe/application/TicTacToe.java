@@ -1,13 +1,14 @@
 package com.gmail.emersonmx.tictactoe.application;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.gmail.emersonmx.tictactoe.view.GameView;
-import com.gmail.emersonmx.tictactoe.view.View;
 
 public class TicTacToe extends Application {
 
@@ -16,9 +17,13 @@ public class TicTacToe extends Application {
     public static final int PLAYER_1 = 0;
     public static final int PLAYER_2 = 1;
 
-    private AssetManager manager;
-    private TextureAtlas atlas;
-    private View gameView;
+    public AssetManager manager;
+    public TextureAtlas atlas;
+
+    public OrthographicCamera camera;
+    public Batch batch;
+
+    public GameView gameView;
 
     @Override
     public void create() {
@@ -36,7 +41,13 @@ public class TicTacToe extends Application {
     }
 
     public void setup() {
-        gameView = new GameView(manager, atlas);
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, TicTacToe.WINDOW_WIDTH,
+                          TicTacToe.WINDOW_HEIGHT);
+
+        batch = new SpriteBatch();
+
+        gameView = new GameView(this);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
 
@@ -45,9 +56,6 @@ public class TicTacToe extends Application {
     }
 
     public void events() {
-        if (Gdx.input.isKeyPressed(Keys.Q)) {
-            Gdx.app.exit();
-        }
     }
 
     public void logic() {
@@ -62,12 +70,11 @@ public class TicTacToe extends Application {
 
     @Override
     public void resize(int width, int height) {
-        gameView.resize(width, height);
     }
 
     @Override
     public void dispose() {
-        gameView.dispose();
+        batch.dispose();
         manager.dispose();
     }
 

@@ -1,179 +1,130 @@
 package com.gmail.emersonmx.tictactoe.view;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gmail.emersonmx.tictactoe.application.TicTacToe;
-import com.gmail.emersonmx.tictactoe.util.SpriteActor;
-import com.gmail.emersonmx.tictactoe.view.scene.BackgroundActor;
-import com.gmail.emersonmx.tictactoe.view.scene.ScoreActor;
 
 public class GameView implements View {
 
     public static final Color PLAYER_1_COLOR = new Color(0x8080ffff);
     public static final Color PLAYER_2_COLOR = new Color(0xff8080ff);
 
-    protected AssetManager manager;
-    protected TextureAtlas atlas;
-    protected Stage stage;
+    TicTacToe game;
 
-    public GameView(AssetManager manager, TextureAtlas atlas) {
-        this.manager = manager;
-        this.atlas = atlas;
+    private Texture background;
+    private Sprite blackboard;
+    private Array<Sprite> hash;
+    private Sprite scoreLine;
+    private Array<Sprite> scoreSeparators;
+    private Sprite menu;
+    private Array<Sprite> playerOneScore;
+    private Array<Sprite> playerTwoScore;
 
-        setup();
-        setupScene();
+    public GameView(TicTacToe game) {
+        this.game = game;
     }
 
-    protected void setup() {
-        FitViewport viewport =
-            new FitViewport(TicTacToe.WINDOW_WIDTH, TicTacToe.WINDOW_HEIGHT);
-        stage = new Stage(viewport);
-        Gdx.input.setInputProcessor(stage);
-    }
+    @Override
+    public void initialize() {
+        background = game.manager.get("background.png", Texture.class);
+        background.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
-    protected void setupScene() {
-        stage.addActor(createBackground());
-        stage.addActor(createBlackboard());
-        stage.addActor(createBoard());
-        stage.addActor(createScoreLine());
-        stage.addActor(createSeparator());
-        stage.addActor(createMenu());
-        stage.addActor(createScoreActor());
-        //stage.addActor(createPlaces());
-    }
+        blackboard = game.atlas.createSprite("blackboard");
 
-    public Actor createBackground() {
-        Texture background = manager.get("background.png", Texture.class);
-        return new BackgroundActor(background);
-    }
+        Array<GridPoint2> layout = new Array<GridPoint2>();
+        layout.add(new GridPoint2(179, 401));
+        layout.add(new GridPoint2(240, 462));
+        layout.add(new GridPoint2(301, 401));
+        layout.add(new GridPoint2(240, 340));
 
-    public Actor createBlackboard() {
-        Sprite blackboard = atlas.createSprite("blackboard");
-        SpriteActor blackboardNode = new SpriteActor("blackboard", blackboard);
-        blackboardNode.setPosition(0, 0);
-
-        return blackboardNode;
-    }
-
-    public Actor createBoard() {
-        Sprite[] lines = new Sprite[4];
-        for (int i = 0; i < lines.length; ++i) {
-            lines[i] = atlas.createSprite("board_line");
-        }
-        GridPoint2[] layout = new GridPoint2[] {
-            new GridPoint2(179, 401), new GridPoint2(240, 462),
-            new GridPoint2(301, 401), new GridPoint2(240, 340)
-        };
+        Sprite sprite = null;
         GridPoint2 point = null;
 
-        Group group = new Group();
-        group.setName("board");
-        Sprite sprite = null;
-        for (int i = 0; i < layout.length; ++i) {
-            point = layout[i];
-            sprite = lines[i];
-            sprite.setCenter(point.x, point.y);
+        hash = new Array<Sprite>(4);
+        for (int i = 0; i < layout.size; ++i) {
+            point = layout.get(i);
 
-            if ((i % 2) != 0) {
+            sprite = game.atlas.createSprite("hash_line");
+            sprite.setCenter(point.x, point.y);
+            if (i % 2 != 0) {
                 sprite.rotate(90);
             }
 
-            group.addActor(new SpriteActor("board_line_" + String.valueOf(i),
-                                           sprite));
+            hash.add(sprite);
         }
 
-        return group;
-    }
+        scoreLine = game.atlas.createSprite("score_line");
+        scoreLine.setCenter(240, 131);
 
-    public Actor createScoreLine() {
-        Sprite line = atlas.createSprite("score_line");
-        line.setCenter(240, 131);
+        layout.clear();
+        layout.add(new GridPoint2(192, 87));
+        layout.add(new GridPoint2(288, 87));
 
-        return new SpriteActor("score_line", line);
-    }
+        scoreSeparators = new Array<Sprite>(2);
+        for (int i = 0; i < layout.size; ++i) {
+            point = layout.get(i);
 
-    public Actor createSeparator() {
-        GridPoint2[] layout = new GridPoint2[] {
-            new GridPoint2(192, 87), new GridPoint2(288, 87)
-        };
-        Sprite[] separators = new Sprite[] {
-            atlas.createSprite("separator"), atlas.createSprite("separator")
-        };
-
-        GridPoint2 point = null;
-        Sprite sprite = null;
-        Group group = new Group();
-        group.setName("separators");
-        for (int i = 0; i < layout.length; ++i) {
-            point = layout[i];
-            sprite = separators[i];
-            sprite.setOriginCenter();
+            sprite = game.atlas.createSprite("score_separator");
             sprite.setCenter(point.x, point.y);
-
-            group.addActor(new SpriteActor("separator_" + String.valueOf(i),
-                                           sprite));
+            scoreSeparators.add(sprite);
         }
 
-        return group;
-    }
-
-    public Actor createMenu() {
-        Sprite menu = atlas.createSprite("menu");
+        menu = game.atlas.createSprite("menu");
         menu.setCenter(240, 87);
 
-        SpriteActor menuActor = new SpriteActor("menu", menu);
-        menuActor.setTouchable(Touchable.enabled);
-        menuActor.setBounds(193, 43, 95, 88);
-        menuActor.addListener(new InputListener() {
+        playerOneScore = game.atlas.createSprites("score_number");
+        for (Sprite score : playerOneScore) {
+            score.setCenter(118, 87);
+            score.setColor(PLAYER_1_COLOR);
+        }
 
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y,
-                    int pointer, int button) {
-
-                System.out.println("<menu touch>");
-                return true;
-            }
-
-        });
-
-        return menuActor;
-    }
-
-    public Actor createScoreActor() {
-        Array<Sprite> scoreArray = atlas.createSprites("number");
-        return new ScoreActor(scoreArray);
-    }
-
-    public Actor createPlaces() {
-        return new Group();
+        playerTwoScore = game.atlas.createSprites("score_number");
+        for (Sprite score : playerTwoScore) {
+            score.setCenter(362, 87);
+            score.setColor(PLAYER_2_COLOR);
+        }
     }
 
     @Override
     public void draw() {
-        stage.draw();
-    }
+        // apenas um teste
+        if (Gdx.input.isTouched()) {
+            Vector3 pos = new Vector3(); // leak
+            pos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            game.camera.unproject(pos);
+            System.out.println(pos);
+        }
 
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
+        game.camera.update();
 
-    @Override
-    public void dispose() {
-        stage.dispose();
+        game.batch.setProjectionMatrix(game.camera.combined);
+        game.batch.begin();
+        game.batch.draw(background, 0, 0,
+                   TicTacToe.WINDOW_WIDTH, TicTacToe.WINDOW_HEIGHT, 0, 0, 5, 5);
+
+        blackboard.draw(game.batch);
+
+        for (Sprite hashLine : hash) {
+            hashLine.draw(game.batch);
+        }
+
+        scoreLine.draw(game.batch);
+        for (Sprite scoreSeparator : scoreSeparators) {
+            scoreSeparator.draw(game.batch);
+        }
+
+        menu.draw(game.batch);
+
+        playerOneScore.get(0).draw(game.batch);
+        playerTwoScore.get(0).draw(game.batch);
+
+        game.batch.end();
     }
 
 }
