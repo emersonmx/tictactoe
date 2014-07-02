@@ -14,9 +14,14 @@ public class Application implements ApplicationListener {
 
     @Override
     public void render() {
-        events();
         logic();
         draw();
+    }
+
+    public void logic() {
+    }
+
+    public void draw() {
     }
 
     @Override
@@ -29,15 +34,6 @@ public class Application implements ApplicationListener {
 
     @Override
     public void dispose() {
-    }
-
-    public void events() {
-    }
-
-    public void logic() {
-    }
-
-    public void draw() {
     }
 
 }

@@ -70,10 +70,6 @@ public class GameApplication extends Application {
     }
 
     @Override
-    public void events() {
-    }
-
-    @Override
     public void logic() {
     }
 

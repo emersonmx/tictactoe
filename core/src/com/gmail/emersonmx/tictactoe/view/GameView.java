@@ -65,7 +65,7 @@ public class GameView implements View {
         }
 
         @Override
-        public boolean touchUp (int screenX, int screenY, int pointer,
+        public boolean touchUp(int screenX, int screenY, int pointer,
                 int button) {
 
             point.x = screenX;
