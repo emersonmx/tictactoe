@@ -1,21 +1,23 @@
 package com.gmail.emersonmx.tictactoe.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.gmail.emersonmx.tictactoe.application.TicTacToe;
+import com.gmail.emersonmx.tictactoe.application.GameApplication;
 
 public class GameView implements View {
 
     public static final Color PLAYER_1_COLOR = new Color(0x8080ffff);
     public static final Color PLAYER_2_COLOR = new Color(0xff8080ff);
 
-    TicTacToe game;
+    private GameApplication game;
 
     private Texture background;
     private Sprite blackboard;
@@ -26,7 +28,61 @@ public class GameView implements View {
     private Array<Sprite> playerOneScore;
     private Array<Sprite> playerTwoScore;
 
-    public GameView(TicTacToe game) {
+    private class Input extends InputAdapter {
+
+        private Array<Rectangle> rectangles;
+        private Vector3 point;
+
+        public Input() {
+            point = new Vector3();
+            rectangles = new Array<Rectangle>(10);
+
+            float width, height;
+            width = height = 108;
+
+            GridPoint2 point = new GridPoint2(64, 469);
+            for (int i = 0; i < 3; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    rectangles.add(
+                        new Rectangle(point.x, point.y, width, height));
+                    point.x += 122;
+                }
+
+                point.x = 64;
+                point.y -= 122;
+            }
+
+            rectangles.add(new Rectangle(193, 43, 95, 88));
+        }
+
+        @Override
+        public boolean touchUp (int screenX, int screenY, int pointer,
+                int button) {
+
+            point.x = screenX;
+            point.y = screenY;
+            game.viewport.unproject(point);
+
+            Rectangle rectangle = null;
+            for (int i = 0; i < rectangles.size; ++i) {
+                rectangle = rectangles.get(i);
+                if (i < rectangles.size - 1) {
+                    if (rectangle.contains(point.x, point.y)) {
+                        System.out.println("Mark " + i + " touched");
+                    }
+                } else {
+                    if (rectangle.contains(point.x, point.y)) {
+                        System.out.println("Menu touched");
+                    }
+                }
+            }
+
+            return true;
+        }
+
+    }
+
+    public GameView(GameApplication game) {
         this.game = game;
     }
 
@@ -40,6 +96,8 @@ public class GameView implements View {
         menu = createMenu();
         playerOneScore = createPlayerOneScore();
         playerTwoScore = createPlayerTwoScore();
+
+        setupRectangles();
     }
 
     protected Texture createBackground() {
@@ -131,22 +189,16 @@ public class GameView implements View {
         return sprites;
     }
 
+    protected void setupRectangles() {
+        Gdx.input.setInputProcessor(new Input());
+    }
+
     @Override
     public void draw() {
-        // apenas um teste
-        if (Gdx.input.isTouched()) {
-            Vector3 pos = new Vector3(); // leak
-            pos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            game.camera.unproject(pos);
-            System.out.println(pos);
-        }
-
-        game.camera.update();
-
-        game.batch.setProjectionMatrix(game.camera.combined);
         game.batch.begin();
         game.batch.draw(background, 0, 0,
-                   TicTacToe.WINDOW_WIDTH, TicTacToe.WINDOW_HEIGHT, 0, 0, 5, 5);
+            GameApplication.WINDOW_WIDTH, GameApplication.WINDOW_HEIGHT,
+            0, 0, 5, 5);
 
         blackboard.draw(game.batch);
 

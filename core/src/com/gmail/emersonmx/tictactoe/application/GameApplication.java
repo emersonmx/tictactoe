@@ -8,9 +8,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.gmail.emersonmx.tictactoe.view.GameView;
 
-public class TicTacToe extends Application {
+public class GameApplication extends Application {
 
     public static final int WINDOW_WIDTH = 480;
     public static final int WINDOW_HEIGHT = 640;
@@ -20,7 +22,7 @@ public class TicTacToe extends Application {
     public AssetManager manager;
     public TextureAtlas atlas;
 
-    public OrthographicCamera camera;
+    public Viewport viewport;
     public Batch batch;
 
     public GameView gameView;
@@ -41,9 +43,9 @@ public class TicTacToe extends Application {
     }
 
     public void setup() {
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, TicTacToe.WINDOW_WIDTH,
-                          TicTacToe.WINDOW_HEIGHT);
+        viewport = new FitViewport(WINDOW_WIDTH, WINDOW_HEIGHT);
+        OrthographicCamera camera = (OrthographicCamera) viewport.getCamera();
+        camera.setToOrtho(false);
 
         batch = new SpriteBatch();
 
@@ -71,6 +73,7 @@ public class TicTacToe extends Application {
 
     @Override
     public void resize(int width, int height) {
+        viewport.update(width, height, false);
     }
 
     @Override
