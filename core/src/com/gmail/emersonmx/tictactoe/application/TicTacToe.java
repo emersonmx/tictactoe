@@ -48,6 +48,7 @@ public class TicTacToe extends Application {
         batch = new SpriteBatch();
 
         gameView = new GameView(this);
+        gameView.setup();
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
 

@@ -31,24 +31,39 @@ public class GameView implements View {
     }
 
     @Override
-    public void initialize() {
-        background = game.manager.get("background.png", Texture.class);
-        background.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+    public void setup() {
+        background = createBackground();
+        blackboard = createBlackboard();
+        hash = createHash();
+        scoreLine = createScoreLine();
+        scoreSeparators = createScoreSeparators();
+        menu = createMenu();
+        playerOneScore = createPlayerOneScore();
+        playerTwoScore = createPlayerTwoScore();
+    }
 
-        blackboard = game.atlas.createSprite("blackboard");
+    protected Texture createBackground() {
+        Texture texture = game.manager.get("background.png", Texture.class);
+        texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
-        Array<GridPoint2> layout = new Array<GridPoint2>();
-        layout.add(new GridPoint2(179, 401));
-        layout.add(new GridPoint2(240, 462));
-        layout.add(new GridPoint2(301, 401));
-        layout.add(new GridPoint2(240, 340));
+        return texture;
+    }
+
+    protected Sprite createBlackboard() {
+        return game.atlas.createSprite("blackboard");
+    }
+
+    protected Array<Sprite> createHash() {
+        Array<Sprite> sprites = new Array<Sprite>(4);
+        GridPoint2[] layout = new GridPoint2[] {
+            new GridPoint2(179, 401), new GridPoint2(240, 462),
+            new GridPoint2(301, 401), new GridPoint2(240, 340)
+        };
 
         Sprite sprite = null;
         GridPoint2 point = null;
-
-        hash = new Array<Sprite>(4);
-        for (int i = 0; i < layout.size; ++i) {
-            point = layout.get(i);
+        for (int i = 0; i < layout.length; ++i) {
+            point = layout[i];
 
             sprite = game.atlas.createSprite("hash_line");
             sprite.setCenter(point.x, point.y);
@@ -56,39 +71,64 @@ public class GameView implements View {
                 sprite.rotate(90);
             }
 
-            hash.add(sprite);
+            sprites.add(sprite);
         }
 
-        scoreLine = game.atlas.createSprite("score_line");
-        scoreLine.setCenter(240, 131);
+        return sprites;
+    }
 
-        layout.clear();
-        layout.add(new GridPoint2(192, 87));
-        layout.add(new GridPoint2(288, 87));
+    protected Sprite createScoreLine() {
+        Sprite sprite = new Sprite();
+        sprite = game.atlas.createSprite("score_line");
+        sprite.setCenter(240, 131);
 
-        scoreSeparators = new Array<Sprite>(2);
-        for (int i = 0; i < layout.size; ++i) {
-            point = layout.get(i);
+        return sprite;
+    }
+
+    protected Array<Sprite> createScoreSeparators() {
+        Array<Sprite> sprites = new Array<Sprite>(2);
+        GridPoint2[] layout = new GridPoint2[] {
+            new GridPoint2(192, 87), new GridPoint2(288, 87)
+        };
+
+        GridPoint2 point = null;
+        Sprite sprite = null;
+        for (int i = 0; i < layout.length; ++i) {
+            point = layout[i];
 
             sprite = game.atlas.createSprite("score_separator");
             sprite.setCenter(point.x, point.y);
-            scoreSeparators.add(sprite);
+            sprites.add(sprite);
         }
 
-        menu = game.atlas.createSprite("menu");
-        menu.setCenter(240, 87);
+        return sprites;
+    }
 
-        playerOneScore = game.atlas.createSprites("score_number");
-        for (Sprite score : playerOneScore) {
+    protected Sprite createMenu() {
+        Sprite sprite = game.atlas.createSprite("menu");
+        sprite.setCenter(240, 87);
+
+        return sprite;
+    }
+
+    protected Array<Sprite> createPlayerOneScore() {
+        Array<Sprite> sprites = game.atlas.createSprites("score_number");
+        for (Sprite score : sprites) {
             score.setCenter(118, 87);
             score.setColor(PLAYER_1_COLOR);
         }
 
-        playerTwoScore = game.atlas.createSprites("score_number");
-        for (Sprite score : playerTwoScore) {
+        return sprites;
+    }
+
+    protected Array<Sprite> createPlayerTwoScore() {
+        Array<Sprite> sprites = game.atlas.createSprites("score_number");
+        for (Sprite score : sprites) {
             score.setCenter(362, 87);
             score.setColor(PLAYER_2_COLOR);
         }
+
+        return sprites;
     }
 
     @Override
