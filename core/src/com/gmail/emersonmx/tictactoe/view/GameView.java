@@ -2,22 +2,29 @@ package com.gmail.emersonmx.tictactoe.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.gmail.emersonmx.tictactoe.application.GameApplication;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.gmail.emersonmx.tictactoe.model.Resource;
 
 public class GameView implements View {
 
     public static final Color PLAYER_1_COLOR = new Color(0x8080ffff);
     public static final Color PLAYER_2_COLOR = new Color(0xff8080ff);
 
-    private GameApplication game;
+    private AssetManager manager;
+    private TextureAtlas atlas;
+    private Viewport viewport;
+    private Batch batch;
 
     private Texture background;
     private Sprite blackboard;
@@ -27,6 +34,8 @@ public class GameView implements View {
     private Sprite menu;
     private Array<Sprite> playerOneScore;
     private Array<Sprite> playerTwoScore;
+
+    private int[] playerScores;
 
     private class Input extends InputAdapter {
 
@@ -52,7 +61,7 @@ public class GameView implements View {
                 point.y -= 122;
             }
 
-            rectangles.add(new Rectangle(193, 43, 95, 88));
+            rectangles.add(new Rectangle(198, 43, 85, 83));
         }
 
         @Override
@@ -61,7 +70,7 @@ public class GameView implements View {
 
             point.x = screenX;
             point.y = screenY;
-            game.viewport.unproject(point);
+            viewport.unproject(point);
 
             Rectangle rectangle = null;
             for (int i = 0; i < rectangles.size; ++i) {
@@ -82,8 +91,13 @@ public class GameView implements View {
 
     }
 
-    public GameView(GameApplication game) {
-        this.game = game;
+    public GameView(Resource resource) {
+        this.manager = resource.manager;
+        this.atlas = resource.atlas;
+        this.viewport = resource.viewport;
+        this.batch = resource.batch;
+
+        playerScores = new int[] { 0, 0 };
     }
 
     @Override
@@ -101,14 +115,14 @@ public class GameView implements View {
     }
 
     protected Texture createBackground() {
-        Texture texture = game.manager.get("background.png", Texture.class);
+        Texture texture = manager.get("background.png", Texture.class);
         texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
         return texture;
     }
 
     protected Sprite createBlackboard() {
-        return game.atlas.createSprite("blackboard");
+        return atlas.createSprite("blackboard");
     }
 
     protected Array<Sprite> createHash() {
@@ -123,7 +137,7 @@ public class GameView implements View {
         for (int i = 0; i < layout.length; ++i) {
             point = layout[i];
 
-            sprite = game.atlas.createSprite("hash_line");
+            sprite = atlas.createSprite("hash_line");
             sprite.setCenter(point.x, point.y);
             if (i % 2 != 0) {
                 sprite.rotate(90);
@@ -137,7 +151,7 @@ public class GameView implements View {
 
     protected Sprite createScoreLine() {
         Sprite sprite = new Sprite();
-        sprite = game.atlas.createSprite("score_line");
+        sprite = atlas.createSprite("score_line");
         sprite.setCenter(240, 131);
 
         return sprite;
@@ -154,7 +168,7 @@ public class GameView implements View {
         for (int i = 0; i < layout.length; ++i) {
             point = layout[i];
 
-            sprite = game.atlas.createSprite("score_separator");
+            sprite = atlas.createSprite("score_separator");
             sprite.setCenter(point.x, point.y);
             sprites.add(sprite);
         }
@@ -163,14 +177,14 @@ public class GameView implements View {
     }
 
     protected Sprite createMenu() {
-        Sprite sprite = game.atlas.createSprite("menu");
+        Sprite sprite = atlas.createSprite("menu");
         sprite.setCenter(240, 87);
 
         return sprite;
     }
 
     protected Array<Sprite> createPlayerOneScore() {
-        Array<Sprite> sprites = game.atlas.createSprites("score_number");
+        Array<Sprite> sprites = atlas.createSprites("score_number");
         for (Sprite score : sprites) {
             score.setCenter(118, 87);
             score.setColor(PLAYER_1_COLOR);
@@ -180,7 +194,7 @@ public class GameView implements View {
     }
 
     protected Array<Sprite> createPlayerTwoScore() {
-        Array<Sprite> sprites = game.atlas.createSprites("score_number");
+        Array<Sprite> sprites = atlas.createSprites("score_number");
         for (Sprite score : sprites) {
             score.setCenter(362, 87);
             score.setColor(PLAYER_2_COLOR);
@@ -195,28 +209,27 @@ public class GameView implements View {
 
     @Override
     public void draw() {
-        game.batch.begin();
-        game.batch.draw(background, 0, 0,
-            GameApplication.WINDOW_WIDTH, GameApplication.WINDOW_HEIGHT,
-            0, 0, 5, 5);
+        batch.begin();
+        batch.draw(background, 0, 0,
+            Resource.WINDOW_WIDTH, Resource.WINDOW_HEIGHT, 0, 0, 5, 5);
 
-        blackboard.draw(game.batch);
+        blackboard.draw(batch);
 
         for (Sprite hashLine : hash) {
-            hashLine.draw(game.batch);
+            hashLine.draw(batch);
         }
 
-        scoreLine.draw(game.batch);
+        scoreLine.draw(batch);
         for (Sprite scoreSeparator : scoreSeparators) {
-            scoreSeparator.draw(game.batch);
+            scoreSeparator.draw(batch);
         }
 
-        menu.draw(game.batch);
+        menu.draw(batch);
 
-        playerOneScore.get(0).draw(game.batch);
-        playerTwoScore.get(0).draw(game.batch);
+        playerOneScore.get(playerScores[Resource.PLAYER_1]).draw(batch);
+        playerTwoScore.get(playerScores[Resource.PLAYER_2]).draw(batch);
 
-        game.batch.end();
+        batch.end();
     }
 
 }

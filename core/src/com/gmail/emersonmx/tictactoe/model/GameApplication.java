@@ -1,4 +1,4 @@
-package com.gmail.emersonmx.tictactoe.application;
+package com.gmail.emersonmx.tictactoe.model;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -8,29 +8,31 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.gmail.emersonmx.tictactoe.view.GameView;
+import com.gmail.emersonmx.tictactoe.view.View;
 
 public class GameApplication extends Application {
 
-    public static final int WINDOW_WIDTH = 480;
-    public static final int WINDOW_HEIGHT = 640;
-    public static final int PLAYER_1 = 0;
-    public static final int PLAYER_2 = 1;
-
     public AssetManager manager;
     public TextureAtlas atlas;
-
     public Viewport viewport;
     public Batch batch;
 
-    public GameView gameView;
+    private Array<View> views;
+    private View currentView;
 
     @Override
     public void create() {
-        loadResources();
         setup();
+    }
+
+    public void setup() {
+        loadResources();
+        setupGraphics();
+        setupViews();
     }
 
     public void loadResources() {
@@ -42,15 +44,13 @@ public class GameApplication extends Application {
         atlas = manager.get("game.atlas");
     }
 
-    public void setup() {
-        viewport = new FitViewport(WINDOW_WIDTH, WINDOW_HEIGHT);
+    private void setupGraphics() {
+        viewport =
+            new FitViewport(Resource.WINDOW_WIDTH, Resource.WINDOW_HEIGHT);
         OrthographicCamera camera = (OrthographicCamera) viewport.getCamera();
         camera.setToOrtho(false);
 
         batch = new SpriteBatch();
-
-        gameView = new GameView(this);
-        gameView.setup();
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
 
@@ -58,9 +58,22 @@ public class GameApplication extends Application {
         Gdx.graphics.requestRendering();
     }
 
+    private void setupViews() {
+        Resource resource = new Resource(manager, atlas, viewport, batch);
+        views = new Array<View>(Resource.VIEW_SIZE);
+
+        GameView gameView = new GameView(resource);
+        views.add(gameView);
+
+        currentView = views.get(Resource.GAME_VIEW);
+        currentView.setup();
+    }
+
+    @Override
     public void events() {
     }
 
+    @Override
     public void logic() {
     }
 
@@ -68,7 +81,7 @@ public class GameApplication extends Application {
     public void draw() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        gameView.draw();
+        currentView.draw();
     }
 
     @Override

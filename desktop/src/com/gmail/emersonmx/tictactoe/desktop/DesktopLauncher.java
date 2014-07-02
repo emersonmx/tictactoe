@@ -1,9 +1,9 @@
 package com.gmail.emersonmx.tictactoe.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
-import com.gmail.emersonmx.tictactoe.application.GameApplication;
+import com.gmail.emersonmx.tictactoe.model.GameApplication;
+import com.gmail.emersonmx.tictactoe.model.Resource;
 
 public class DesktopLauncher {
 
@@ -12,10 +12,11 @@ public class DesktopLauncher {
         settings.maxWidth = 1024;
         settings.maxHeight = 1024;
 
-        TexturePacker.process(settings, "../../images/game", ".", "game");
+        //TexturePacker.process(settings, "../../images/game", ".", "game");
 
         new LwjglApplication(new GameApplication(), "TicTacToe",
-                             GameApplication.WINDOW_WIDTH, GameApplication.WINDOW_HEIGHT);
+                             Resource.WINDOW_WIDTH,
+                             Resource.WINDOW_HEIGHT);
     }
 
 }
