@@ -26,9 +26,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Array;
+import com.gmail.emersonmx.tictactoe.controller.GameController;
 import com.gmail.emersonmx.tictactoe.model.Game;
+import com.gmail.emersonmx.tictactoe.model.GameEvent;
+import com.gmail.emersonmx.tictactoe.model.GameListener;
 
-public class GameView extends AbstractView {
+public class GameView extends AbstractView implements GameListener {
 
     public static final Color PLAYER_1_COLOR = new Color(0x8080ffff);
     public static final Color PLAYER_2_COLOR = new Color(0xff8080ff);
@@ -47,7 +50,7 @@ public class GameView extends AbstractView {
     private int[] playerScores;
 
     public GameView(ViewManager viewManager) {
-        super();
+        super(viewManager);
 
         this.atlas = viewManager.atlas;
         this.batch = viewManager.batch;
@@ -70,6 +73,7 @@ public class GameView extends AbstractView {
 
     @Override
     public void setup() {
+        input.setGameController((GameController) controller);
         Gdx.input.setInputProcessor(input);
     }
 
@@ -177,6 +181,48 @@ public class GameView extends AbstractView {
 
     @Override
     public void dispose() {
+    }
+
+    @Override
+    public void gameStart(GameEvent event) {
+        System.out.println("Game Start");
+    }
+
+    @Override
+    public void gameOver(GameEvent event) {
+        System.out.println("Game Over");
+    }
+
+    @Override
+    public void marked(GameEvent event) {
+        System.out.println("Marked");
+    }
+
+    @Override
+    public void gameWinner(GameEvent event) {
+        System.out.println("Game Winner");
+    }
+
+    @Override
+    public void gameDraw(GameEvent event) {
+        System.out.println("Game Draw");
+    }
+
+    @Override
+    public void currentPlayerChanged(GameEvent event) {
+        System.out.println("Player Changed");
+        Game game = (Game) event.getSource();
+        System.out.println(game.getCurrentPlayer());
+    }
+
+    @Override
+    public void invalidPosition(GameEvent event) {
+        System.out.println("Invalid Position");
+    }
+
+    @Override
+    public void positionIsNotEmpty(GameEvent event) {
+        System.out.println("Position is not Empty");
     }
 
 }

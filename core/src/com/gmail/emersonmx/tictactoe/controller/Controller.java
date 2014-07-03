@@ -23,9 +23,7 @@ import com.gmail.emersonmx.tictactoe.view.View;
 
 public interface Controller {
 
-    public void setView(View view);
     public View getView();
-
-    public void mark(int index);
+    public void setView(View view);
 
 }

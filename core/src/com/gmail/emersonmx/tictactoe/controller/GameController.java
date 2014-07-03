@@ -17,41 +17,26 @@
   along with tictactoe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.gmail.emersonmx.tictactoe.model;
+package com.gmail.emersonmx.tictactoe.controller;
 
-public class Player {
+import com.gmail.emersonmx.tictactoe.model.Game;
 
-    public int mark;
+public class GameController extends AbstractController {
 
-    public Player(int mark) {
-        this.mark = mark;
+    protected Game game;
+
+    public void mark(int index) {
+        int j = index % Game.BOARD_WIDTH;
+        int i = (index - j) / Game.BOARD_HEIGHT;
+        game.setMark(i, j);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Player) {
-            Player other = (Player) obj;
-            if (mark == other.mark) {
-                return true;
-            }
-        }
-
-        return false;
+    public void setGame(Game game) {
+        this.game = game;
     }
 
-    @Override
-    public String toString() {
-        String s = "Player with mark: ";
-
-        if (mark == Game.NO_MARK) {
-            s += "\" \"";
-        } else if (mark == Game.MARK_O) {
-            s += "O";
-        } else if (mark == Game.MARK_X) {
-            s += "X";
-        }
-
-        return s;
+    public Game getGame() {
+        return game;
     }
 
 }

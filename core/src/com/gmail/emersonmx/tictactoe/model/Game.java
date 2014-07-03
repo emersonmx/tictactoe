@@ -53,7 +53,9 @@ public class Game {
     private GameEvent event;
 
     public Game() {
-        players = new Player[2];
+        players = new Player[] {
+            new Player(MARK_O), new Player(MARK_X)
+        };
         board = new int[BOARD_WIDTH * BOARD_HEIGHT];
 
         random = new Random();
@@ -148,6 +150,7 @@ public class Game {
 
         cleanBoard();
     }
+
     public void randomPlayer() {
         currentPlayer = players[random.nextInt(2)];
     }
@@ -301,7 +304,7 @@ public class Game {
     }
 
     private int indexMark(int i, int j) {
-        return i + j * BOARD_WIDTH;
+        return j + i * BOARD_HEIGHT;
     }
 
 }

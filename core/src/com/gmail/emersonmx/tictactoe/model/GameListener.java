@@ -21,7 +21,7 @@ package com.gmail.emersonmx.tictactoe.model;
 
 import java.util.EventListener;
 
-interface GameListener extends EventListener {
+public interface GameListener extends EventListener {
 
     public void gameStart(GameEvent event);
     public void gameOver(GameEvent event);

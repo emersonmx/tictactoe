@@ -23,6 +23,8 @@ import com.gmail.emersonmx.tictactoe.controller.Controller;
 
 public interface View {
 
+    public void setViewManager(ViewManager viewManager);
+    public ViewManager getViewManager();
     public void setController(Controller controller);
     public Controller getController();
 

@@ -29,6 +29,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.gmail.emersonmx.tictactoe.controller.GameController;
+import com.gmail.emersonmx.tictactoe.model.Game;
+import com.gmail.emersonmx.tictactoe.view.GameView;
 import com.gmail.emersonmx.tictactoe.view.ViewManager;
 
 public class GameApplication extends Application {
@@ -39,8 +42,6 @@ public class GameApplication extends Application {
     public Batch batch;
 
     private ViewManager viewManager;
-    //private Controller controller;
-    //private Game game;
 
     private float deltaTime;
 
@@ -52,7 +53,6 @@ public class GameApplication extends Application {
     public void setup() {
         loadResources();
         setupGraphics();
-        setupViews();
         setupSystem();
     }
 
@@ -76,15 +76,22 @@ public class GameApplication extends Application {
         Gdx.gl.glClearColor(0, 0, 0, 1);
     }
 
-    private void setupViews() {
-        viewManager = new ViewManager(manager, atlas, viewport, batch);
-
-        viewManager.create();
-        viewManager.setup();
-    }
-
     public void setupSystem() {
-        //game = new Game();
+        viewManager = new ViewManager(manager, atlas, viewport, batch);
+        viewManager.create();
+
+        GameView gameView =
+            (GameView) viewManager.getView(ViewManager.GAME_VIEW);
+        GameController gameController = new GameController();
+        Game game = new Game();
+
+        gameView.setController(gameController);
+        gameController.setView(gameView);
+        gameController.setGame(game);
+        game.addListener(gameView);
+        game.setup();
+
+        viewManager.setup();
     }
 
     @Override
