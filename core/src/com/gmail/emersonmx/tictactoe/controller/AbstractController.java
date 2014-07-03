@@ -23,7 +23,7 @@ import com.gmail.emersonmx.tictactoe.view.View;
 
 public abstract class AbstractController implements Controller {
 
-    private View view;
+    protected View view;
 
     @Override
     public View getView() {

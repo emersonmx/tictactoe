@@ -4,7 +4,7 @@ import com.gmail.emersonmx.tictactoe.controller.Controller;
 
 public abstract class AbstractView implements View {
 
-    private Controller controller;
+    protected Controller controller;
 
     @Override
     public Controller getController() {

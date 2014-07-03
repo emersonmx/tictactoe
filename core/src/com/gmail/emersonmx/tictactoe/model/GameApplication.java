@@ -30,6 +30,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.gmail.emersonmx.tictactoe.controller.Controller;
 import com.gmail.emersonmx.tictactoe.view.GameView;
 import com.gmail.emersonmx.tictactoe.view.View;
 
@@ -42,6 +43,8 @@ public class GameApplication extends Application {
 
     private Array<View> views;
     private View currentView;
+    private Controller controller;
+    private Game game;
 
     @Override
     public void create() {
@@ -52,6 +55,7 @@ public class GameApplication extends Application {
         loadResources();
         setupGraphics();
         setupViews();
+        setupSystem();
     }
 
     public void loadResources() {
@@ -72,9 +76,6 @@ public class GameApplication extends Application {
         batch = new SpriteBatch();
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
-
-        Gdx.graphics.setContinuousRendering(false);
-        Gdx.graphics.requestRendering();
     }
 
     private void setupViews() {
@@ -88,8 +89,12 @@ public class GameApplication extends Application {
         currentView.setup();
     }
 
+    public void setupSystem() {
+    }
+
     @Override
     public void logic() {
+        //float delta = Gdx.graphics.getDeltaTime();
     }
 
     @Override
