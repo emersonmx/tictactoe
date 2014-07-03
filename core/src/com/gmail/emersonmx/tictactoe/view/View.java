@@ -26,7 +26,12 @@ public interface View {
     public void setController(Controller controller);
     public Controller getController();
 
+    public boolean isLoaded();
+
+    public void create();
     public void setup();
+    public void logic(float deltaTime);
     public void draw();
+    public void dispose();
 
 }

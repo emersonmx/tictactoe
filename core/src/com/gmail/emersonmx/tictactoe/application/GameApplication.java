@@ -27,11 +27,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.gmail.emersonmx.tictactoe.view.GameView;
-import com.gmail.emersonmx.tictactoe.view.View;
+import com.gmail.emersonmx.tictactoe.view.ViewManager;
 
 public class GameApplication extends Application {
 
@@ -40,10 +38,11 @@ public class GameApplication extends Application {
     public Viewport viewport;
     public Batch batch;
 
-    private Array<View> views;
-    private View currentView;
+    private ViewManager viewManager;
     //private Controller controller;
     //private Game game;
+
+    private float deltaTime;
 
     @Override
     public void create() {
@@ -67,8 +66,8 @@ public class GameApplication extends Application {
     }
 
     private void setupGraphics() {
-        viewport =
-            new FitViewport(Resource.WINDOW_WIDTH, Resource.WINDOW_HEIGHT);
+        viewport = new FitViewport(ViewManager.WINDOW_WIDTH,
+            ViewManager.WINDOW_HEIGHT);
         OrthographicCamera camera = (OrthographicCamera) viewport.getCamera();
         camera.setToOrtho(false);
 
@@ -78,14 +77,10 @@ public class GameApplication extends Application {
     }
 
     private void setupViews() {
-        Resource resource = new Resource(manager, atlas, viewport, batch);
-        views = new Array<View>(Resource.VIEW_SIZE);
+        viewManager = new ViewManager(manager, atlas, viewport, batch);
 
-        GameView gameView = new GameView(resource);
-        views.add(gameView);
-
-        currentView = views.get(Resource.GAME_VIEW);
-        currentView.setup();
+        viewManager.create();
+        viewManager.setup();
     }
 
     public void setupSystem() {
@@ -94,14 +89,15 @@ public class GameApplication extends Application {
 
     @Override
     public void logic() {
-        //float delta = Gdx.graphics.getDeltaTime();
+        deltaTime = Gdx.graphics.getDeltaTime();
+        viewManager.logic(deltaTime);
     }
 
     @Override
     public void draw() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        currentView.draw();
+        viewManager.draw();
     }
 
     @Override
@@ -111,6 +107,7 @@ public class GameApplication extends Application {
 
     @Override
     public void dispose() {
+        viewManager.dispose();
         batch.dispose();
         manager.dispose();
     }
