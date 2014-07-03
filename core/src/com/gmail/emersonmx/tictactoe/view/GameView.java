@@ -1,5 +1,5 @@
 /*
-  Copyright (C) Emerson Max de Medeiros Silva
+  Copyright (C) 2014 Emerson Max de Medeiros Silva
 
   This file is part of tictactoe.
 
@@ -35,7 +35,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.gmail.emersonmx.tictactoe.model.Resource;
 
-public class GameView implements View {
+public class GameView extends AbstractView {
 
     public static final Color PLAYER_1_COLOR = new Color(0x8080ffff);
     public static final Color PLAYER_2_COLOR = new Color(0xff8080ff);

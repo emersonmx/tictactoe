@@ -1,5 +1,5 @@
 /*
-  Copyright (C) Emerson Max de Medeiros Silva
+  Copyright (C) 2014 Emerson Max de Medeiros Silva
 
   This file is part of tictactoe.
 
@@ -19,7 +19,12 @@
 
 package com.gmail.emersonmx.tictactoe.view;
 
+import com.gmail.emersonmx.tictactoe.controller.Controller;
+
 public interface View {
+
+    public void setController(Controller controller);
+    public Controller getController();
 
     public void setup();
     public void draw();

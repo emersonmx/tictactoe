@@ -17,42 +17,15 @@
   along with tictactoe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.gmail.emersonmx.tictactoe.model;
+package com.gmail.emersonmx.tictactoe.controller;
 
-import com.badlogic.gdx.ApplicationListener;
+import com.gmail.emersonmx.tictactoe.view.View;
 
-public class Application implements ApplicationListener {
+public interface Controller {
 
-    @Override
-    public void create() {
-    }
+    public void setView(View view);
+    public View getView();
 
-    @Override
-    public void resize(int width, int height) {
-    }
-
-    @Override
-    public void render() {
-        logic();
-        draw();
-    }
-
-    public void logic() {
-    }
-
-    public void draw() {
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void dispose() {
-    }
+    public void mark(int index);
 
 }

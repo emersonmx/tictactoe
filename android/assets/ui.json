@@ -1,0 +1,75 @@
+{
+    "textures": {
+        "background": {
+            "image": "background.png",
+            "position": [0, 0]
+        },
+        "blackboard": {
+            "image": "blackboard.png",
+            "position": [0, 0]
+        }
+    },
+    "views": {
+        "game": {
+            "hash": [
+                {
+                    "id": 0,
+                    "sprite": "hash_line",
+                    "center": [179, 401],
+                    "orientation": "vertical"
+                },
+                {
+                    "id": 1,
+                    "sprite": "hash_line",
+                    "center": [240, 462],
+                    "orientation": "horizontal"
+                },
+                {
+                    "id": 2,
+                    "sprite": "hash_line",
+                    "center": [301, 401],
+                    "orientation": "vertical"
+                },
+                {
+                    "id": 3,
+                    "sprite": "hash_line",
+                    "center": [240, 340],
+                    "orientation": "horizontal"
+                }
+            ],
+            "score_line": {
+                "sprite": "score_line",
+                "center": [240, 131]
+            },
+            "score_separators": [
+                {
+                    "id": 0,
+                    "sprite": "score_separator",
+                    "center": [192, 87]
+                },
+                {
+                    "id": 1,
+                    "sprite": "score_separator",
+                    "center": [288, 87]
+                }
+            ],
+            "menu": {
+                "sprite": "menu",
+                "center": [240, 87],
+                "bounds": [198, 43, 85, 83]
+            },
+            "scores": [
+                {
+                    "id": 0,
+                    "sprite": "score_number",
+                    "center": [118, 87]
+                },
+                {
+                    "id": 1,
+                    "sprite": "score_number",
+                    "center": [362, 87]
+                }
+            ]
+        }
+    }
+}
