@@ -17,7 +17,7 @@
   along with tictactoe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.gmail.emersonmx.tictactoe.model;
+package com.gmail.emersonmx.tictactoe.application;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Batch;

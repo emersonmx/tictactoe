@@ -33,7 +33,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.gmail.emersonmx.tictactoe.model.Resource;
+import com.gmail.emersonmx.tictactoe.application.Resource;
 
 public class GameView extends AbstractView {
 

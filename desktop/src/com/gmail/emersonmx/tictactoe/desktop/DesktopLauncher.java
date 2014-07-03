@@ -22,8 +22,8 @@ package com.gmail.emersonmx.tictactoe.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
-import com.gmail.emersonmx.tictactoe.model.GameApplication;
-import com.gmail.emersonmx.tictactoe.model.Resource;
+import com.gmail.emersonmx.tictactoe.application.GameApplication;
+import com.gmail.emersonmx.tictactoe.application.Resource;
 
 public class DesktopLauncher {
 

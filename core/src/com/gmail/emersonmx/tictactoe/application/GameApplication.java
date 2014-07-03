@@ -17,7 +17,7 @@
   along with tictactoe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.gmail.emersonmx.tictactoe.model;
+package com.gmail.emersonmx.tictactoe.application;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -30,7 +30,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.gmail.emersonmx.tictactoe.controller.Controller;
 import com.gmail.emersonmx.tictactoe.view.GameView;
 import com.gmail.emersonmx.tictactoe.view.View;
 
@@ -43,8 +42,8 @@ public class GameApplication extends Application {
 
     private Array<View> views;
     private View currentView;
-    private Controller controller;
-    private Game game;
+    //private Controller controller;
+    //private Game game;
 
     @Override
     public void create() {
@@ -90,6 +89,7 @@ public class GameApplication extends Application {
     }
 
     public void setupSystem() {
+        //game = new Game();
     }
 
     @Override
