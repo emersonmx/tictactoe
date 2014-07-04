@@ -29,6 +29,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.gmail.emersonmx.tictactoe.controller.Controller;
 import com.gmail.emersonmx.tictactoe.controller.GameController;
 import com.gmail.emersonmx.tictactoe.model.Game;
 import com.gmail.emersonmx.tictactoe.view.GameView;
@@ -82,12 +83,12 @@ public class GameApplication extends Application {
 
         GameView gameView =
             (GameView) viewManager.getView(ViewManager.GAME_VIEW);
-        GameController gameController = new GameController();
+        Controller controller = new GameController();
         Game game = new Game();
 
-        gameView.setController(gameController);
-        gameController.setView(gameView);
-        gameController.setGame(game);
+        gameView.setController(controller);
+        controller.setView(gameView);
+        controller.setGame(game);
         game.addListener(gameView);
         game.setup();
 

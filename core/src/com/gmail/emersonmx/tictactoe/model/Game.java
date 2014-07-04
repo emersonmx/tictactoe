@@ -46,8 +46,8 @@ public class Game {
     private int[] board;
 
     private Random random;
-    private int[] horizontals;
-    private int[] verticals;
+    private int[] lines;
+    private int[] columns;
     private int[] diagonals;
     private Array<GameListener> listeners;
     private GameEvent event;
@@ -59,8 +59,8 @@ public class Game {
         board = new int[BOARD_WIDTH * BOARD_HEIGHT];
 
         random = new Random();
-        horizontals = new int[] { 0, 0, 0 };
-        verticals = new int[] { 0, 0, 0 };
+        lines = new int[] { 0, 0, 0 };
+        columns = new int[] { 0, 0, 0 };
         diagonals = new int[] { 0, 0 };
         listeners = new Array<GameListener>(2);
         event = new GameEvent(this);
@@ -130,6 +130,8 @@ public class Game {
 
         randomPlayer();
         cleanBoard();
+
+        fireGameStart();
     }
 
     public void dispose() {
@@ -153,6 +155,7 @@ public class Game {
 
     public void randomPlayer() {
         currentPlayer = players[random.nextInt(2)];
+        fireCurrentPlayerChanged();
     }
 
     public void cleanBoard() {
@@ -187,8 +190,8 @@ public class Game {
                 boardMark = getMark(i, j);
 
                 if (boardMark == MARK_O) {
-                    horizontals[i]--;
-                    verticals[i]--;
+                    lines[i]--;
+                    columns[j]--;
 
                     if (i == j) {
                         diagonals[0]--;
@@ -197,8 +200,8 @@ public class Game {
                         diagonals[1]--;
                     }
                 } else if (boardMark == MARK_X) {
-                    horizontals[i]++;
-                    verticals[i]++;
+                    lines[i]++;
+                    columns[j]++;
 
                     if (i == j) {
                         diagonals[0]++;
@@ -218,15 +221,15 @@ public class Game {
                 }
             }
 
-            if (horizontals[i] == WINNER_O) {
+            if (lines[i] == WINNER_O) {
                 return MARK_O;
-            } else if (horizontals[i] == WINNER_X) {
+            } else if (lines[i] == WINNER_X) {
                 return MARK_X;
             }
 
-            if (verticals[i] == WINNER_O) {
+            if (columns[i] == WINNER_O) {
                 return MARK_O;
-            } else if (verticals[i] == WINNER_X) {
+            } else if (columns[i] == WINNER_X) {
                 return MARK_X;
             }
         }
@@ -236,7 +239,7 @@ public class Game {
 
     public void resetConditions() {
         for (int i = 0; i < 3; ++i) {
-            horizontals[i] = verticals[i] = 0;
+            lines[i] = columns[i] = 0;
             if (i < 2) {
                 diagonals[i] = 0;
             }

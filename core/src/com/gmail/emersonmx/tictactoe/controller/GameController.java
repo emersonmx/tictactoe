@@ -23,20 +23,11 @@ import com.gmail.emersonmx.tictactoe.model.Game;
 
 public class GameController extends AbstractController {
 
-    protected Game game;
-
+    @Override
     public void mark(int index) {
         int j = index % Game.BOARD_WIDTH;
         int i = (index - j) / Game.BOARD_HEIGHT;
         game.setMark(i, j);
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
-    public Game getGame() {
-        return game;
     }
 
 }

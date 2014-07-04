@@ -19,11 +19,16 @@
 
 package com.gmail.emersonmx.tictactoe.controller;
 
+import com.gmail.emersonmx.tictactoe.model.Game;
 import com.gmail.emersonmx.tictactoe.view.View;
 
 public interface Controller {
 
     public View getView();
     public void setView(View view);
+    public Game getGame();
+    public void setGame(Game game);
+
+    public void mark(int index);
 
 }

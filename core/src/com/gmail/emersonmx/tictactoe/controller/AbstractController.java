@@ -19,11 +19,13 @@
 
 package com.gmail.emersonmx.tictactoe.controller;
 
+import com.gmail.emersonmx.tictactoe.model.Game;
 import com.gmail.emersonmx.tictactoe.view.View;
 
 public abstract class AbstractController implements Controller {
 
     protected View view;
+    protected Game game;
 
     @Override
     public View getView() {
@@ -33,6 +35,16 @@ public abstract class AbstractController implements Controller {
     @Override
     public void setView(View view) {
         this.view = view;
+    }
+
+    @Override
+    public Game getGame() {
+        return game;
+    }
+
+    @Override
+    public void setGame(Game game) {
+        this.game = game;
     }
 
 }

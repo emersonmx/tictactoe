@@ -58,7 +58,7 @@ nbactions.xml
 nb-configuration.xml
 
 ## Gradle
-
+ui/
 .gradle
 build/
 

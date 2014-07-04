@@ -25,13 +25,13 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.gmail.emersonmx.tictactoe.controller.GameController;
+import com.gmail.emersonmx.tictactoe.controller.Controller;
 
 public class GameInput extends InputAdapter {
 
     private ViewManager viewManager;
     private Viewport viewport;
-    private GameController gameController;
+    private Controller controller;
 
     private Array<Rectangle> rectangles;
     private Vector3 point;
@@ -65,12 +65,12 @@ public class GameInput extends InputAdapter {
         rectangles.add(new Rectangle(198, 43, 85, 83));
     }
 
-    public void setGameController(GameController gameController) {
-        this.gameController = gameController;
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
-    public GameController getGameController() {
-        return gameController;
+    public Controller getController() {
+        return controller;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class GameInput extends InputAdapter {
             if (i < rectangles.size - 1) {
                 if (rectangle.contains(point.x, point.y)) {
                     System.out.println("Mark " + i + " touched");
-                    gameController.mark(i);
+                    controller.mark(i);
                 }
             } else {
                 if (rectangle.contains(point.x, point.y)) {

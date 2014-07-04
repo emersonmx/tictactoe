@@ -26,7 +26,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Array;
-import com.gmail.emersonmx.tictactoe.controller.GameController;
 import com.gmail.emersonmx.tictactoe.model.Game;
 import com.gmail.emersonmx.tictactoe.model.GameEvent;
 import com.gmail.emersonmx.tictactoe.model.GameListener;
@@ -73,7 +72,7 @@ public class GameView extends AbstractView implements GameListener {
 
     @Override
     public void setup() {
-        input.setGameController((GameController) controller);
+        input.setController(controller);
         Gdx.input.setInputProcessor(input);
     }
 
