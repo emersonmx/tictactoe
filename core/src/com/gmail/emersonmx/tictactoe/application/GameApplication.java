@@ -70,7 +70,8 @@ public class GameApplication extends Application {
         viewport = new FitViewport(ViewManager.WINDOW_WIDTH,
             ViewManager.WINDOW_HEIGHT);
         OrthographicCamera camera = (OrthographicCamera) viewport.getCamera();
-        camera.setToOrtho(false);
+        camera.setToOrtho(false, ViewManager.WINDOW_WIDTH,
+                          ViewManager.WINDOW_HEIGHT);
 
         batch = new SpriteBatch();
 

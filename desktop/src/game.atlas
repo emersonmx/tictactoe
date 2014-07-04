@@ -1,125 +1,153 @@
 
 game.png
-size: 498,1016
+size: 498,1022
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 blackboard
   rotate: false
-  xy: 2, 376
+  xy: 2, 382
   size: 480, 640
   orig: 480, 640
   offset: 0, 0
   index: -1
 hash_line
   rotate: false
-  xy: 484, 666
+  xy: 484, 672
   size: 14, 350
   orig: 14, 350
   offset: 0, 0
   index: -1
 mark_o
   rotate: false
-  xy: 72, 289
+  xy: 226, 183
   size: 69, 70
   orig: 69, 70
   offset: 0, 0
   index: -1
 mark_x
   rotate: false
-  xy: 2, 287
+  xy: 2, 29
   size: 68, 72
   orig: 68, 72
   offset: 0, 0
   index: -1
 menu
   rotate: false
-  xy: 143, 296
+  xy: 72, 38
   size: 70, 63
   orig: 70, 63
   offset: 0, 0
   index: -1
+player_one_wins
+  rotate: false
+  xy: 2, 235
+  size: 222, 130
+  orig: 222, 130
+  offset: 0, 0
+  index: -1
+player_turn
+  rotate: false
+  xy: 2, 3
+  size: 25, 24
+  orig: 25, 24
+  offset: 0, 0
+  index: -1
+player_two_wins
+  rotate: false
+  xy: 2, 103
+  size: 222, 130
+  orig: 222, 130
+  offset: 0, 0
+  index: -1
 score_line
   rotate: false
-  xy: 2, 361
+  xy: 2, 367
   size: 405, 13
   orig: 405, 13
   offset: 0, 0
   index: -1
 score_number
   rotate: false
-  xy: 2, 221
+  xy: 226, 117
   size: 42, 64
   orig: 42, 64
   offset: 0, 0
   index: 7
 score_number
   rotate: false
-  xy: 215, 301
+  xy: 297, 195
   size: 43, 58
   orig: 43, 58
   offset: 0, 0
   index: 5
 score_number
   rotate: false
-  xy: 2, 164
+  xy: 144, 46
   size: 42, 55
   orig: 42, 55
   offset: 0, 0
   index: 6
 score_number
   rotate: false
-  xy: 260, 301
+  xy: 342, 195
   size: 35, 58
   orig: 35, 58
   offset: 0, 0
   index: 9
 score_number
   rotate: false
-  xy: 2, 109
+  xy: 188, 48
   size: 35, 53
   orig: 35, 53
   offset: 0, 0
   index: 3
 score_number
   rotate: false
-  xy: 297, 305
+  xy: 379, 199
   size: 34, 54
   orig: 34, 54
   offset: 0, 0
   index: 4
 score_number
   rotate: false
-  xy: 333, 315
+  xy: 188, 2
   size: 41, 44
   orig: 41, 44
   offset: 0, 0
   index: 2
 score_number
   rotate: false
-  xy: 2, 55
+  xy: 415, 201
   size: 32, 52
   orig: 32, 52
   offset: 0, 0
   index: 8
 score_number
   rotate: false
-  xy: 2, 2
+  xy: 270, 130
   size: 30, 51
   orig: 30, 51
   offset: 0, 0
   index: 1
 score_number
   rotate: false
-  xy: 376, 315
+  xy: 302, 149
   size: 38, 44
   orig: 38, 44
   offset: 0, 0
   index: 0
 score_separator
   rotate: false
-  xy: 484, 575
+  xy: 484, 581
   size: 12, 89
   orig: 12, 89
+  offset: 0, 0
+  index: -1
+tap_to_start
+  rotate: false
+  xy: 226, 255
+  size: 215, 110
+  orig: 215, 110
   offset: 0, 0
   index: -1

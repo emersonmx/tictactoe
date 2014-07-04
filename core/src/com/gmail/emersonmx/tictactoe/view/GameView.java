@@ -35,7 +35,7 @@ import com.gmail.emersonmx.tictactoe.model.Player;
 public class GameView extends AbstractView implements GameListener {
 
     public static final Color PLAYER_1_COLOR = new Color(0xaaaaffff);
-    public static final Color PLAYER_2_COLOR = new Color(0xffaaaaff);
+    public static final Color PLAYER_2_COLOR = new Color(0xaaffaaff);
 
     private TextureAtlas atlas;
     private Batch batch;
@@ -251,7 +251,6 @@ public class GameView extends AbstractView implements GameListener {
 
     @Override
     public void draw() {
-        batch.begin();
         for (Sprite hashLine : hash) {
             hashLine.draw(batch);
         }
@@ -288,14 +287,18 @@ public class GameView extends AbstractView implements GameListener {
         playerTwoScore.get(scores[Player.PLAYER_2]).draw(batch);
 
         point = playerTurnLayout[playerTurn];
+        if (playerTurn == Player.PLAYER_1) {
+            turn.setColor(PLAYER_1_COLOR);
+        } else if (playerTurn == Player.PLAYER_2) {
+            turn.setColor(PLAYER_2_COLOR);
+        }
+
         turn.setCenter(point.x, point.y);
         turn.draw(batch);
 
         if (pauseToStart) {
             tapToStart.draw(batch);
         }
-
-        batch.end();
     }
 
     @Override
@@ -370,6 +373,12 @@ public class GameView extends AbstractView implements GameListener {
             for (int j = 0; j < Game.BOARD_WIDTH; ++j) {
                 board[Game.indexMark(i, j)] = game.getBoardMark(i, j);
             }
+        }
+    }
+
+    public void cleanBoard() {
+        for (int i = 0; i < board.length; ++i) {
+            board[i] = Player.NO_MARK;
         }
     }
 
