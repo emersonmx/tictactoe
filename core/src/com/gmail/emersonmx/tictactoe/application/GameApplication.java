@@ -89,7 +89,7 @@ public class GameApplication extends Application {
         gameView.setController(controller);
         controller.setView(gameView);
         controller.setGame(game);
-        game.addListener(gameView);
+        game.setListener(gameView);
         game.setup();
 
         viewManager.setup();

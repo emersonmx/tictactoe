@@ -27,7 +27,7 @@ public class GameController extends AbstractController {
     public void mark(int index) {
         int j = index % Game.BOARD_WIDTH;
         int i = (index - j) / Game.BOARD_HEIGHT;
-        game.setMark(i, j);
+        game.setBoardMark(i, j);
     }
 
 }

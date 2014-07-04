@@ -21,35 +21,31 @@ package com.gmail.emersonmx.tictactoe.model;
 
 import java.util.Random;
 
-import com.badlogic.gdx.utils.Array;
-
 public class Game {
 
     public static final int BOARD_WIDTH = 3;
     public static final int BOARD_HEIGHT = 3;
+
     private static final int WINNER_O = -3;
     private static final int WINNER_X = 3;
 
-    public static final int PLAYER_NONE = -1;
-    public static final int PLAYER_1 = 0;
-    public static final int PLAYER_2 = 1;
-
-    public static final int NO_MARK = 0;
-    public static final int MARK_O = 1;
-    public static final int MARK_X = 2;
+    public static final int DEFAULT_MATCH = 3;
 
     private Player currentPlayer;
     private Player[] players;
     private int winner;
     private int markCount;
-    private boolean gameDone;
     private int[] board;
+
+    private int match;
+    private int matchCount;
 
     private Random random;
     private int[] lines;
     private int[] columns;
     private int[] diagonals;
-    private Array<GameListener> listeners;
+
+    private GameListener listener;
     private GameEvent event;
 
     public static int indexMark(int i, int j) {
@@ -58,15 +54,16 @@ public class Game {
 
     public Game() {
         players = new Player[] {
-            new Player(PLAYER_1, MARK_O), new Player(PLAYER_2, MARK_X)
+            new Player(Player.PLAYER_1, Player.MARK_O),
+            new Player(Player.PLAYER_2, Player.MARK_X)
         };
         board = new int[BOARD_WIDTH * BOARD_HEIGHT];
+        match = DEFAULT_MATCH;
 
         random = new Random();
         lines = new int[] { 0, 0, 0 };
         columns = new int[] { 0, 0, 0 };
         diagonals = new int[] { 0, 0 };
-        listeners = new Array<GameListener>(2);
         event = new GameEvent(this);
 
         reset();
@@ -80,52 +77,60 @@ public class Game {
         return players;
     }
 
+    public int getMatch() {
+        return match;
+    }
+
+    public void setMatch(int match) {
+        this.match = match;
+    }
+
     public int getWinner() {
         return winner;
     }
 
-    public int getMark(int i, int j) {
+    public int getBoardMark(int i, int j) {
         return board[indexMark(i, j)];
     }
 
-    public void setMark(int i, int j) {
-        if (gameDone) {
-            if (markCount == (BOARD_WIDTH * BOARD_HEIGHT)) {
-                fireGameDraw();
-            } else {
-                fireGameWinner();
-            }
-        } else {
-            if ((i >= 0 && i <= BOARD_HEIGHT) && (j >= 0 && j <= BOARD_WIDTH)) {
-                int boardMark = getMark(i, j);
-                if (boardMark == NO_MARK) {
-                    board[indexMark(i, j)] = currentPlayer.mark;
-                    markCount++;
+    public void setBoardMark(int i, int j) {
+        if ((i >= 0 && i <= BOARD_HEIGHT) && (j >= 0 && j <= BOARD_WIDTH)) {
+            int boardMark = getBoardMark(i, j);
+            if (boardMark == Player.NO_MARK) {
+                board[indexMark(i, j)] = currentPlayer.mark;
+                markCount++;
 
-                    fireMarked();
+                fireMarked();
 
-                    int winnerMark = checkVictory();
-                    if (winnerMark != NO_MARK) {
-                        if (players[PLAYER_1].mark == winnerMark) {
-                            winner = PLAYER_1;
-                        } else {
-                            winner = PLAYER_2;
-                        }
-
-                        gameDone = true;
-                        fireGameWinner();
-                    } else if (markCount == (BOARD_WIDTH * BOARD_HEIGHT)) {
-                        gameDone = true;
-                        fireGameDraw();
-                    } else {
-                        changePlayer();
-                    }
+                int winnerMark = checkVictory();
+                if (winnerMark != Player.NO_MARK) {
+                    winner = Player.byMark(winnerMark, players);
+                    players[winner].score++;
+                    checkMatchWinner();
+                } else if (markCount == (BOARD_WIDTH * BOARD_HEIGHT)) {
+                    winner = Player.PLAYER_NONE;
+                    checkMatchWinner();
                 } else {
-                    firePositionIsNotEmpty();
+                    changePlayer();
                 }
             } else {
-                fireInvalidPosition();
+                firePositionIsNotEmpty();
             }
+        } else {
+            fireInvalidPosition();
+        }
+    }
+
+    public void checkMatchWinner() {
+        matchCount++;
+
+        if (matchCount >= match) {
+            fireGameWinner();
+            fireGameMatchWinner();
+            fireGameEnd();
+        } else {
+            fireGameWinner();
+            restart();
         }
     }
 
@@ -140,15 +145,15 @@ public class Game {
 
     public void dispose() {
         fireGameOver();
+        fireGameEnd();
     }
 
     public void restart() {
         fireGameOver();
 
         markCount = 0;
-        gameDone = false;
 
-        if (winner != PLAYER_NONE) {
+        if (winner != Player.PLAYER_NONE) {
             currentPlayer = players[winner];
         } else {
             randomPlayer();
@@ -164,22 +169,21 @@ public class Game {
 
     public void cleanBoard() {
         for (int i = 0; i < board.length; ++i) {
-            board[i] = NO_MARK;
+            board[i] = Player.NO_MARK;
         }
     }
 
     public void reset() {
         markCount = 0;
-        gameDone = false;
         currentPlayer = null;
-        winner = PLAYER_NONE;
+        winner = Player.PLAYER_NONE;
     }
 
     public void changePlayer() {
-        if (currentPlayer.equals(players[PLAYER_1])) {
-            currentPlayer = players[PLAYER_2];
+        if (currentPlayer.equals(players[Player.PLAYER_1])) {
+            currentPlayer = players[Player.PLAYER_2];
         } else {
-            currentPlayer = players[PLAYER_1];
+            currentPlayer = players[Player.PLAYER_1];
         }
 
         fireCurrentPlayerChanged();
@@ -188,12 +192,12 @@ public class Game {
     public int checkVictory() {
         resetConditions();
 
-        int boardMark = NO_MARK;
+        int boardMark = Player.NO_MARK;
         for (int i = 0; i < BOARD_HEIGHT; ++i) {
             for (int j = 0; j < BOARD_WIDTH; ++j) {
-                boardMark = getMark(i, j);
+                boardMark = getBoardMark(i, j);
 
-                if (boardMark == MARK_O) {
+                if (boardMark == Player.MARK_O) {
                     lines[i]--;
                     columns[j]--;
 
@@ -203,7 +207,7 @@ public class Game {
                     if (((BOARD_WIDTH - 1) - j - i) == 0) {
                         diagonals[1]--;
                     }
-                } else if (boardMark == MARK_X) {
+                } else if (boardMark == Player.MARK_X) {
                     lines[i]++;
                     columns[j]++;
 
@@ -220,26 +224,26 @@ public class Game {
         for (int i = 0; i < BOARD_WIDTH; ++i) {
             if (i < (BOARD_WIDTH - 1)) {
                 if (diagonals[i] == WINNER_O) {
-                    return MARK_O;
+                    return Player.MARK_O;
                 } else if (diagonals[i] == WINNER_X) {
-                    return MARK_X;
+                    return Player.MARK_X;
                 }
             }
 
             if (lines[i] == WINNER_O) {
-                return MARK_O;
+                return Player.MARK_O;
             } else if (lines[i] == WINNER_X) {
-                return MARK_X;
+                return Player.MARK_X;
             }
 
             if (columns[i] == WINNER_O) {
-                return MARK_O;
+                return Player.MARK_O;
             } else if (columns[i] == WINNER_X) {
-                return MARK_X;
+                return Player.MARK_X;
             }
         }
 
-        return NO_MARK;
+        return Player.NO_MARK;
     }
 
     public void resetConditions() {
@@ -251,64 +255,50 @@ public class Game {
         }
     }
 
-    public void addListener(GameListener listener) {
+    public void setListener(GameListener listener) {
         if (listener != null) {
-            listeners.add(listener);
-        }
-    }
-
-    public void removeListener(GameListener listener) {
-        if (listener != null) {
-            listeners.removeValue(listener, true);
+            this.listener = listener;
         }
     }
 
     public void fireGameStart() {
-        for (GameListener listener : listeners) {
-            listener.gameStart(event);
-        }
+        listener.gameStart(event);
     }
 
     public void fireGameOver() {
-        for (GameListener listener : listeners) {
-            listener.gameOver(event);
-        }
+        listener.gameOver(event);
+    }
+
+    public void fireGameEnd() {
+        listener.gameEnd(event);
     }
 
     public void fireMarked() {
-        for (GameListener listener : listeners) {
-            listener.marked(event);
-        }
+        listener.marked(event);
     }
 
     public void fireGameWinner() {
-        for (GameListener listener : listeners) {
-            listener.gameWinner(event);
-        }
+        listener.gameWinner(event);
     }
 
     public void fireGameDraw() {
-        for (GameListener listener : listeners) {
-            listener.gameDraw(event);
-        }
+        listener.gameDraw(event);
+    }
+
+    public void fireGameMatchWinner() {
+        listener.gameMatchWinner(event);
     }
 
     public void fireCurrentPlayerChanged() {
-        for (GameListener listener : listeners) {
-            listener.currentPlayerChanged(event);
-        }
+        listener.currentPlayerChanged(event);
     }
 
     public void fireInvalidPosition() {
-        for (GameListener listener : listeners) {
-            listener.invalidPosition(event);
-        }
+        listener.invalidPosition(event);
     }
 
     public void firePositionIsNotEmpty() {
-        for (GameListener listener : listeners) {
-            listener.positionIsNotEmpty(event);
-        }
+        listener.positionIsNotEmpty(event);
     }
 
 }

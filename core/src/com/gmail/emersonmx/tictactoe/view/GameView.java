@@ -20,6 +20,7 @@
 package com.gmail.emersonmx.tictactoe.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -46,12 +47,13 @@ public class GameView extends AbstractView implements GameListener {
     private Sprite menu;
     private Array<Sprite> playerOneScore;
     private Array<Sprite> playerTwoScore;
-    private Sprite playerTurn;
+    private Sprite turn;
+
     private GameInput input;
 
-    private int[] playerScores;
     private int[] board;
-    private int playerTurnValue;
+    private int[] scores;
+    private int playerTurn;
     private GridPoint2[] boardLayout;
     private GridPoint2[] playerTurnLayout;
 
@@ -63,9 +65,9 @@ public class GameView extends AbstractView implements GameListener {
 
         input = new GameInput(viewManager);
 
-        playerScores = new int[] { 0, 0 };
         int size = Game.BOARD_WIDTH * Game.BOARD_HEIGHT;
         board = new int[size];
+        scores = new int[] { 0, 0 };
     }
 
     @Override
@@ -77,7 +79,7 @@ public class GameView extends AbstractView implements GameListener {
         menu = createMenu();
         playerOneScore = createPlayerOneScore();
         playerTwoScore = createPlayerTwoScore();
-        playerTurn = createPlayerTurn();
+        turn = createPlayerTurn();
 
         loaded = true;
     }
@@ -216,7 +218,7 @@ public class GameView extends AbstractView implements GameListener {
         GridPoint2 point = null;
         int boardMark;
         for (int i = 0; i < boardLayout.length; ++i) {
-            boardMark = board[i] - 1;
+            boardMark = board[i];
             if (boardMark >= 0) {
                 mark = marks.get(boardMark);
                 point = boardLayout[i];
@@ -231,12 +233,12 @@ public class GameView extends AbstractView implements GameListener {
         }
 
         menu.draw(batch);
-        playerOneScore.get(playerScores[Game.PLAYER_1]).draw(batch);
-        playerTwoScore.get(playerScores[Game.PLAYER_2]).draw(batch);
+        playerOneScore.get(scores[Player.PLAYER_1]).draw(batch);
+        playerTwoScore.get(scores[Player.PLAYER_2]).draw(batch);
 
-        point = playerTurnLayout[playerTurnValue];
-        playerTurn.setCenter(point.x, point.y);
-        playerTurn.draw(batch);
+        point = playerTurnLayout[playerTurn];
+        turn.setCenter(point.x, point.y);
+        turn.draw(batch);
 
         batch.end();
     }
@@ -250,11 +252,17 @@ public class GameView extends AbstractView implements GameListener {
         System.out.println("Game Start");
         Game game = (Game) event.getSource();
         copyBoard(game);
+        copyScore(game);
     }
 
     @Override
     public void gameOver(GameEvent event) {
         System.out.println("Game Over");
+    }
+
+    @Override
+    public void gameEnd(GameEvent event) {
+        System.out.println("Game End");
     }
 
     @Override
@@ -267,7 +275,7 @@ public class GameView extends AbstractView implements GameListener {
     @Override
     public void gameWinner(GameEvent event) {
         Game game = (Game) event.getSource();
-        playerScores[game.getWinner()]++;
+        copyScore(game);
     }
 
     @Override
@@ -276,11 +284,18 @@ public class GameView extends AbstractView implements GameListener {
     }
 
     @Override
+    public void gameMatchWinner(GameEvent event) {
+        System.out.println("Match Winner");
+        Gdx.input.setInputProcessor(new InputAdapter() {
+        });
+    }
+
+    @Override
     public void currentPlayerChanged(GameEvent event) {
         System.out.println("Player Changed");
         Game game = (Game) event.getSource();
         Player currentPlayer = game.getCurrentPlayer();
-        playerTurnValue = currentPlayer.id;
+        playerTurn = currentPlayer.id;
     }
 
     @Override
@@ -296,9 +311,15 @@ public class GameView extends AbstractView implements GameListener {
     public void copyBoard(Game game) {
         for (int i = 0; i < Game.BOARD_HEIGHT; ++i) {
             for (int j = 0; j < Game.BOARD_WIDTH; ++j) {
-                board[Game.indexMark(i, j)] = game.getMark(i, j);
+                board[Game.indexMark(i, j)] = game.getBoardMark(i, j);
             }
         }
+    }
+
+    public void copyScore(Game game) {
+        Player[] players = game.getPlayers();
+        scores[Player.PLAYER_1] = players[Player.PLAYER_1].score;
+        scores[Player.PLAYER_2] = players[Player.PLAYER_2].score;
     }
 
 }
