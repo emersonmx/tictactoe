@@ -74,20 +74,16 @@ public class GameView extends AbstractView implements GameListener {
     public void create() {
         hash = createHash();
         marks = createMarks();
+        boardLayout = createBoardLayout();
         scoreLine = createScoreLine();
         scoreSeparators = createScoreSeparators();
         menu = createMenu();
         playerOneScore = createPlayerOneScore();
         playerTwoScore = createPlayerTwoScore();
         turn = createPlayerTurn();
+        playerTurnLayout = createPlayerTurnLayout();
 
         loaded = true;
-    }
-
-    @Override
-    public void setup() {
-        input.setController(controller);
-        Gdx.input.setInputProcessor(input);
     }
 
     protected Array<Sprite> createHash() {
@@ -119,13 +115,11 @@ public class GameView extends AbstractView implements GameListener {
         sprites.add(atlas.createSprite("mark_o"));
         sprites.add(atlas.createSprite("mark_x"));
 
-        createBoardLayout();
-
         return sprites;
     }
 
-    protected void createBoardLayout() {
-        boardLayout = new GridPoint2[] {
+    protected GridPoint2[] createBoardLayout() {
+        return new GridPoint2[] {
             new GridPoint2(118, 523), new GridPoint2(240, 523),
                 new GridPoint2(362, 523),
             new GridPoint2(118, 401), new GridPoint2(240, 401),
@@ -192,15 +186,19 @@ public class GameView extends AbstractView implements GameListener {
     protected Sprite createPlayerTurn() {
         Sprite sprite = atlas.createSprite("player_turn");
 
-        createPlayerTurnLayout();
-
         return sprite;
     }
 
-    protected void createPlayerTurnLayout() {
-        playerTurnLayout = new GridPoint2[] {
+    protected GridPoint2[] createPlayerTurnLayout() {
+        return new GridPoint2[] {
             new GridPoint2(57, 87), new GridPoint2(423, 87)
         };
+    }
+
+    @Override
+    public void setup() {
+        input.setController(controller);
+        Gdx.input.setInputProcessor(input);
     }
 
     @Override
