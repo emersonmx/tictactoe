@@ -39,6 +39,13 @@ menu
   orig: 70, 63
   offset: 0, 0
   index: -1
+player_turn
+  rotate: false
+  xy: 46, 261
+  size: 25, 24
+  orig: 25, 24
+  offset: 0, 0
+  index: -1
 score_line
   rotate: false
   xy: 2, 361

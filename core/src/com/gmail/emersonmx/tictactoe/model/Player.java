@@ -21,9 +21,11 @@ package com.gmail.emersonmx.tictactoe.model;
 
 public class Player {
 
+    public int id;
     public int mark;
 
-    public Player(int mark) {
+    public Player(int id, int mark) {
+        this.id = id;
         this.mark = mark;
     }
 
@@ -41,7 +43,7 @@ public class Player {
 
     @Override
     public String toString() {
-        String s = "Player with mark: ";
+        String s = "Player " + id + " with mark: ";
 
         if (mark == Game.NO_MARK) {
             s += "\" \"";

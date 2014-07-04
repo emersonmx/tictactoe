@@ -29,6 +29,7 @@ import com.badlogic.gdx.utils.Array;
 import com.gmail.emersonmx.tictactoe.model.Game;
 import com.gmail.emersonmx.tictactoe.model.GameEvent;
 import com.gmail.emersonmx.tictactoe.model.GameListener;
+import com.gmail.emersonmx.tictactoe.model.Player;
 
 public class GameView extends AbstractView implements GameListener {
 
@@ -45,11 +46,14 @@ public class GameView extends AbstractView implements GameListener {
     private Sprite menu;
     private Array<Sprite> playerOneScore;
     private Array<Sprite> playerTwoScore;
+    private Sprite playerTurn;
     private GameInput input;
 
     private int[] playerScores;
     private int[] board;
+    private int playerTurnValue;
     private GridPoint2[] boardLayout;
+    private GridPoint2[] playerTurnLayout;
 
     public GameView(ViewManager viewManager) {
         super(viewManager);
@@ -73,6 +77,7 @@ public class GameView extends AbstractView implements GameListener {
         menu = createMenu();
         playerOneScore = createPlayerOneScore();
         playerTwoScore = createPlayerTwoScore();
+        playerTurn = createPlayerTurn();
 
         loaded = true;
     }
@@ -182,6 +187,20 @@ public class GameView extends AbstractView implements GameListener {
         return sprites;
     }
 
+    protected Sprite createPlayerTurn() {
+        Sprite sprite = atlas.createSprite("player_turn");
+
+        createPlayerTurnLayout();
+
+        return sprite;
+    }
+
+    protected void createPlayerTurnLayout() {
+        playerTurnLayout = new GridPoint2[] {
+            new GridPoint2(57, 87), new GridPoint2(423, 87)
+        };
+    }
+
     @Override
     public void logic(float deltaTime) {
     }
@@ -214,6 +233,10 @@ public class GameView extends AbstractView implements GameListener {
         menu.draw(batch);
         playerOneScore.get(playerScores[Game.PLAYER_1]).draw(batch);
         playerTwoScore.get(playerScores[Game.PLAYER_2]).draw(batch);
+
+        point = playerTurnLayout[playerTurnValue];
+        playerTurn.setCenter(point.x, point.y);
+        playerTurn.draw(batch);
 
         batch.end();
     }
@@ -256,7 +279,8 @@ public class GameView extends AbstractView implements GameListener {
     public void currentPlayerChanged(GameEvent event) {
         System.out.println("Player Changed");
         Game game = (Game) event.getSource();
-        System.out.println(game.getCurrentPlayer());
+        Player currentPlayer = game.getCurrentPlayer();
+        playerTurnValue = currentPlayer.id;
     }
 
     @Override

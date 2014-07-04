@@ -58,7 +58,7 @@ public class Game {
 
     public Game() {
         players = new Player[] {
-            new Player(MARK_O), new Player(MARK_X)
+            new Player(PLAYER_1, MARK_O), new Player(PLAYER_2, MARK_X)
         };
         board = new int[BOARD_WIDTH * BOARD_HEIGHT];
 
