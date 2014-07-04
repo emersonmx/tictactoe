@@ -30,8 +30,10 @@ import com.gmail.emersonmx.tictactoe.controller.Controller;
 public class GameInput extends InputAdapter {
 
     private ViewManager viewManager;
-    private Viewport viewport;
+    private GameView gameView;
     private Controller controller;
+
+    private Viewport viewport;
 
     private Array<Rectangle> rectangles;
     private Vector3 point;
@@ -41,6 +43,14 @@ public class GameInput extends InputAdapter {
         this.viewport = viewManager.viewport;
 
         createRectangles();
+    }
+
+    public void setGameView(GameView gameView) {
+        this.gameView = gameView;
+    }
+
+    public GameView getGameView() {
+        return gameView;
     }
 
     public void createRectangles() {
@@ -74,8 +84,11 @@ public class GameInput extends InputAdapter {
     }
 
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer,
-            int button) {
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (gameView.isPauseToStart()) {
+            gameView.setPauseToStart(false);
+            return true;
+        }
 
         point.x = screenX;
         point.y = screenY;

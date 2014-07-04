@@ -49,6 +49,7 @@ public class GameView extends AbstractView implements GameListener {
     private Array<Sprite> playerOneScore;
     private Array<Sprite> playerTwoScore;
     private Sprite turn;
+    private Sprite tapToStart;
 
     private GameInput input;
 
@@ -59,6 +60,8 @@ public class GameView extends AbstractView implements GameListener {
     private GridPoint2[] boardLayout;
     private GridPoint2[] playerTurnLayout;
 
+    private boolean pauseToStart;
+
     public GameView(ViewManager viewManager) {
         super(viewManager);
 
@@ -66,10 +69,21 @@ public class GameView extends AbstractView implements GameListener {
         this.batch = viewManager.batch;
 
         input = new GameInput(viewManager);
+        input.setGameView(this);
 
         int size = Game.BOARD_WIDTH * Game.BOARD_HEIGHT;
         board = new int[size];
         scores = new int[] { 0, 0 };
+
+        pauseToStart = true;
+    }
+
+    public void setPauseToStart(boolean tapToStart) {
+        this.pauseToStart = tapToStart;
+    }
+
+    public boolean isPauseToStart() {
+        return pauseToStart;
     }
 
     @Override
@@ -85,6 +99,7 @@ public class GameView extends AbstractView implements GameListener {
         playerTwoScore = createPlayerTwoScore();
         turn = createPlayerTurn();
         playerTurnLayout = createPlayerTurnLayout();
+        tapToStart = createTapToStart();
 
         loaded = true;
     }
@@ -216,6 +231,14 @@ public class GameView extends AbstractView implements GameListener {
         };
     }
 
+    public Sprite createTapToStart() {
+        Sprite sprite = atlas.createSprite("tap_to_start");
+        sprite.setCenter(ViewManager.WINDOW_WIDTH / 2.f,
+                         ViewManager.WINDOW_HEIGHT / 2.f);
+
+        return sprite;
+    }
+
     @Override
     public void setup() {
         input.setController(controller);
@@ -254,16 +277,6 @@ public class GameView extends AbstractView implements GameListener {
             }
 
         }
-        //int boardMark;
-        //for (int i = 0; i < boardLayout.length; ++i) {
-        //    boardMark = board[i];
-        //    if (boardMark >= 0) {
-        //        mark = marks.get(boardMark);
-        //        point = boardLayout[i];
-        //        mark.setCenter(point.x, point.y);
-        //        mark.draw(batch);
-        //    }
-        //}
 
         scoreLine.draw(batch);
         for (Sprite scoreSeparator : scoreSeparators) {
@@ -277,6 +290,10 @@ public class GameView extends AbstractView implements GameListener {
         point = playerTurnLayout[playerTurn];
         turn.setCenter(point.x, point.y);
         turn.draw(batch);
+
+        if (pauseToStart) {
+            tapToStart.draw(batch);
+        }
 
         batch.end();
     }
@@ -315,6 +332,7 @@ public class GameView extends AbstractView implements GameListener {
     public void gameWinner(GameEvent event) {
         Game game = (Game) event.getSource();
         copyScore(game);
+        pauseToStart = true;
     }
 
     @Override
