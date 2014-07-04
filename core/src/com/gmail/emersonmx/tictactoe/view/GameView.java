@@ -34,14 +34,15 @@ import com.gmail.emersonmx.tictactoe.model.Player;
 
 public class GameView extends AbstractView implements GameListener {
 
-    public static final Color PLAYER_1_COLOR = new Color(0x8080ffff);
-    public static final Color PLAYER_2_COLOR = new Color(0xff8080ff);
+    public static final Color PLAYER_1_COLOR = new Color(0xaaaaffff);
+    public static final Color PLAYER_2_COLOR = new Color(0xffaaaaff);
 
     private TextureAtlas atlas;
     private Batch batch;
 
     private Array<Sprite> hash;
-    private Array<Sprite> marks;
+    private Sprite[] playerOneMarks;
+    private Sprite[] playerTwoMarks;
     private Sprite scoreLine;
     private Array<Sprite> scoreSeparators;
     private Sprite menu;
@@ -53,6 +54,7 @@ public class GameView extends AbstractView implements GameListener {
 
     private int[] board;
     private int[] scores;
+    private Player[] players;
     private int playerTurn;
     private GridPoint2[] boardLayout;
     private GridPoint2[] playerTurnLayout;
@@ -73,7 +75,8 @@ public class GameView extends AbstractView implements GameListener {
     @Override
     public void create() {
         hash = createHash();
-        marks = createMarks();
+        playerOneMarks = createPlayerOneMarks();
+        playerTwoMarks = createPlayerTwoMarks();
         boardLayout = createBoardLayout();
         scoreLine = createScoreLine();
         scoreSeparators = createScoreSeparators();
@@ -110,10 +113,28 @@ public class GameView extends AbstractView implements GameListener {
         return sprites;
     }
 
-    protected Array<Sprite> createMarks() {
-        Array<Sprite> sprites = new Array<Sprite>(2);
-        sprites.add(atlas.createSprite("mark_o"));
-        sprites.add(atlas.createSprite("mark_x"));
+    public Sprite[] createPlayerOneMarks() {
+        Sprite[] sprites = createMarks();
+        for (Sprite sprite : sprites) {
+            sprite.setColor(PLAYER_1_COLOR);
+        }
+
+        return sprites;
+    }
+
+    public Sprite[] createPlayerTwoMarks() {
+        Sprite[] sprites = createMarks();
+        for (Sprite sprite : sprites) {
+            sprite.setColor(PLAYER_2_COLOR);
+        }
+
+        return sprites;
+    }
+
+    protected Sprite[] createMarks() {
+        Sprite[] sprites = new Sprite[2];
+        sprites[Player.MARK_O] = atlas.createSprite("mark_o");
+        sprites[Player.MARK_X] = atlas.createSprite("mark_x");
 
         return sprites;
     }
@@ -212,18 +233,37 @@ public class GameView extends AbstractView implements GameListener {
             hashLine.draw(batch);
         }
 
-        Sprite mark = null;
-        GridPoint2 point = null;
+        Sprite mark;
+        GridPoint2 point;
         int boardMark;
-        for (int i = 0; i < boardLayout.length; ++i) {
+        int playerId;
+        for (int i = 0; i < board.length; ++i) {
             boardMark = board[i];
-            if (boardMark >= 0) {
-                mark = marks.get(boardMark);
+            if (boardMark != Player.NO_MARK) {
                 point = boardLayout[i];
-                mark.setCenter(point.x, point.y);
-                mark.draw(batch);
+                playerId = Player.byMark(boardMark, players);
+                if (playerId == Player.PLAYER_1) {
+                    mark = playerOneMarks[boardMark];
+                    mark.setCenter(point.x, point.y);
+                    mark.draw(batch);
+                } else if (playerId == Player.PLAYER_2) {
+                    mark = playerTwoMarks[boardMark];
+                    mark.setCenter(point.x, point.y);
+                    mark.draw(batch);
+                }
             }
+
         }
+        //int boardMark;
+        //for (int i = 0; i < boardLayout.length; ++i) {
+        //    boardMark = board[i];
+        //    if (boardMark >= 0) {
+        //        mark = marks.get(boardMark);
+        //        point = boardLayout[i];
+        //        mark.setCenter(point.x, point.y);
+        //        mark.draw(batch);
+        //    }
+        //}
 
         scoreLine.draw(batch);
         for (Sprite scoreSeparator : scoreSeparators) {
@@ -251,6 +291,7 @@ public class GameView extends AbstractView implements GameListener {
         Game game = (Game) event.getSource();
         copyBoard(game);
         copyScore(game);
+        players = game.getPlayers();
     }
 
     @Override
