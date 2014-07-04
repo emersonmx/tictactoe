@@ -35,8 +35,8 @@ public class Game {
     public static final int PLAYER_2 = 1;
 
     public static final int NO_MARK = 0;
-    public static final int MARK_X = 1;
-    public static final int MARK_O = 2;
+    public static final int MARK_O = 1;
+    public static final int MARK_X = 2;
 
     private Player currentPlayer;
     private Player[] players;
@@ -51,6 +51,10 @@ public class Game {
     private int[] diagonals;
     private Array<GameListener> listeners;
     private GameEvent event;
+
+    public static int indexMark(int i, int j) {
+        return j + i * BOARD_HEIGHT;
+    }
 
     public Game() {
         players = new Player[] {
@@ -205,7 +209,8 @@ public class Game {
 
                     if (i == j) {
                         diagonals[0]++;
-                    } else if (((BOARD_WIDTH - 1) - j - i) == 0) {
+                    }
+                    if (((BOARD_WIDTH - 1) - j - i) == 0) {
                         diagonals[1]++;
                     }
                 }
@@ -304,10 +309,6 @@ public class Game {
         for (GameListener listener : listeners) {
             listener.positionIsNotEmpty(event);
         }
-    }
-
-    private int indexMark(int i, int j) {
-        return j + i * BOARD_HEIGHT;
     }
 
 }

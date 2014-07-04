@@ -39,6 +39,7 @@ public class GameView extends AbstractView implements GameListener {
     private Batch batch;
 
     private Array<Sprite> hash;
+    private Array<Sprite> marks;
     private Sprite scoreLine;
     private Array<Sprite> scoreSeparators;
     private Sprite menu;
@@ -47,6 +48,8 @@ public class GameView extends AbstractView implements GameListener {
     private GameInput input;
 
     private int[] playerScores;
+    private int[] board;
+    private GridPoint2[] boardLayout;
 
     public GameView(ViewManager viewManager) {
         super(viewManager);
@@ -54,13 +57,17 @@ public class GameView extends AbstractView implements GameListener {
         this.atlas = viewManager.atlas;
         this.batch = viewManager.batch;
 
-        playerScores = new int[] { 0, 0 };
         input = new GameInput(viewManager);
+
+        playerScores = new int[] { 0, 0 };
+        int size = Game.BOARD_WIDTH * Game.BOARD_HEIGHT;
+        board = new int[size];
     }
 
     @Override
     public void create() {
         hash = createHash();
+        marks = createMarks();
         scoreLine = createScoreLine();
         scoreSeparators = createScoreSeparators();
         menu = createMenu();
@@ -98,6 +105,27 @@ public class GameView extends AbstractView implements GameListener {
         }
 
         return sprites;
+    }
+
+    protected Array<Sprite> createMarks() {
+        Array<Sprite> sprites = new Array<Sprite>(2);
+        sprites.add(atlas.createSprite("mark_o"));
+        sprites.add(atlas.createSprite("mark_x"));
+
+        createBoardLayout();
+
+        return sprites;
+    }
+
+    protected void createBoardLayout() {
+        boardLayout = new GridPoint2[] {
+            new GridPoint2(118, 523), new GridPoint2(240, 523),
+                new GridPoint2(362, 523),
+            new GridPoint2(118, 401), new GridPoint2(240, 401),
+                new GridPoint2(362, 401),
+            new GridPoint2(118, 279), new GridPoint2(240, 279),
+                new GridPoint2(362, 279)
+        };
     }
 
     protected Sprite createScoreLine() {
@@ -165,13 +193,25 @@ public class GameView extends AbstractView implements GameListener {
             hashLine.draw(batch);
         }
 
+        Sprite mark = null;
+        GridPoint2 point = null;
+        int boardMark;
+        for (int i = 0; i < boardLayout.length; ++i) {
+            boardMark = board[i] - 1;
+            if (boardMark >= 0) {
+                mark = marks.get(boardMark);
+                point = boardLayout[i];
+                mark.setCenter(point.x, point.y);
+                mark.draw(batch);
+            }
+        }
+
         scoreLine.draw(batch);
         for (Sprite scoreSeparator : scoreSeparators) {
             scoreSeparator.draw(batch);
         }
 
         menu.draw(batch);
-
         playerOneScore.get(playerScores[Game.PLAYER_1]).draw(batch);
         playerTwoScore.get(playerScores[Game.PLAYER_2]).draw(batch);
 
@@ -185,6 +225,8 @@ public class GameView extends AbstractView implements GameListener {
     @Override
     public void gameStart(GameEvent event) {
         System.out.println("Game Start");
+        Game game = (Game) event.getSource();
+        copyBoard(game);
     }
 
     @Override
@@ -195,11 +237,14 @@ public class GameView extends AbstractView implements GameListener {
     @Override
     public void marked(GameEvent event) {
         System.out.println("Marked");
+        Game game = (Game) event.getSource();
+        copyBoard(game);
     }
 
     @Override
     public void gameWinner(GameEvent event) {
-        System.out.println("Game Winner");
+        Game game = (Game) event.getSource();
+        playerScores[game.getWinner()]++;
     }
 
     @Override
@@ -222,6 +267,14 @@ public class GameView extends AbstractView implements GameListener {
     @Override
     public void positionIsNotEmpty(GameEvent event) {
         System.out.println("Position is not Empty");
+    }
+
+    public void copyBoard(Game game) {
+        for (int i = 0; i < Game.BOARD_HEIGHT; ++i) {
+            for (int j = 0; j < Game.BOARD_WIDTH; ++j) {
+                board[Game.indexMark(i, j)] = game.getMark(i, j);
+            }
+        }
     }
 
 }
