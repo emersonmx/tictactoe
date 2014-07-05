@@ -41,8 +41,11 @@ public class GameView extends AbstractView implements GameListener {
     public static final int TAP_TO_START = 0;
     public static final int TAP_PLAYER_1_WINS = 1;
     public static final int TAP_PLAYER_2_WINS = 2;
-    public static final int TAP_DRAW = 3;
-    public static final int TAP_WINDOW_LIST_SIZE = 4;
+    public static final int TAP_PLAYER_1_MATCH = 3;
+    public static final int TAP_PLAYER_2_MATCH = 4;
+    public static final int TAP_GAME_DRAWN = 5;
+    public static final int TAP_DRAW = 6;
+    public static final int TAP_WINDOW_LIST_SIZE = 7;
 
     private TextureAtlas atlas;
     private Batch batch;
@@ -253,6 +256,9 @@ public class GameView extends AbstractView implements GameListener {
         sprites[TAP_TO_START] = atlas.createSprite("tap_to_start");
         sprites[TAP_PLAYER_1_WINS] = atlas.createSprite("player_one_wins");
         sprites[TAP_PLAYER_2_WINS] = atlas.createSprite("player_two_wins");
+        sprites[TAP_PLAYER_1_MATCH] = atlas.createSprite("match_winner_one");
+        sprites[TAP_PLAYER_2_MATCH] = atlas.createSprite("match_winner_two");
+        sprites[TAP_GAME_DRAWN] = atlas.createSprite("game_drawn");
         sprites[TAP_DRAW] = atlas.createSprite("draw");
 
         for (int i = 0; i < sprites.length; ++i) {
@@ -329,6 +335,15 @@ public class GameView extends AbstractView implements GameListener {
                 case TAP_PLAYER_2_WINS:
                     window = tapWindowList[TAP_PLAYER_2_WINS];
                     break;
+                case TAP_PLAYER_1_MATCH:
+                    window = tapWindowList[TAP_PLAYER_1_MATCH];
+                    break;
+                case TAP_PLAYER_2_MATCH:
+                    window = tapWindowList[TAP_PLAYER_2_MATCH];
+                    break;
+                case TAP_GAME_DRAWN:
+                    window = tapWindowList[TAP_GAME_DRAWN];
+                    break;
                 case TAP_DRAW:
                     window = tapWindowList[TAP_DRAW];
                     break;
@@ -393,6 +408,18 @@ public class GameView extends AbstractView implements GameListener {
     @Override
     public void gameMatchWinner(GameEvent event) {
         System.out.println("Match Winner");
+        Game game = (Game) event.getSource();
+
+        int matchWinner = Player.matchWinner(game.getMatch(),
+                                             game.getPlayers());
+        if (matchWinner == Player.PLAYER_1) {
+            pauseTap = TAP_PLAYER_1_MATCH;
+        } else if (matchWinner == Player.PLAYER_2) {
+            pauseTap = TAP_PLAYER_2_MATCH;
+        } else {
+            pauseTap = TAP_GAME_DRAWN;
+        }
+
         Gdx.input.setInputProcessor(new InputAdapter() {
         });
     }
