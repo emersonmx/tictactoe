@@ -29,7 +29,7 @@ public class Game {
     private static final int WINNER_O = -3;
     private static final int WINNER_X = 3;
 
-    public static final int DEFAULT_MATCH = 3;
+    public static final int DEFAULT_MATCH = 5;
 
     private Player currentPlayer;
     private Player[] players;
@@ -109,6 +109,7 @@ public class Game {
                     checkMatchWinner();
                 } else if (markCount == (BOARD_WIDTH * BOARD_HEIGHT)) {
                     winner = Player.PLAYER_NONE;
+                    fireGameDraw();
                     checkMatchWinner();
                 } else {
                     changePlayer();

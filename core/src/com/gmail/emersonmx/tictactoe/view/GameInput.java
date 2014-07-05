@@ -85,8 +85,8 @@ public class GameInput extends InputAdapter {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if (gameView.isPauseToStart()) {
-            gameView.setPauseToStart(false);
+        if (gameView.getPauseTap() != GameView.NO_PAUSE_TAP) {
+            gameView.setPauseTap(GameView.NO_PAUSE_TAP);
             gameView.cleanBoard();
             return true;
         }

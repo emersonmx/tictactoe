@@ -37,6 +37,13 @@ public class GameView extends AbstractView implements GameListener {
     public static final Color PLAYER_1_COLOR = new Color(0xaaaaffff);
     public static final Color PLAYER_2_COLOR = new Color(0xaaffaaff);
 
+    public static final int NO_PAUSE_TAP = -1;
+    public static final int TAP_TO_START = 0;
+    public static final int TAP_PLAYER_1_WINS = 1;
+    public static final int TAP_PLAYER_2_WINS = 2;
+    public static final int TAP_DRAW = 3;
+    public static final int TAP_WINDOW_LIST_SIZE = 4;
+
     private TextureAtlas atlas;
     private Batch batch;
 
@@ -49,7 +56,7 @@ public class GameView extends AbstractView implements GameListener {
     private Array<Sprite> playerOneScore;
     private Array<Sprite> playerTwoScore;
     private Sprite turn;
-    private Sprite tapToStart;
+    private Sprite[] tapWindowList;
 
     private GameInput input;
 
@@ -61,6 +68,7 @@ public class GameView extends AbstractView implements GameListener {
     private GridPoint2[] playerTurnLayout;
 
     private boolean pauseToStart;
+    private int pauseTap;
 
     public GameView(ViewManager viewManager) {
         super(viewManager);
@@ -76,6 +84,7 @@ public class GameView extends AbstractView implements GameListener {
         scores = new int[] { 0, 0 };
 
         pauseToStart = true;
+        pauseTap = NO_PAUSE_TAP;
     }
 
     public void setPauseToStart(boolean tapToStart) {
@@ -84,6 +93,14 @@ public class GameView extends AbstractView implements GameListener {
 
     public boolean isPauseToStart() {
         return pauseToStart;
+    }
+
+    public void setPauseTap(int pauseTap) {
+        this.pauseTap = pauseTap;
+    }
+
+    public int getPauseTap() {
+        return pauseTap;
     }
 
     @Override
@@ -99,7 +116,7 @@ public class GameView extends AbstractView implements GameListener {
         playerTwoScore = createPlayerTwoScore();
         turn = createPlayerTurn();
         playerTurnLayout = createPlayerTurnLayout();
-        tapToStart = createTapToStart();
+        tapWindowList = createTapWindowList();
 
         loaded = true;
     }
@@ -231,12 +248,19 @@ public class GameView extends AbstractView implements GameListener {
         };
     }
 
-    public Sprite createTapToStart() {
-        Sprite sprite = atlas.createSprite("tap_to_start");
-        sprite.setCenter(ViewManager.WINDOW_WIDTH / 2.f,
-                         ViewManager.WINDOW_HEIGHT / 2.f);
+    public Sprite[] createTapWindowList() {
+        Sprite[] sprites = new Sprite[TAP_WINDOW_LIST_SIZE];
+        sprites[TAP_TO_START] = atlas.createSprite("tap_to_start");
+        sprites[TAP_PLAYER_1_WINS] = atlas.createSprite("player_one_wins");
+        sprites[TAP_PLAYER_2_WINS] = atlas.createSprite("player_two_wins");
+        sprites[TAP_DRAW] = atlas.createSprite("draw");
 
-        return sprite;
+        for (int i = 0; i < sprites.length; ++i) {
+            sprites[i].setCenter(ViewManager.WINDOW_WIDTH / 2.f,
+                                 ViewManager.WINDOW_HEIGHT / 2.f);
+        }
+
+        return sprites;
     }
 
     @Override
@@ -296,8 +320,25 @@ public class GameView extends AbstractView implements GameListener {
         turn.setCenter(point.x, point.y);
         turn.draw(batch);
 
-        if (pauseToStart) {
-            tapToStart.draw(batch);
+        if (pauseTap != NO_PAUSE_TAP) {
+            Sprite window;
+            switch (pauseTap) {
+                case TAP_PLAYER_1_WINS:
+                    window = tapWindowList[TAP_PLAYER_1_WINS];
+                    break;
+                case TAP_PLAYER_2_WINS:
+                    window = tapWindowList[TAP_PLAYER_2_WINS];
+                    break;
+                case TAP_DRAW:
+                    window = tapWindowList[TAP_DRAW];
+                    break;
+                case TAP_TO_START:
+                default:
+                    window = tapWindowList[TAP_TO_START];
+                    break;
+            }
+
+            window.draw(batch);
         }
     }
 
@@ -312,6 +353,7 @@ public class GameView extends AbstractView implements GameListener {
         copyBoard(game);
         copyScore(game);
         players = game.getPlayers();
+        pauseTap = TAP_TO_START;
     }
 
     @Override
@@ -335,12 +377,17 @@ public class GameView extends AbstractView implements GameListener {
     public void gameWinner(GameEvent event) {
         Game game = (Game) event.getSource();
         copyScore(game);
-        pauseToStart = true;
+        if (game.getWinner() == Player.PLAYER_1) {
+            pauseTap = TAP_PLAYER_1_WINS;
+        } else if (game.getWinner() == Player.PLAYER_2) {
+            pauseTap = TAP_PLAYER_2_WINS;
+        }
     }
 
     @Override
     public void gameDraw(GameEvent event) {
         System.out.println("Game Draw");
+        pauseTap = TAP_DRAW;
     }
 
     @Override

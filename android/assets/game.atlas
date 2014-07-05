@@ -1,166 +1,173 @@
 
 game.png
-size: 1022,994
+size: 1022,1020
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 blackboard
   rotate: false
-  xy: 2, 354
+  xy: 2, 380
   size: 480, 640
   orig: 480, 640
   offset: 0, 0
   index: -1
+draw
+  rotate: false
+  xy: 2, 28
+  size: 208, 78
+  orig: 208, 78
+  offset: 0, 0
+  index: -1
 hash_line
   rotate: false
-  xy: 484, 504
+  xy: 484, 530
   size: 14, 350
   orig: 14, 350
   offset: 0, 0
   index: -1
 mark_o
   rotate: false
-  xy: 286, 282
+  xy: 500, 683
   size: 69, 70
   orig: 69, 70
   offset: 0, 0
   index: -1
 mark_x
   rotate: false
-  xy: 500, 670
+  xy: 286, 306
   size: 68, 72
   orig: 68, 72
   offset: 0, 0
   index: -1
 match_winner_one
   rotate: false
-  xy: 2, 214
+  xy: 2, 240
   size: 282, 138
   orig: 282, 138
   offset: 0, 0
   index: -1
 match_winner_two
   rotate: false
-  xy: 484, 856
+  xy: 484, 882
   size: 282, 138
   orig: 282, 138
   offset: 0, 0
   index: -1
 menu
   rotate: false
-  xy: 2, 2
+  xy: 356, 315
   size: 70, 63
   orig: 70, 63
   offset: 0, 0
   index: -1
 player_one_wins
   rotate: false
-  xy: 2, 82
+  xy: 2, 108
   size: 222, 130
   orig: 222, 130
   offset: 0, 0
   index: -1
 player_turn
   rotate: false
-  xy: 992, 917
+  xy: 2, 2
   size: 25, 24
   orig: 25, 24
   offset: 0, 0
   index: -1
 player_two_wins
   rotate: false
-  xy: 768, 864
+  xy: 768, 890
   size: 222, 130
   orig: 222, 130
   offset: 0, 0
   index: -1
 score_line
   rotate: false
-  xy: 2, 67
+  xy: 500, 755
   size: 405, 13
   orig: 405, 13
   offset: 0, 0
   index: -1
 score_number
   rotate: false
-  xy: 992, 943
+  xy: 992, 969
   size: 30, 51
   orig: 30, 51
   offset: 0, 0
   index: 1
 score_number
   rotate: false
-  xy: 717, 790
+  xy: 226, 174
   size: 42, 64
   orig: 42, 64
   offset: 0, 0
   index: 7
 score_number
   rotate: false
-  xy: 226, 154
+  xy: 717, 822
   size: 43, 58
   orig: 43, 58
   offset: 0, 0
   index: 5
 score_number
   rotate: false
-  xy: 500, 613
+  xy: 286, 249
   size: 42, 55
   orig: 42, 55
   offset: 0, 0
   index: 6
 score_number
   rotate: false
-  xy: 570, 684
+  xy: 500, 623
   size: 35, 58
   orig: 35, 58
   offset: 0, 0
   index: 9
 score_number
   rotate: false
-  xy: 286, 227
+  xy: 571, 700
   size: 35, 53
   orig: 35, 53
   offset: 0, 0
   index: 3
 score_number
   rotate: false
-  xy: 357, 298
+  xy: 428, 324
   size: 34, 54
   orig: 34, 54
   offset: 0, 0
   index: 4
 score_number
   rotate: false
-  xy: 74, 21
+  xy: 226, 128
   size: 41, 44
   orig: 41, 44
   offset: 0, 0
   index: 2
 score_number
   rotate: false
-  xy: 226, 100
+  xy: 500, 569
   size: 32, 52
   orig: 32, 52
   offset: 0, 0
   index: 8
 score_number
   rotate: false
-  xy: 717, 744
+  xy: 717, 776
   size: 38, 44
   orig: 38, 44
   offset: 0, 0
   index: 0
 score_separator
   rotate: false
-  xy: 484, 413
+  xy: 484, 439
   size: 12, 89
   orig: 12, 89
   offset: 0, 0
   index: -1
 tap_to_start
   rotate: false
-  xy: 500, 744
+  xy: 500, 770
   size: 215, 110
   orig: 215, 110
   offset: 0, 0
