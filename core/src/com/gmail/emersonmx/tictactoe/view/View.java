@@ -19,6 +19,7 @@
 
 package com.gmail.emersonmx.tictactoe.view;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.gmail.emersonmx.tictactoe.controller.Controller;
 
 public interface View {
@@ -33,7 +34,7 @@ public interface View {
     public void create();
     public void setup();
     public void logic(float deltaTime);
-    public void draw();
+    public void draw(Batch batch);
     public void dispose();
 
 }

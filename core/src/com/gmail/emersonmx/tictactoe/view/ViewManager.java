@@ -122,7 +122,7 @@ public class ViewManager {
 
         blackboard.draw(batch);
 
-        currentView.draw();
+        currentView.draw(batch);
         batch.end();
     }
 

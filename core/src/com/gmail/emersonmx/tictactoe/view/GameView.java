@@ -48,7 +48,6 @@ public class GameView extends AbstractView implements GameListener {
     public static final int TAP_WINDOW_LIST_SIZE = 7;
 
     private TextureAtlas atlas;
-    private Batch batch;
 
     private Array<Sprite> hash;
     private Sprite[] playerOneMarks;
@@ -77,7 +76,6 @@ public class GameView extends AbstractView implements GameListener {
         super(viewManager);
 
         this.atlas = viewManager.atlas;
-        this.batch = viewManager.batch;
 
         input = new GameInput(viewManager);
         input.setGameView(this);
@@ -280,7 +278,7 @@ public class GameView extends AbstractView implements GameListener {
     }
 
     @Override
-    public void draw() {
+    public void draw(Batch batch) {
         for (Sprite hashLine : hash) {
             hashLine.draw(batch);
         }
