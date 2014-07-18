@@ -279,6 +279,8 @@ public class GameView extends AbstractView implements GameListener {
 
     @Override
     public void draw(Batch batch) {
+        batch.begin();
+
         for (Sprite hashLine : hash) {
             hashLine.draw(batch);
         }
@@ -353,6 +355,8 @@ public class GameView extends AbstractView implements GameListener {
 
             window.draw(batch);
         }
+
+        batch.end();
     }
 
     @Override

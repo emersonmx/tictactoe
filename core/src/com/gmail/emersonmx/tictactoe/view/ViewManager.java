@@ -21,7 +21,6 @@ package com.gmail.emersonmx.tictactoe.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -40,8 +39,6 @@ public class ViewManager {
     public AssetManager manager;
     public TextureAtlas atlas;
     public Viewport viewport;
-    private Camera camera;
-    public Batch batch;
 
     private View[] views;
     private View currentView;
@@ -51,13 +48,11 @@ public class ViewManager {
     private Sprite blackboard;
 
     public ViewManager(AssetManager manager, TextureAtlas atlas,
-            Viewport viewport, Batch batch) {
+            Viewport viewport) {
 
         this.manager = manager;
         this.atlas = atlas;
         this.viewport = viewport;
-        this.camera = viewport.getCamera();
-        this.batch = batch;
 
         views = new View[VIEWS_SIZE];
         currentView = nextView = null;
@@ -113,17 +108,14 @@ public class ViewManager {
         currentView.logic(deltaTime);
     }
 
-    public void draw() {
-        viewport.update();
-        batch.setProjectionMatrix(camera.combined);
-
+    public void draw(Batch batch) {
         batch.begin();
         batch.draw(background, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0, 5, 5);
 
         blackboard.draw(batch);
+        batch.end();
 
         currentView.draw(batch);
-        batch.end();
     }
 
     public void dispose() {

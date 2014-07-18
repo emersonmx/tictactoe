@@ -21,6 +21,7 @@ package com.gmail.emersonmx.tictactoe.application;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -40,6 +41,7 @@ public class GameApplication extends Application {
     public AssetManager manager;
     public TextureAtlas atlas;
     public Viewport viewport;
+    public Camera camera;
     public Batch batch;
 
     private ViewManager viewManager;
@@ -72,6 +74,7 @@ public class GameApplication extends Application {
         OrthographicCamera camera = (OrthographicCamera) viewport.getCamera();
         camera.setToOrtho(false, ViewManager.WINDOW_WIDTH,
                           ViewManager.WINDOW_HEIGHT);
+        this.camera = camera;
 
         batch = new SpriteBatch();
 
@@ -79,7 +82,7 @@ public class GameApplication extends Application {
     }
 
     public void setupSystem() {
-        viewManager = new ViewManager(manager, atlas, viewport, batch);
+        viewManager = new ViewManager(manager, atlas, viewport);
         viewManager.create();
 
         GameView gameView =
@@ -106,7 +109,10 @@ public class GameApplication extends Application {
     public void draw() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        viewManager.draw();
+        viewport.update();
+        batch.setProjectionMatrix(camera.combined);
+
+        viewManager.draw(batch);
     }
 
     @Override
