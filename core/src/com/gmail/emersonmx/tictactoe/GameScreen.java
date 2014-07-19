@@ -308,6 +308,7 @@ public class GameScreen extends ScreenAdapter implements GameListener {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(input);
+        ttt.playGame();
     }
 
     @Override

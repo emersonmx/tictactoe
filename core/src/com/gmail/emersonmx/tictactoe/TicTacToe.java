@@ -61,7 +61,6 @@ public class TicTacToe extends com.badlogic.gdx.Game {
 
         game = new Game();
         game.setListener(gameScreen);
-        game.start();
 
         setScreen(gameScreen);
     }
@@ -76,15 +75,15 @@ public class TicTacToe extends com.badlogic.gdx.Game {
     }
 
     public void playGame() {
-        //game.start();
+        game.start();
     }
 
     public void restartGame() {
-        //game.restart();
+        game.restart();
     }
 
     public void quitGame() {
-        //game.quit();
+        game.quit();
     }
 
     public void mark(int index) {

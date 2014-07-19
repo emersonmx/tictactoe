@@ -92,7 +92,6 @@ public class GameInput extends InputAdapter {
             } else {
                 if (rectangle.contains(point.x, point.y)) {
                     System.out.println("Menu touched");
-                    ttt.setScreen(ttt.getGameScreen());
                 }
             }
         }
