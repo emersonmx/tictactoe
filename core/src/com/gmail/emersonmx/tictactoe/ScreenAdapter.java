@@ -19,16 +19,50 @@
 
 package com.gmail.emersonmx.tictactoe;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.Screen;
 
-public interface View {
+public class ScreenAdapter implements Screen {
 
-    public void enter();
-    public void leave();
+    public void create() {
+    }
 
-    public void create();
-    public void logic(float deltaTime);
-    public void draw(Batch batch);
-    public void dispose();
+    public void setup() {
+    }
+
+    @Override
+    public void dispose() {
+    }
+
+    @Override
+    public void resize(int width, int height) {
+    }
+
+    @Override
+    public void show() {
+    }
+
+    @Override
+    public void hide() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void render(float delta) {
+        logic(delta);
+        draw();
+    }
+
+    public void logic(float delta) {
+    }
+
+    public void draw() {
+    }
 
 }

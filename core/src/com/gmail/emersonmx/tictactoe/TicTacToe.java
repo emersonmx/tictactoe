@@ -19,81 +19,71 @@
 
 package com.gmail.emersonmx.tictactoe;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class TicTacToe extends Application {
+public class TicTacToe extends com.badlogic.gdx.Game {
+
+    public static final int WINDOW_WIDTH = 480;
+    public static final int WINDOW_HEIGHT = 640;
 
     public AssetManager manager;
     public TextureAtlas atlas;
-    public Viewport viewport;
     public Batch batch;
 
-    private ViewManager viewManager;
+    private Game game;
+
+    private GameScreen gameScreen;
+
+    public TicTacToe() {
+    }
+
+    public GameScreen getGameScreen() {
+        return gameScreen;
+    }
 
     @Override
     public void create() {
-        loadResources();
-        setupGraphics();
-        setupSystem();
-    }
-
-    public void loadResources() {
         manager = new AssetManager();
         manager.load("background.png", Texture.class);
+        manager.load("blackboard.png", Texture.class);
         manager.load("game.atlas", TextureAtlas.class);
         manager.finishLoading();
 
         atlas = manager.get("game.atlas");
-    }
-
-    private void setupGraphics() {
-        viewport = new FitViewport(ViewManager.WINDOW_WIDTH,
-            ViewManager.WINDOW_HEIGHT);
-        OrthographicCamera camera = (OrthographicCamera) viewport.getCamera();
-        camera.setToOrtho(false, ViewManager.WINDOW_WIDTH,
-                          ViewManager.WINDOW_HEIGHT);
 
         batch = new SpriteBatch();
 
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-    }
+        gameScreen = new GameScreen(this);
+        gameScreen.create();
+        gameScreen.setup();
 
-    public void setupSystem() {
-        viewManager = new ViewManager(manager, atlas, viewport);
-        viewManager.create();
-    }
+        // TODO: Arrumar o setup para não chamar um evento.
+        game = new Game();
+        game.setListener(gameScreen);
+        game.setup();
 
-    @Override
-    public void logic() {
-        viewManager.logic(Gdx.graphics.getDeltaTime());
-    }
-
-    @Override
-    public void draw() {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        viewManager.draw(batch);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height, false);
+        setScreen(gameScreen);
     }
 
     @Override
     public void dispose() {
-        viewManager.dispose();
+        super.dispose();
+
+        getScreen().dispose();
         batch.dispose();
         manager.dispose();
+    }
+
+    public void mark(int index) {
+        if (gameScreen == getScreen()) {
+            int j = index % Game.BOARD_WIDTH;
+            int i = (index - j) / Game.BOARD_HEIGHT;
+            game.setBoardMark(i, j);
+        }
     }
 
 }

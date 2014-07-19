@@ -21,14 +21,13 @@ package com.gmail.emersonmx.tictactoe.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.gmail.emersonmx.tictactoe.TicTacToe;
-import com.gmail.emersonmx.tictactoe.ViewManager;
 
 public class DesktopLauncher {
 
     public static void main(String[] arg) {
         new LwjglApplication(new TicTacToe(), "TicTacToe",
-                             ViewManager.WINDOW_WIDTH,
-                             ViewManager.WINDOW_HEIGHT);
+                             TicTacToe.WINDOW_WIDTH,
+                             TicTacToe.WINDOW_HEIGHT);
     }
 
 }

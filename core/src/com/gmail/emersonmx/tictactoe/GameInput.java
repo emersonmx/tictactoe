@@ -28,28 +28,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GameInput extends InputAdapter {
 
-    private ViewManager viewManager;
-    private GameView gameView;
-    private Controller controller;
+    private final TicTacToe ttt;
 
     private Viewport viewport;
 
     private Array<Rectangle> rectangles;
     private Vector3 point;
 
-    public GameInput(ViewManager viewManager) {
-        this.viewManager = viewManager;
-        this.viewport = viewManager.viewport;
+    public GameInput(TicTacToe ttt) {
+        this.ttt = ttt;
+        this.viewport = ttt.getGameScreen().viewport;
 
         createRectangles();
-    }
-
-    public void setGameView(GameView gameView) {
-        this.gameView = gameView;
-    }
-
-    public GameView getGameView() {
-        return gameView;
     }
 
     public void createRectangles() {
@@ -74,19 +64,13 @@ public class GameInput extends InputAdapter {
         rectangles.add(new Rectangle(198, 43, 85, 83));
     }
 
-    public void setController(Controller controller) {
-        this.controller = controller;
-    }
-
-    public Controller getController() {
-        return controller;
-    }
-
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if (gameView.getPauseTap() != GameView.NO_PAUSE_TAP) {
-            gameView.setPauseTap(GameView.NO_PAUSE_TAP);
-            gameView.cleanBoard();
+        GameScreen gameScreen = ttt.getGameScreen();
+
+        if (gameScreen.getPauseTap() != GameScreen.NO_PAUSE_TAP) {
+            gameScreen.setPauseTap(GameScreen.NO_PAUSE_TAP);
+            gameScreen.cleanBoard();
             return true;
         }
 
@@ -100,12 +84,12 @@ public class GameInput extends InputAdapter {
             if (i < rectangles.size - 1) {
                 if (rectangle.contains(point.x, point.y)) {
                     System.out.println("Mark " + i + " touched");
-                    controller.mark(i);
+                    ttt.mark(i);
                 }
             } else {
                 if (rectangle.contains(point.x, point.y)) {
                     System.out.println("Menu touched");
-                    viewManager.changeView(viewManager.getGameView());
+                    ttt.setScreen(ttt.getGameScreen());
                 }
             }
         }
