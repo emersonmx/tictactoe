@@ -77,14 +77,6 @@ public class Game {
         return players;
     }
 
-    public int getMatch() {
-        return match;
-    }
-
-    public void setMatch(int match) {
-        this.match = match;
-    }
-
     public int getWinner() {
         return winner;
     }
@@ -100,7 +92,7 @@ public class Game {
                 board[indexMark(i, j)] = currentPlayer.mark;
                 markCount++;
 
-                fireMarked();
+                notifyMarked();
 
                 int winnerMark = checkVictory();
                 if (winnerMark != Player.NO_MARK) {
@@ -109,20 +101,62 @@ public class Game {
                     checkMatchWinner();
                 } else if (markCount == (BOARD_WIDTH * BOARD_HEIGHT)) {
                     winner = Player.PLAYER_NONE;
-                    fireGameDraw();
+                    notifyGameDraw();
                     checkMatchWinner();
                 } else {
                     changePlayer();
                 }
             } else {
-                firePositionIsNotEmpty();
+                notifyPositionIsNotEmpty();
             }
         } else {
-            fireInvalidPosition();
+            notifyInvalidPosition();
         }
     }
 
-    public int checkVictory() {
+    public int getMatch() {
+        return match;
+    }
+
+    public void setMatch(int match) {
+        this.match = match;
+    }
+
+    public void setListener(GameListener listener) {
+        if (listener != null) {
+            this.listener = listener;
+        }
+    }
+
+    public void start() {
+        reset();
+
+        randomPlayer();
+        cleanBoard();
+
+        notifyGameStart();
+    }
+
+    public void quit() {
+        notifyGameOver();
+        notifyGameEnd();
+    }
+
+    public void restart() {
+        notifyGameOver();
+
+        markCount = 0;
+
+        if (winner != Player.PLAYER_NONE) {
+            currentPlayer = players[winner];
+        } else {
+            randomPlayer();
+        }
+
+        cleanBoard();
+    }
+
+    private int checkVictory() {
         resetConditions();
 
         int boardMark = Player.NO_MARK;
@@ -179,7 +213,7 @@ public class Game {
         return Player.NO_MARK;
     }
 
-    public void resetConditions() {
+    private void resetConditions() {
         for (int i = 0; i < 3; ++i) {
             lines[i] = columns[i] = 0;
             if (i < 2) {
@@ -188,118 +222,83 @@ public class Game {
         }
     }
 
-    public void checkMatchWinner() {
+    private void checkMatchWinner() {
         matchCount++;
 
         if (matchCount >= match) {
-            fireGameWinner();
-            fireGameMatchWinner();
-            fireGameEnd();
+            notifyGameWinner();
+            notifyGameMatchWinner();
+            notifyGameEnd();
         } else {
-            fireGameWinner();
+            notifyGameWinner();
             restart();
         }
     }
 
-    public void changePlayer() {
+    private void changePlayer() {
         if (currentPlayer.equals(players[Player.PLAYER_1])) {
             currentPlayer = players[Player.PLAYER_2];
         } else {
             currentPlayer = players[Player.PLAYER_1];
         }
 
-        fireCurrentPlayerChanged();
+        notifyCurrentPlayerChanged();
     }
 
-
-    public void setup() {
-        reset();
-
-        randomPlayer();
-        cleanBoard();
-
-        fireGameStart();
-    }
-
-    public void randomPlayer() {
+    private void randomPlayer() {
         currentPlayer = players[random.nextInt(2)];
-        fireCurrentPlayerChanged();
+        notifyCurrentPlayerChanged();
     }
 
-    public void cleanBoard() {
+    private void cleanBoard() {
         for (int i = 0; i < board.length; ++i) {
             board[i] = Player.NO_MARK;
         }
     }
 
-    public void reset() {
+    private void reset() {
         markCount = 0;
         currentPlayer = null;
         winner = Player.PLAYER_NONE;
     }
 
-    public void dispose() {
-        fireGameOver();
-        fireGameEnd();
-    }
-
-    public void restart() {
-        fireGameOver();
-
-        markCount = 0;
-
-        if (winner != Player.PLAYER_NONE) {
-            currentPlayer = players[winner];
-        } else {
-            randomPlayer();
-        }
-
-        cleanBoard();
-    }
-
-    public void setListener(GameListener listener) {
-        if (listener != null) {
-            this.listener = listener;
-        }
-    }
-
-    public void fireGameStart() {
+    private void notifyGameStart() {
         listener.gameStart(event);
     }
 
-    public void fireGameOver() {
+    private void notifyGameOver() {
         listener.gameOver(event);
     }
 
-    public void fireGameEnd() {
+    private void notifyGameEnd() {
         listener.gameEnd(event);
     }
 
-    public void fireMarked() {
+    private void notifyMarked() {
         listener.marked(event);
     }
 
-    public void fireGameWinner() {
+    private void notifyGameWinner() {
         listener.gameWinner(event);
     }
 
-    public void fireGameDraw() {
+    private void notifyGameDraw() {
         listener.gameDraw(event);
     }
 
-    public void fireGameMatchWinner() {
+    private void notifyGameMatchWinner() {
         listener.gameMatchWinner(event);
     }
 
-    public void fireCurrentPlayerChanged() {
+    private void notifyCurrentPlayerChanged() {
         listener.currentPlayerChanged(event);
     }
 
-    public void fireInvalidPosition() {
+    private void notifyInvalidPosition() {
         listener.invalidPosition(event);
     }
 
-    public void firePositionIsNotEmpty() {
+    private void notifyPositionIsNotEmpty() {
         listener.positionIsNotEmpty(event);
     }
 

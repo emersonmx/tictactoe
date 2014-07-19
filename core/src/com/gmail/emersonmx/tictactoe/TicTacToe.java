@@ -61,7 +61,7 @@ public class TicTacToe extends com.badlogic.gdx.Game {
 
         game = new Game();
         game.setListener(gameScreen);
-        game.setup();
+        game.start();
 
         setScreen(gameScreen);
     }
