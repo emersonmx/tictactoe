@@ -20,19 +20,13 @@
 package com.gmail.emersonmx.tictactoe.view;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.gmail.emersonmx.tictactoe.controller.Controller;
 
 public interface View {
 
-    public void setViewManager(ViewManager viewManager);
-    public ViewManager getViewManager();
-    public void setController(Controller controller);
-    public Controller getController();
-
-    public boolean isLoaded();
+    public void enter();
+    public void leave();
 
     public void create();
-    public void setup();
     public void logic(float deltaTime);
     public void draw(Batch batch);
     public void dispose();

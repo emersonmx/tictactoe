@@ -19,30 +19,29 @@
 
 package com.gmail.emersonmx.tictactoe.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.gmail.emersonmx.tictactoe.controller.GameController;
+import com.gmail.emersonmx.tictactoe.model.Game;
 
 public class ViewManager {
 
     public static final int WINDOW_WIDTH = 480;
     public static final int WINDOW_HEIGHT = 640;
 
-    public static final int GAME_VIEW = 0;
-    public static final int VIEWS_SIZE = 1;
-
     public AssetManager manager;
     public TextureAtlas atlas;
     public Viewport viewport;
+    public Camera camera;
 
-    private View[] views;
+    private GameView gameView;
     private View currentView;
-    private View nextView;
 
     private Texture background;
     private Sprite blackboard;
@@ -53,20 +52,20 @@ public class ViewManager {
         this.manager = manager;
         this.atlas = atlas;
         this.viewport = viewport;
+        this.camera = viewport.getCamera();
 
-        views = new View[VIEWS_SIZE];
-        currentView = nextView = null;
+        currentView = null;
     }
 
-    public View getView(int view) {
-        return views[view];
+    public GameView getGameView() {
+        return gameView;
     }
 
-    public void changeView(int view) {
-        nextView = views[view];
-
-        if (!nextView.isLoaded()) {
-            nextView.create();
+    public void changeView(View view) {
+        if (view != null) {
+            currentView.leave();
+            view.enter();
+            currentView = view;
         }
     }
 
@@ -74,8 +73,10 @@ public class ViewManager {
         background = createBackground();
         blackboard = createBlackboard();
 
-        GameView gameView = new GameView(this);
-        views[GAME_VIEW] = gameView;
+        gameView = createGameView();
+
+        currentView = gameView;
+        currentView.enter();
     }
 
     protected Texture createBackground() {
@@ -89,26 +90,31 @@ public class ViewManager {
         return atlas.createSprite("blackboard");
     }
 
-    public void setup() {
-        currentView = views[GAME_VIEW];
-        currentView.create();
-        currentView.setup();
+    protected GameView createGameView() {
+        GameView gameView = new GameView(this);
+        gameView.create();
+
+        GameController controller = new GameController();
+        Game game = new Game();
+
+        gameView.setController(controller);
+        controller.setView(gameView);
+        controller.setGame(game);
+        game.setListener(gameView);
+
+        game.setup();
+
+        return gameView;
     }
 
     public void logic(float deltaTime) {
-        if (nextView != null) {
-            currentView = nextView;
-            nextView = null;
-
-            currentView.setup();
-        }
-
-        deltaTime = Gdx.graphics.getDeltaTime();
-
         currentView.logic(deltaTime);
     }
 
     public void draw(Batch batch) {
+        viewport.update();
+        batch.setProjectionMatrix(camera.combined);
+
         batch.begin();
         batch.draw(background, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0, 5, 5);
 
@@ -119,9 +125,7 @@ public class ViewManager {
     }
 
     public void dispose() {
-        for (View view : views) {
-            view.dispose();
-        }
+        gameView.dispose();
     }
 
 }

@@ -106,7 +106,7 @@ public class GameInput extends InputAdapter {
             } else {
                 if (rectangle.contains(point.x, point.y)) {
                     System.out.println("Menu touched");
-                    viewManager.changeView(ViewManager.GAME_VIEW);
+                    viewManager.changeView(viewManager.getGameView());
                 }
             }
         }

@@ -21,7 +21,6 @@ package com.gmail.emersonmx.tictactoe.application;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -30,10 +29,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.gmail.emersonmx.tictactoe.controller.Controller;
-import com.gmail.emersonmx.tictactoe.controller.GameController;
-import com.gmail.emersonmx.tictactoe.model.Game;
-import com.gmail.emersonmx.tictactoe.view.GameView;
 import com.gmail.emersonmx.tictactoe.view.ViewManager;
 
 public class GameApplication extends Application {
@@ -41,19 +36,12 @@ public class GameApplication extends Application {
     public AssetManager manager;
     public TextureAtlas atlas;
     public Viewport viewport;
-    public Camera camera;
     public Batch batch;
 
     private ViewManager viewManager;
 
-    private float deltaTime;
-
     @Override
     public void create() {
-        setup();
-    }
-
-    public void setup() {
         loadResources();
         setupGraphics();
         setupSystem();
@@ -74,7 +62,6 @@ public class GameApplication extends Application {
         OrthographicCamera camera = (OrthographicCamera) viewport.getCamera();
         camera.setToOrtho(false, ViewManager.WINDOW_WIDTH,
                           ViewManager.WINDOW_HEIGHT);
-        this.camera = camera;
 
         batch = new SpriteBatch();
 
@@ -84,33 +71,16 @@ public class GameApplication extends Application {
     public void setupSystem() {
         viewManager = new ViewManager(manager, atlas, viewport);
         viewManager.create();
-
-        GameView gameView =
-            (GameView) viewManager.getView(ViewManager.GAME_VIEW);
-        Controller controller = new GameController();
-        Game game = new Game();
-
-        gameView.setController(controller);
-        controller.setView(gameView);
-        controller.setGame(game);
-        game.setListener(gameView);
-        game.setup();
-
-        viewManager.setup();
     }
 
     @Override
     public void logic() {
-        deltaTime = Gdx.graphics.getDeltaTime();
-        viewManager.logic(deltaTime);
+        viewManager.logic(Gdx.graphics.getDeltaTime());
     }
 
     @Override
     public void draw() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        viewport.update();
-        batch.setProjectionMatrix(camera.combined);
 
         viewManager.draw(batch);
     }

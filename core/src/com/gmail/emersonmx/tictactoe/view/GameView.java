@@ -27,6 +27,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Array;
+import com.gmail.emersonmx.tictactoe.controller.GameController;
 import com.gmail.emersonmx.tictactoe.model.Game;
 import com.gmail.emersonmx.tictactoe.model.GameEvent;
 import com.gmail.emersonmx.tictactoe.model.GameListener;
@@ -46,6 +47,8 @@ public class GameView extends AbstractView implements GameListener {
     public static final int TAP_GAME_DRAWN = 5;
     public static final int TAP_DRAW = 6;
     public static final int TAP_WINDOW_LIST_SIZE = 7;
+
+    private GameController controller;
 
     private TextureAtlas atlas;
 
@@ -88,6 +91,14 @@ public class GameView extends AbstractView implements GameListener {
         pauseTap = NO_PAUSE_TAP;
     }
 
+    public void setController(GameController controller) {
+        this.controller = controller;
+    }
+
+    public GameController getController() {
+        return controller;
+    }
+
     public void setPauseToStart(boolean tapToStart) {
         this.pauseToStart = tapToStart;
     }
@@ -105,6 +116,16 @@ public class GameView extends AbstractView implements GameListener {
     }
 
     @Override
+    public void enter() {
+        input.setController(controller);
+        Gdx.input.setInputProcessor(input);
+    }
+
+    @Override
+    public void leave() {
+    }
+
+    @Override
     public void create() {
         hash = createHash();
         playerOneMarks = createPlayerOneMarks();
@@ -118,8 +139,6 @@ public class GameView extends AbstractView implements GameListener {
         turn = createPlayerTurn();
         playerTurnLayout = createPlayerTurnLayout();
         tapWindowList = createTapWindowList();
-
-        loaded = true;
     }
 
     protected Array<Sprite> createHash() {
@@ -265,12 +284,6 @@ public class GameView extends AbstractView implements GameListener {
         }
 
         return sprites;
-    }
-
-    @Override
-    public void setup() {
-        input.setController(controller);
-        Gdx.input.setInputProcessor(input);
     }
 
     @Override
