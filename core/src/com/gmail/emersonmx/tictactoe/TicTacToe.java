@@ -30,7 +30,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class GameApplication extends Application {
+public class TicTacToe extends Application {
 
     public AssetManager manager;
     public TextureAtlas atlas;
