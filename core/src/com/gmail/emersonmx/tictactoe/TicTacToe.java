@@ -61,7 +61,6 @@ public class TicTacToe extends com.badlogic.gdx.Game {
         gameScreen.create();
         gameScreen.setup();
 
-        // TODO: Arrumar o setup para não chamar um evento.
         game = new Game();
         game.setListener(gameScreen);
         game.setup();
@@ -76,6 +75,18 @@ public class TicTacToe extends com.badlogic.gdx.Game {
         getScreen().dispose();
         batch.dispose();
         manager.dispose();
+    }
+
+    public void playGame() {
+        //game.start();
+    }
+
+    public void restartGame() {
+        //game.restart();
+    }
+
+    public void quitGame() {
+        //game.quit();
     }
 
     public void mark(int index) {
