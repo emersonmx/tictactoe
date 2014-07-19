@@ -23,7 +23,7 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.gmail.emersonmx.tictactoe.application.GameApplication;
+import com.gmail.emersonmx.tictactoe.GameApplication;
 
 public class AndroidLauncher extends AndroidApplication {
 

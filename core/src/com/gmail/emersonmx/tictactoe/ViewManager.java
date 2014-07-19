@@ -17,7 +17,7 @@
   along with tictactoe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.gmail.emersonmx.tictactoe.view;
+package com.gmail.emersonmx.tictactoe;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
@@ -27,8 +27,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.gmail.emersonmx.tictactoe.controller.GameController;
-import com.gmail.emersonmx.tictactoe.model.Game;
 
 public class ViewManager {
 

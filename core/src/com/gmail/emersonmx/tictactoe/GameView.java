@@ -17,7 +17,7 @@
   along with tictactoe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.gmail.emersonmx.tictactoe.view;
+package com.gmail.emersonmx.tictactoe;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
@@ -27,11 +27,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Array;
-import com.gmail.emersonmx.tictactoe.controller.GameController;
-import com.gmail.emersonmx.tictactoe.model.Game;
-import com.gmail.emersonmx.tictactoe.model.GameEvent;
-import com.gmail.emersonmx.tictactoe.model.GameListener;
-import com.gmail.emersonmx.tictactoe.model.Player;
 
 public class GameView extends AbstractView implements GameListener {
 

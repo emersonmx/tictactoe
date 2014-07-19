@@ -17,34 +17,16 @@
   along with tictactoe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.gmail.emersonmx.tictactoe.controller;
+package com.gmail.emersonmx.tictactoe;
 
-import com.gmail.emersonmx.tictactoe.model.Game;
-import com.gmail.emersonmx.tictactoe.view.View;
 
-public abstract class AbstractController implements Controller {
-
-    protected View view;
-    protected Game game;
+public class GameController extends AbstractController {
 
     @Override
-    public View getView() {
-        return view;
-    }
-
-    @Override
-    public void setView(View view) {
-        this.view = view;
-    }
-
-    @Override
-    public Game getGame() {
-        return game;
-    }
-
-    @Override
-    public void setGame(Game game) {
-        this.game = game;
+    public void mark(int index) {
+        int j = index % Game.BOARD_WIDTH;
+        int i = (index - j) / Game.BOARD_HEIGHT;
+        game.setBoardMark(i, j);
     }
 
 }

@@ -17,18 +17,16 @@
   along with tictactoe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.gmail.emersonmx.tictactoe.view;
+package com.gmail.emersonmx.tictactoe;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
+import java.util.EventObject;
 
-public interface View {
+public class GameEvent extends EventObject {
 
-    public void enter();
-    public void leave();
+    private static final long serialVersionUID = 1L;
 
-    public void create();
-    public void logic(float deltaTime);
-    public void draw(Batch batch);
-    public void dispose();
+    public GameEvent(Object source) {
+        super(source);
+    }
 
 }

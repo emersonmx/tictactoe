@@ -1,4 +1,4 @@
-package com.gmail.emersonmx.tictactoe.view;
+package com.gmail.emersonmx.tictactoe;
 
 
 public abstract class AbstractView implements View {

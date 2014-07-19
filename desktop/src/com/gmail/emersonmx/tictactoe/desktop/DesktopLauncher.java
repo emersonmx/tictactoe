@@ -20,8 +20,8 @@
 package com.gmail.emersonmx.tictactoe.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.gmail.emersonmx.tictactoe.application.GameApplication;
-import com.gmail.emersonmx.tictactoe.view.ViewManager;
+import com.gmail.emersonmx.tictactoe.GameApplication;
+import com.gmail.emersonmx.tictactoe.ViewManager;
 
 public class DesktopLauncher {
 

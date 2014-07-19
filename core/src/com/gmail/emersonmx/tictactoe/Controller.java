@@ -17,10 +17,8 @@
   along with tictactoe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.gmail.emersonmx.tictactoe.controller;
+package com.gmail.emersonmx.tictactoe;
 
-import com.gmail.emersonmx.tictactoe.model.Game;
-import com.gmail.emersonmx.tictactoe.view.View;
 
 public interface Controller {
 

@@ -17,16 +17,42 @@
   along with tictactoe.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.gmail.emersonmx.tictactoe.model;
+package com.gmail.emersonmx.tictactoe;
 
-import java.util.EventObject;
+import com.badlogic.gdx.ApplicationListener;
 
-public class GameEvent extends EventObject {
+public class Application implements ApplicationListener {
 
-    private static final long serialVersionUID = 1L;
+    @Override
+    public void create() {
+    }
 
-    public GameEvent(Object source) {
-        super(source);
+    @Override
+    public void resize(int width, int height) {
+    }
+
+    @Override
+    public void render() {
+        logic();
+        draw();
+    }
+
+    public void logic() {
+    }
+
+    public void draw() {
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void dispose() {
     }
 
 }
