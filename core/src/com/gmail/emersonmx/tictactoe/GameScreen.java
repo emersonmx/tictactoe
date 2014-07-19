@@ -87,6 +87,9 @@ public class GameScreen extends ScreenAdapter implements GameListener {
 
         pauseToStart = true;
         pauseTap = NO_PAUSE_TAP;
+
+        create();
+        setup();
     }
 
     public void setPauseToStart(boolean tapToStart) {
@@ -105,7 +108,7 @@ public class GameScreen extends ScreenAdapter implements GameListener {
         return pauseTap;
     }
 
-    public void create() {
+    private void create() {
         background = createBackground();
         blackboard = createBlackboard();
         hash = createHash();
@@ -158,7 +161,7 @@ public class GameScreen extends ScreenAdapter implements GameListener {
         return sprites;
     }
 
-    public Sprite[] createPlayerOneMarks() {
+    protected Sprite[] createPlayerOneMarks() {
         Sprite[] sprites = createMarks();
         for (Sprite sprite : sprites) {
             sprite.setColor(PLAYER_1_COLOR);
@@ -167,7 +170,7 @@ public class GameScreen extends ScreenAdapter implements GameListener {
         return sprites;
     }
 
-    public Sprite[] createPlayerTwoMarks() {
+    protected Sprite[] createPlayerTwoMarks() {
         Sprite[] sprites = createMarks();
         for (Sprite sprite : sprites) {
             sprite.setColor(PLAYER_2_COLOR);
@@ -281,23 +284,16 @@ public class GameScreen extends ScreenAdapter implements GameListener {
         return sprites;
     }
 
-    public void setup() {
-        setupGraphics();
-        setupInput();
-    }
-
-    private void setupGraphics() {
+    private void setup() {
         viewport = new FitViewport(TicTacToe.WINDOW_WIDTH,
                                    TicTacToe.WINDOW_HEIGHT);
         camera = (OrthographicCamera) viewport.getCamera();
         camera.setToOrtho(false, TicTacToe.WINDOW_WIDTH,
                           TicTacToe.WINDOW_HEIGHT);
 
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-    }
+        input = new GameInput(ttt, viewport);
 
-    private void setupInput() {
-        input = new GameInput(ttt);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
     }
 
     @Override
@@ -513,7 +509,7 @@ public class GameScreen extends ScreenAdapter implements GameListener {
         }
     }
 
-    public void copyScore(Game game) {
+    private void copyScore(Game game) {
         Player[] players = game.getPlayers();
         scores[Player.PLAYER_1] = players[Player.PLAYER_1].score;
         scores[Player.PLAYER_2] = players[Player.PLAYER_2].score;

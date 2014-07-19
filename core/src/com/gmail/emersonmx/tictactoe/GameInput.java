@@ -26,18 +26,19 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+// TODO: Pode ser que seja melhor usar um multiplexer e criar um inputadapter
+// para cada retângulo.
 public class GameInput extends InputAdapter {
 
     private final TicTacToe ttt;
-
-    private Viewport viewport;
+    private final Viewport viewport;
 
     private Array<Rectangle> rectangles;
     private Vector3 point;
 
-    public GameInput(TicTacToe ttt) {
+    public GameInput(TicTacToe ttt, Viewport viewport) {
         this.ttt = ttt;
-        this.viewport = ttt.getGameScreen().viewport;
+        this.viewport = viewport;
 
         createRectangles();
     }
@@ -68,6 +69,8 @@ public class GameInput extends InputAdapter {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         GameScreen gameScreen = ttt.getGameScreen();
 
+        // TODO: Pode ser que seja melhor o input comunicar diretamente com o
+        // TicTacToe. Esse cleanBoard tá meio estranho.
         if (gameScreen.getPauseTap() != GameScreen.NO_PAUSE_TAP) {
             gameScreen.setPauseTap(GameScreen.NO_PAUSE_TAP);
             gameScreen.cleanBoard();

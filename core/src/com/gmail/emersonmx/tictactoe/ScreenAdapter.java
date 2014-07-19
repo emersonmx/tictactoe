@@ -23,12 +23,6 @@ import com.badlogic.gdx.Screen;
 
 public class ScreenAdapter implements Screen {
 
-    public void create() {
-    }
-
-    public void setup() {
-    }
-
     @Override
     public void dispose() {
     }

@@ -58,8 +58,6 @@ public class TicTacToe extends com.badlogic.gdx.Game {
         batch = new SpriteBatch();
 
         gameScreen = new GameScreen(this);
-        gameScreen.create();
-        gameScreen.setup();
 
         game = new Game();
         game.setListener(gameScreen);
