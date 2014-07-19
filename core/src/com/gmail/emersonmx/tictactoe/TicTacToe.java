@@ -19,6 +19,7 @@
 
 package com.gmail.emersonmx.tictactoe;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -69,9 +70,14 @@ public class TicTacToe extends com.badlogic.gdx.Game {
     public void dispose() {
         super.dispose();
 
-        getScreen().dispose();
+        gameScreen.dispose();
+
         batch.dispose();
         manager.dispose();
+    }
+
+    public void exit() {
+        Gdx.app.exit();
     }
 
     public void playGame() {

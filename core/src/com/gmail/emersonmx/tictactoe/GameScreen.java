@@ -36,6 +36,7 @@ public class GameScreen extends ScreenAdapter implements GameListener {
 
     public static final Color PLAYER_1_COLOR = new Color(0xaaaaffff);
     public static final Color PLAYER_2_COLOR = new Color(0xaaffaaff);
+    public static final Color MENU_COLOR = new Color(0xff8000ff);
 
     public static final int NO_PAUSE_TAP = -1;
     public static final int TAP_TO_START = 0;
@@ -228,6 +229,7 @@ public class GameScreen extends ScreenAdapter implements GameListener {
     protected Sprite createMenu() {
         Sprite sprite = ttt.atlas.createSprite("menu");
         sprite.setCenter(240, 87);
+        sprite.setColor(MENU_COLOR);
 
         return sprite;
     }
@@ -307,12 +309,14 @@ public class GameScreen extends ScreenAdapter implements GameListener {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(input);
         ttt.playGame();
+        Gdx.input.setInputProcessor(input);
     }
 
     @Override
     public void hide() {
+        Gdx.input.setInputProcessor(new InputAdapter());
+        ttt.quitGame();
     }
 
     @Override
@@ -415,6 +419,12 @@ public class GameScreen extends ScreenAdapter implements GameListener {
         ttt.batch.end();
     }
 
+    public void cleanBoard() {
+        for (int i = 0; i < board.length; ++i) {
+            board[i] = Player.NO_MARK;
+        }
+    }
+
     @Override
     public void gameStart(GameEvent event) {
         System.out.println("Game Start");
@@ -474,8 +484,7 @@ public class GameScreen extends ScreenAdapter implements GameListener {
             pauseTap = TAP_GAME_DRAWN;
         }
 
-        Gdx.input.setInputProcessor(new InputAdapter() {
-        });
+        Gdx.input.setInputProcessor(new InputAdapter());
     }
 
     @Override
@@ -496,17 +505,11 @@ public class GameScreen extends ScreenAdapter implements GameListener {
         System.out.println("Position is not Empty");
     }
 
-    public void copyBoard(Game game) {
+    private void copyBoard(Game game) {
         for (int i = 0; i < Game.BOARD_HEIGHT; ++i) {
             for (int j = 0; j < Game.BOARD_WIDTH; ++j) {
                 board[Game.indexMark(i, j)] = game.getBoardMark(i, j);
             }
-        }
-    }
-
-    public void cleanBoard() {
-        for (int i = 0; i < board.length; ++i) {
-            board[i] = Player.NO_MARK;
         }
     }
 

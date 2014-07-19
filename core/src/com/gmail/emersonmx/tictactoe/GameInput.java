@@ -69,8 +69,6 @@ public class GameInput extends InputAdapter {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         GameScreen gameScreen = ttt.getGameScreen();
 
-        // TODO: Pode ser que seja melhor o input comunicar diretamente com o
-        // TicTacToe. Esse cleanBoard tá meio estranho.
         if (gameScreen.getPauseTap() != GameScreen.NO_PAUSE_TAP) {
             gameScreen.setPauseTap(GameScreen.NO_PAUSE_TAP);
             gameScreen.cleanBoard();
