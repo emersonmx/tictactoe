@@ -16,7 +16,7 @@ allprojects {
     ext {
         appName = 'tictactoe'
         gdxVersion = '1.2.0'
-        roboVMVersion = '0.0.13'
+        roboVMVersion = '0.0.14'
     }
 
     repositories {
