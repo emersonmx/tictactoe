@@ -22,7 +22,6 @@ package com.gmail.emersonmx.tictactoe;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Rectangle;
@@ -124,14 +123,7 @@ public class GameScreen extends BaseScreen implements GameListener {
         Group group = new Group();
         group.setName(name);
 
-        GridPoint2[] layout = new GridPoint2[] {
-            new GridPoint2(118, 523), new GridPoint2(240, 523),
-                new GridPoint2(362, 523),
-            new GridPoint2(118, 401), new GridPoint2(240, 401),
-                new GridPoint2(362, 401),
-            new GridPoint2(118, 279), new GridPoint2(240, 279),
-                new GridPoint2(362, 279)
-        };
+        GridPoint2[] layout = createPlayerMarkLayout();
         Array<Rectangle> rectangles = createPlayerMarkRectangles();
 
         GridPoint2 point;
@@ -152,11 +144,16 @@ public class GameScreen extends BaseScreen implements GameListener {
             actor.setTouchable(Touchable.enabled);
             actor.setBounds(rectangle.x, rectangle.y,
                             rectangle.width, rectangle.height);
+            actor.setUserObject(i);
             actor.addListener(new ClickListener() {
 
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    System.out.println("Mark touched");
+                    SpritesActor actor =
+                        (SpritesActor) event.getListenerActor();
+                    Integer mark = (Integer) actor.getUserObject();
+                    ttt.mark(mark);
+                    System.out.println("Mark " + mark + " touched");
                 }
 
             });
@@ -165,6 +162,17 @@ public class GameScreen extends BaseScreen implements GameListener {
         }
 
         return group;
+    }
+
+    private GridPoint2[] createPlayerMarkLayout() {
+        return new GridPoint2[] {
+            new GridPoint2(118, 523), new GridPoint2(240, 523),
+                new GridPoint2(362, 523),
+            new GridPoint2(118, 401), new GridPoint2(240, 401),
+                new GridPoint2(362, 401),
+            new GridPoint2(118, 279), new GridPoint2(240, 279),
+                new GridPoint2(362, 279)
+        };
     }
 
     private Array<Rectangle> createPlayerMarkRectangles() {
@@ -277,7 +285,7 @@ public class GameScreen extends BaseScreen implements GameListener {
         return actor;
     }
 
-    public Drawable createTapWindowList() {
+    /*public Drawable createTapWindowList() {
         return new Drawable() {
 
             private Sprite[] sprites;
@@ -337,7 +345,7 @@ public class GameScreen extends BaseScreen implements GameListener {
             }
 
         };
-    }
+    }*/
 
     @Override
     public void show() {
@@ -383,12 +391,40 @@ public class GameScreen extends BaseScreen implements GameListener {
     @Override
     public void marked(GameEvent event) {
         System.out.println("Marked");
-        //Game game = (Game) event.getSource();
+        Game game = (Game) event.getSource();
+        Group root = stage.getRoot();
+
+        int boardMark;
+        int playerId;
+        int mark;
+        String name;
+        SpritesActor actor;
+        for (int i = 0; i < Game.BOARD_HEIGHT; i++) {
+            for (int j = 0; j < Game.BOARD_WIDTH; j++) {
+                boardMark = game.getBoardMark(i, j);
+                playerId = Player.byMark(boardMark, game.getPlayers());
+
+                if (playerId == Player.PLAYER_1) {
+                    name = "player_1_marks";
+                } else if (playerId == Player.PLAYER_2) {
+                    name = "player_2_marks";
+                } else {
+                    name = "";
+                }
+
+                if (!name.isEmpty()) {
+                    mark = Game.indexMark(i, j);
+                    actor = root.findActor(name + "_" + mark);
+                    actor.setIndex(boardMark);
+                }
+            }
+        }
     }
 
     @Override
     public void gameWinner(GameEvent event) {
-        //Game game = (Game) event.getSource();
+        Game game = (Game) event.getSource();
+        System.out.println("Game winner " + game.getWinner());
         //copyScore(game);
         //if (game.getWinner() == Player.PLAYER_1) {
         //    pauseTap = TAP_PLAYER_1_WINS;
