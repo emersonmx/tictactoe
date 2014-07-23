@@ -25,8 +25,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
 public class GameScreen extends BaseScreen implements GameListener {
@@ -128,14 +132,15 @@ public class GameScreen extends BaseScreen implements GameListener {
             new GridPoint2(118, 279), new GridPoint2(240, 279),
                 new GridPoint2(362, 279)
         };
+        Array<Rectangle> rectangles = createPlayerMarkRectangles();
 
         GridPoint2 point;
+        Rectangle rectangle;
         for (int i = 0; i < layout.length; i++) {
             point = layout[i];
+            rectangle = rectangles.get(i);
 
-            Sprite[] sprites = new Sprite[2];
-            sprites[Player.MARK_O] = ttt.atlas.createSprite("mark_o");
-            sprites[Player.MARK_X] = ttt.atlas.createSprite("mark_x");
+            Sprite[] sprites = createMarks();
             for (Sprite sprite : sprites) {
                 sprite.setCenter(point.x, point.y);
                 sprite.setColor(color);
@@ -144,9 +149,51 @@ public class GameScreen extends BaseScreen implements GameListener {
             Array<Sprite> array = new Array<Sprite>(sprites);
             SpritesActor actor = new SpritesActor(name + "_" + i, array);
             actor.setIndex(SpritesActor.HIDDEN);
+            actor.setTouchable(Touchable.enabled);
+            actor.setBounds(rectangle.x, rectangle.y,
+                            rectangle.width, rectangle.height);
+            actor.addListener(new ClickListener() {
+
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    System.out.println("Mark touched");
+                }
+
+            });
+
+            group.addActor(actor);
         }
 
         return group;
+    }
+
+    private Array<Rectangle> createPlayerMarkRectangles() {
+        Array<Rectangle> rectangles = new Array<Rectangle>(10);
+
+        float width, height;
+        width = height = 108;
+
+        GridPoint2 point = new GridPoint2(64, 469);
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                rectangles.add(
+                        new Rectangle(point.x, point.y, width, height));
+                point.x += 122;
+            }
+
+            point.x = 64;
+            point.y -= 122;
+        }
+
+        return rectangles;
+    }
+
+    public Sprite[] createMarks() {
+        Sprite[] sprites = new Sprite[2];
+        sprites[Player.MARK_O] = ttt.atlas.createSprite("mark_o");
+        sprites[Player.MARK_X] = ttt.atlas.createSprite("mark_x");
+
+        return sprites;
     }
 
     private Actor createScoreLine() {
@@ -182,7 +229,19 @@ public class GameScreen extends BaseScreen implements GameListener {
         sprite.setCenter(240, 87);
         sprite.setColor(MENU_COLOR);
 
-        return new SpriteActor("menu", sprite);
+        SpriteActor actor = new SpriteActor("menu", sprite);
+        actor.setTouchable(Touchable.enabled);
+        actor.setBounds(198, 43, 85, 83);
+        actor.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Menu touched");
+            }
+
+        });
+
+        return actor;
     }
 
     private Actor createPlayerScore(String name, float x, float y,
