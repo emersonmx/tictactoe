@@ -25,6 +25,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -32,25 +34,31 @@ public class BaseScreen extends ScreenAdapter {
 
     protected final TicTacToe ttt;
 
-    protected Viewport viewport;
-    protected OrthographicCamera camera;
-
-    protected Sprite background;
-    protected Sprite blackboard;
+    protected Stage stage;
 
     public BaseScreen(TicTacToe ttt) {
         this.ttt = ttt;
 
-        background = createBackground();
-        blackboard = createBlackboard();
         setup();
+
+        stage.addActor(createBackground());
+        stage.addActor(createBlackboard());
     }
 
-    public Viewport getViewport() {
-        return viewport;
+    protected void setup() {
+        Viewport viewport =
+            new FitViewport(TicTacToe.WINDOW_WIDTH, TicTacToe.WINDOW_HEIGHT);
+        OrthographicCamera camera = (OrthographicCamera) viewport.getCamera();
+        camera.setToOrtho(false, TicTacToe.WINDOW_WIDTH,
+                          TicTacToe.WINDOW_HEIGHT);
+
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+
+        stage = new Stage(viewport);
+        Gdx.input.setInputProcessor(stage);
     }
 
-    protected Sprite createBackground() {
+    protected Actor createBackground() {
         Texture texture = ttt.manager.get("background.png", Texture.class);
         texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
@@ -58,39 +66,36 @@ public class BaseScreen extends ScreenAdapter {
         sprite.setBounds(0, 0, TicTacToe.WINDOW_WIDTH, TicTacToe.WINDOW_HEIGHT);
         sprite.setRegion(0, 0, 5, 5);
 
-        return sprite;
+        return new SpriteActor("background", sprite);
+
     }
 
-    protected Sprite createBlackboard() {
-        return new Sprite(ttt.manager.get("blackboard.png", Texture.class));
+    protected Actor createBlackboard() {
+        Sprite sprite =
+            new Sprite(ttt.manager.get("blackboard.png", Texture.class));
+        return new SpriteActor("blackboard", sprite);
     }
 
-    protected void setup() {
-        viewport = new FitViewport(TicTacToe.WINDOW_WIDTH,
-                                   TicTacToe.WINDOW_HEIGHT);
-        camera = (OrthographicCamera) viewport.getCamera();
-        camera.setToOrtho(false, TicTacToe.WINDOW_WIDTH,
-                          TicTacToe.WINDOW_HEIGHT);
-
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+    @Override
+    public void dispose() {
+        stage.dispose();
     }
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height, false);
+        stage.getViewport().update(width, height, true);
+    }
+
+    @Override
+    public void logic(float delta) {
+        stage.act(delta);
     }
 
     @Override
     public void draw() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        viewport.update();
-        ttt.batch.setProjectionMatrix(camera.combined);
-
-        ttt.batch.begin();
-        background.draw(ttt.batch);
-        blackboard.draw(ttt.batch);
-        ttt.batch.end();
+        stage.draw();
     }
 
 }
