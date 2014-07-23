@@ -22,18 +22,14 @@ package com.gmail.emersonmx.tictactoe;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class GameScreen extends ScreenAdapter implements GameListener {
+public class GameScreen extends BaseScreen implements GameListener {
 
     public static final Color PLAYER_1_COLOR = new Color(0xaaaaffff);
     public static final Color PLAYER_2_COLOR = new Color(0xaaffaaff);
@@ -49,39 +45,18 @@ public class GameScreen extends ScreenAdapter implements GameListener {
     public static final int TAP_DRAW = 6;
     public static final int TAP_WINDOW_LIST_SIZE = 7;
 
-    private final TicTacToe ttt;
-
-    public Viewport viewport;
-    private OrthographicCamera camera;
-
-    private Array<Drawable> drawableList;
-
-    private GameInput input;
-
-    private int[] board;
-    private int[] scores;
-    private Player[] players;
-    private int playerTurn;
-    private GridPoint2[] boardLayout;
-    private GridPoint2[] playerTurnLayout;
+    //private int playerTurn;
 
     private boolean pauseToStart;
     private int pauseTap;
 
     public GameScreen(TicTacToe ttt) {
-        this.ttt = ttt;
-
-        drawableList = new Array<Drawable>();
-
-        int size = Game.BOARD_WIDTH * Game.BOARD_HEIGHT;
-        board = new int[size];
-        scores = new int[] { 0, 0 };
+        super(ttt);
 
         pauseToStart = true;
         pauseTap = NO_PAUSE_TAP;
 
         create();
-        setup();
     }
 
     public void setPauseToStart(boolean tapToStart) {
@@ -101,29 +76,51 @@ public class GameScreen extends ScreenAdapter implements GameListener {
     }
 
     private void create() {
-        boardLayout = createBoardLayout();
-        playerTurnLayout = createPlayerTurnLayout();
-
-        drawableList.add(createBackground());
-        drawableList.add(createBlackboard());
-        drawableList.add(createHash());
-        drawableList.add(createPlayerOneMarks());
-        drawableList.add(createPlayerTwoMarks());
-        drawableList.add(createScoreLine());
-        drawableList.add(createScoreSeparators());
-        drawableList.add(createMenu());
-        drawableList.add(createPlayerOneScore());
-        drawableList.add(createPlayerTwoScore());
-        drawableList.add(createPlayerTurn());
-        drawableList.add(createTapWindowList());
-
-        for (Drawable drawable : drawableList) {
-            drawable.create();
-        }
+        stage.addActor(createHash());
+        stage.addActor(createPlayerMarks("player_1_marks", PLAYER_1_COLOR));
+        stage.addActor(createPlayerMarks("player_2_marks", PLAYER_2_COLOR));
+        stage.addActor(createScoreLine());
+        stage.addActor(createScoreSeparators());
+        stage.addActor(createMenu());
+        stage.addActor(createPlayerScore("player_1_score", 118, 87,
+                                         PLAYER_1_COLOR));
+        stage.addActor(createPlayerScore("player_2_score", 362, 87,
+                                         PLAYER_2_COLOR));
+        stage.addActor(createPlayerTurn());
+        //stage.addActor(createTapWindowList());
     }
 
-    protected GridPoint2[] createBoardLayout() {
-        return new GridPoint2[] {
+    private Actor createHash() {
+        Group group = new Group();
+        group.setName("hash");
+
+        GridPoint2[] layout = new GridPoint2[] {
+            new GridPoint2(179, 401), new GridPoint2(240, 462),
+                new GridPoint2(301, 401), new GridPoint2(240, 340)
+        };
+
+        Sprite sprite = null;
+        GridPoint2 point = null;
+        for (int i = 0; i < layout.length; ++i) {
+            point = layout[i];
+
+            sprite = ttt.atlas.createSprite("hash_line");
+            sprite.setCenter(point.x, point.y);
+            if (i % 2 != 0) {
+                sprite.rotate(90);
+            }
+
+            group.addActor(new SpriteActor("hash_line_" + i, sprite));
+        }
+
+        return group;
+    }
+
+    private Actor createPlayerMarks(String name, Color color) {
+        Group group = new Group();
+        group.setName(name);
+
+        GridPoint2[] layout = new GridPoint2[] {
             new GridPoint2(118, 523), new GridPoint2(240, 523),
                 new GridPoint2(362, 523),
             new GridPoint2(118, 401), new GridPoint2(240, 401),
@@ -131,311 +128,94 @@ public class GameScreen extends ScreenAdapter implements GameListener {
             new GridPoint2(118, 279), new GridPoint2(240, 279),
                 new GridPoint2(362, 279)
         };
-    }
 
-    protected GridPoint2[] createPlayerTurnLayout() {
-        return new GridPoint2[] {
-            new GridPoint2(57, 87), new GridPoint2(423, 87)
-        };
-    }
-
-    protected Drawable createBackground() {
-        return new Drawable() {
-
-            private Texture texture;
-
-            @Override
-            public void create() {
-                texture = ttt.manager.get("background.png", Texture.class);
-                texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
-            }
-
-            @Override
-            public void draw(Batch batch) {
-                batch.draw(texture, 0, 0, TicTacToe.WINDOW_WIDTH,
-                    TicTacToe.WINDOW_HEIGHT, 0, 0, 5, 5);
-            }
-
-        };
-    }
-
-    protected Drawable createBlackboard() {
-        return new Drawable() {
-
-            private Texture texture;
-
-            @Override
-            public void create() {
-                texture =  ttt.manager.get("blackboard.png", Texture.class);
-            }
-
-            @Override
-            public void draw(Batch batch) {
-                batch.draw(texture, 0, 0);
-            }
-
-        };
-    }
-
-    protected Drawable createHash() {
-        return new Drawable() {
-
-            private Array<Sprite> sprites;
-
-            public void create() {
-                sprites = new Array<Sprite>(4);
-                GridPoint2[] layout = new GridPoint2[] {
-                    new GridPoint2(179, 401), new GridPoint2(240, 462),
-                        new GridPoint2(301, 401), new GridPoint2(240, 340)
-                };
-
-                Sprite sprite = null;
-                GridPoint2 point = null;
-                for (int i = 0; i < layout.length; ++i) {
-                    point = layout[i];
-
-                    sprite = ttt.atlas.createSprite("hash_line");
-                    sprite.setCenter(point.x, point.y);
-                    if (i % 2 != 0) {
-                        sprite.rotate(90);
-                    }
-
-                    sprites.add(sprite);
-                }
-            }
-
-            @Override
-            public void draw(Batch batch) {
-                for (Sprite sprite : sprites) {
-                    sprite.draw(batch);
-                }
-            }
-        };
-    }
-
-    protected Drawable createPlayerOneMarks() {
-        return new Drawable() {
-
-            private Sprite[] sprites;
-
-            @Override
-            public void create() {
-                sprites = createMarks();
-
-                for (Sprite sprite : sprites) {
-                    sprite.setColor(PLAYER_1_COLOR);
-                }
-            }
-
-            @Override
-            public void draw(Batch batch) {
-                Sprite mark;
-                GridPoint2 point;
-                int boardMark;
-                int playerId;
-                for (int i = 0; i < board.length; ++i) {
-                    boardMark = board[i];
-                    if (boardMark != Player.NO_MARK) {
-                        point = boardLayout[i];
-                        playerId = Player.byMark(boardMark, players);
-                        if (playerId == Player.PLAYER_1) {
-                            mark = sprites[boardMark];
-                            mark.setCenter(point.x, point.y);
-                            mark.draw(batch);
-                        }
-                    }
-
-                }
-            }
-
-        };
-    }
-
-    protected Drawable createPlayerTwoMarks() {
-        return new Drawable() {
-
-            private Sprite[] sprites;
-
-            @Override
-            public void create() {
-                sprites = createMarks();
-                for (Sprite sprite : sprites) {
-                    sprite.setColor(PLAYER_2_COLOR);
-                }
-            }
-
-            @Override
-            public void draw(Batch batch) {
-                Sprite mark;
-                GridPoint2 point;
-                int boardMark;
-                int playerId;
-                for (int i = 0; i < board.length; ++i) {
-                    boardMark = board[i];
-                    if (boardMark != Player.NO_MARK) {
-                        point = boardLayout[i];
-                        playerId = Player.byMark(boardMark, players);
-                        if (playerId == Player.PLAYER_2) {
-                            mark = sprites[boardMark];
-                            mark.setCenter(point.x, point.y);
-                            mark.draw(batch);
-                        }
-                    }
-
-                }
-            }
-
-        };
-    }
-
-    protected Sprite[] createMarks() {
-        Sprite[] sprites = new Sprite[2];
-        sprites[Player.MARK_O] = ttt.atlas.createSprite("mark_o");
-        sprites[Player.MARK_X] = ttt.atlas.createSprite("mark_x");
-
-        return sprites;
-    }
-
-    protected Drawable createScoreLine() {
-        return new Drawable() {
-
-            private Sprite sprite;
-
-            @Override
-            public void create() {
-                sprite = ttt.atlas.createSprite("score_line");
-                sprite.setCenter(240, 131);
-            }
-
-            @Override
-            public void draw(Batch batch) {
-                sprite.draw(batch);
-            }
-
-        };
-    }
-
-    protected Drawable createScoreSeparators() {
-        return new Drawable() {
-
-            private Array<Sprite> sprites;
-
-            @Override
-            public void create() {
-                sprites = new Array<Sprite>(2);
-                GridPoint2[] layout = new GridPoint2[] {
-                    new GridPoint2(192, 87), new GridPoint2(288, 87)
-                };
-
-                GridPoint2 point = null;
-                Sprite sprite = null;
-                for (int i = 0; i < layout.length; ++i) {
-                    point = layout[i];
-
-                    sprite = ttt.atlas.createSprite("score_separator");
-                    sprite.setCenter(point.x, point.y);
-                    sprites.add(sprite);
-                }
-            }
-
-            @Override
-            public void draw(Batch batch) {
-                for (Sprite sprite : sprites) {
-                    sprite.draw(batch);
-                }
-            }
-
-        };
-    }
-
-    protected Drawable createMenu() {
-        return new Drawable() {
-
-            private Sprite sprite;
-
-            @Override
-            public void create() {
-                sprite = ttt.atlas.createSprite("menu");
-                sprite.setCenter(240, 87);
-                sprite.setColor(MENU_COLOR);
-            }
-
-            @Override
-            public void draw(Batch batch) {
-                sprite.draw(batch);
-            }
-
-        };
-    }
-
-    protected Drawable createPlayerOneScore() {
-        return new Drawable() {
-
-            private Array<Sprite> sprites;
-
-            @Override
-            public void create() {
-                sprites = ttt.atlas.createSprites("score_number");
-                for (Sprite score : sprites) {
-                    score.setCenter(118, 87);
-                    score.setColor(PLAYER_1_COLOR);
-                }
-            }
-
-            @Override
-            public void draw(Batch batch) {
-                sprites.get(scores[Player.PLAYER_1]).draw(batch);
-            }
-
-        };
-    }
-
-    protected Drawable createPlayerTwoScore() {
-        return new Drawable() {
-
-            private Array<Sprite> sprites;
-
-            @Override
-            public void create() {
-                sprites = ttt.atlas.createSprites("score_number");
-                for (Sprite score : sprites) {
-                    score.setCenter(362, 87);
-                    score.setColor(PLAYER_2_COLOR);
-                }
-            }
-
-            @Override
-            public void draw(Batch batch) {
-                sprites.get(scores[Player.PLAYER_2]).draw(batch);
-            }
-
-        };
-    }
-
-    protected Drawable createPlayerTurn() {
-        return new Drawable() {
-
-            private Sprite sprite;
-
-            @Override
-            public void create() {
-                sprite = ttt.atlas.createSprite("player_turn");
-            }
-
-            @Override
-            public void draw(Batch batch) {
-                GridPoint2 point = playerTurnLayout[playerTurn];
-                if (playerTurn == Player.PLAYER_1) {
-                    sprite.setColor(PLAYER_1_COLOR);
-                } else if (playerTurn == Player.PLAYER_2) {
-                    sprite.setColor(PLAYER_2_COLOR);
-                }
-
+        GridPoint2 point;
+        for (int i = 0; i < layout.length; i++) {
+            point = layout[i];
+
+            Sprite[] sprites = new Sprite[2];
+            sprites[Player.MARK_O] = ttt.atlas.createSprite("mark_o");
+            sprites[Player.MARK_X] = ttt.atlas.createSprite("mark_x");
+            for (Sprite sprite : sprites) {
                 sprite.setCenter(point.x, point.y);
-                sprite.draw(batch);
+                sprite.setColor(color);
             }
 
+            Array<Sprite> array = new Array<Sprite>(sprites);
+            SpritesActor actor = new SpritesActor(name + "_" + i, array);
+            actor.setIndex(SpritesActor.HIDDEN);
+        }
+
+        return group;
+    }
+
+    private Actor createScoreLine() {
+        Sprite sprite = ttt.atlas.createSprite("score_line");
+        sprite.setCenter(240, 131);
+
+        return new SpriteActor("score_line", sprite);
+    }
+
+    private Actor createScoreSeparators() {
+        Group group = new Group();
+        group.setName("score_separators");
+
+        GridPoint2[] layout = new GridPoint2[] {
+            new GridPoint2(192, 87), new GridPoint2(288, 87)
         };
+
+        GridPoint2 point = null;
+        Sprite sprite = null;
+        for (int i = 0; i < layout.length; ++i) {
+            point = layout[i];
+
+            sprite = ttt.atlas.createSprite("score_separator");
+            sprite.setCenter(point.x, point.y);
+            group.addActor(new SpriteActor("score_separator_" + i, sprite));
+        }
+
+        return group;
+    }
+
+    private Actor createMenu() {
+        Sprite sprite = ttt.atlas.createSprite("menu");
+        sprite.setCenter(240, 87);
+        sprite.setColor(MENU_COLOR);
+
+        return new SpriteActor("menu", sprite);
+    }
+
+    private Actor createPlayerScore(String name, float x, float y,
+            Color color) {
+
+        Array<Sprite> sprites = ttt.atlas.createSprites("score_number");
+
+        for (Sprite sprite : sprites) {
+            sprite.setCenter(x, y);
+            sprite.setColor(color);
+        }
+
+        return new SpritesActor(name, sprites);
+    }
+
+    private Actor createPlayerTurn() {
+        Sprite[] sprites = new Sprite[2];
+
+        Sprite sprite = ttt.atlas.createSprite("player_turn");
+        sprite.setCenter(57, 87);
+        sprite.setColor(PLAYER_1_COLOR);
+        sprites[Player.PLAYER_1] = sprite;
+
+        sprite = ttt.atlas.createSprite("player_turn");
+        sprite.setCenter(423, 87);
+        sprite.setColor(PLAYER_2_COLOR);
+        sprites[Player.PLAYER_2] = sprite;
+
+        Array<Sprite> array = new Array<Sprite>(sprites);
+        SpritesActor actor = new SpritesActor("player_turn", array);
+        actor.setIndex(SpritesActor.HIDDEN);
+
+        return actor;
     }
 
     public Drawable createTapWindowList() {
@@ -500,31 +280,10 @@ public class GameScreen extends ScreenAdapter implements GameListener {
         };
     }
 
-    private void setup() {
-        viewport = new FitViewport(TicTacToe.WINDOW_WIDTH,
-                                   TicTacToe.WINDOW_HEIGHT);
-        camera = (OrthographicCamera) viewport.getCamera();
-        camera.setToOrtho(false, TicTacToe.WINDOW_WIDTH,
-                          TicTacToe.WINDOW_HEIGHT);
-
-        input = new GameInput(ttt, viewport);
-
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-    }
-
-    @Override
-    public void dispose() {
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height, false);
-    }
-
     @Override
     public void show() {
         ttt.playGame();
-        Gdx.input.setInputProcessor(input);
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -541,35 +300,14 @@ public class GameScreen extends ScreenAdapter implements GameListener {
     public void pause() {
     }
 
-    public void logic(float deltaTime) {
-    }
-
-    public void draw() {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        viewport.update();
-        ttt.batch.setProjectionMatrix(camera.combined);
-
-        ttt.batch.begin();
-        for (Drawable drawable : drawableList) {
-            drawable.draw(ttt.batch);
-        }
-        ttt.batch.end();
-    }
-
     public void cleanBoard() {
-        for (int i = 0; i < board.length; ++i) {
-            board[i] = Player.NO_MARK;
-        }
     }
 
     @Override
     public void gameStart(GameEvent event) {
         System.out.println("Game Start");
-        Game game = (Game) event.getSource();
-        copyBoard(game);
-        copyScore(game);
-        players = game.getPlayers();
+        //Game game = (Game) event.getSource();
+
         pauseTap = TAP_TO_START;
     }
 
@@ -586,19 +324,18 @@ public class GameScreen extends ScreenAdapter implements GameListener {
     @Override
     public void marked(GameEvent event) {
         System.out.println("Marked");
-        Game game = (Game) event.getSource();
-        copyBoard(game);
+        //Game game = (Game) event.getSource();
     }
 
     @Override
     public void gameWinner(GameEvent event) {
-        Game game = (Game) event.getSource();
-        copyScore(game);
-        if (game.getWinner() == Player.PLAYER_1) {
-            pauseTap = TAP_PLAYER_1_WINS;
-        } else if (game.getWinner() == Player.PLAYER_2) {
-            pauseTap = TAP_PLAYER_2_WINS;
-        }
+        //Game game = (Game) event.getSource();
+        //copyScore(game);
+        //if (game.getWinner() == Player.PLAYER_1) {
+        //    pauseTap = TAP_PLAYER_1_WINS;
+        //} else if (game.getWinner() == Player.PLAYER_2) {
+        //    pauseTap = TAP_PLAYER_2_WINS;
+        //}
     }
 
     @Override
@@ -630,7 +367,11 @@ public class GameScreen extends ScreenAdapter implements GameListener {
         System.out.println("Player Changed");
         Game game = (Game) event.getSource();
         Player currentPlayer = game.getCurrentPlayer();
-        playerTurn = currentPlayer.id;
+
+        Group root = stage.getRoot();
+        SpritesActor playerTurn = root.findActor("player_turn");
+
+        playerTurn.setIndex(currentPlayer.id);
     }
 
     @Override
@@ -641,20 +382,6 @@ public class GameScreen extends ScreenAdapter implements GameListener {
     @Override
     public void positionIsNotEmpty(GameEvent event) {
         System.out.println("Position is not Empty");
-    }
-
-    private void copyBoard(Game game) {
-        for (int i = 0; i < Game.BOARD_HEIGHT; ++i) {
-            for (int j = 0; j < Game.BOARD_WIDTH; ++j) {
-                board[Game.indexMark(i, j)] = game.getBoardMark(i, j);
-            }
-        }
-    }
-
-    private void copyScore(Game game) {
-        Player[] players = game.getPlayers();
-        scores[Player.PLAYER_1] = players[Player.PLAYER_1].score;
-        scores[Player.PLAYER_2] = players[Player.PLAYER_2].score;
     }
 
 }

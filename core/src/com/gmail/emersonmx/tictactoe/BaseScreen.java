@@ -55,7 +55,6 @@ public class BaseScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
 
         stage = new Stage(viewport);
-        Gdx.input.setInputProcessor(stage);
     }
 
     protected Actor createBackground() {
