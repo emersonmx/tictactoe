@@ -88,10 +88,10 @@ public class TicTacToe extends com.badlogic.gdx.Game {
     }
 
     public void playGame() {
-        if (game.isMatchDone()) {
-            game.restart();
-        } else {
+        if (!game.isGameDone()) {
             game.start();
+        } else {
+            game.restart();
         }
     }
 

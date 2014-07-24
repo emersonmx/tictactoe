@@ -37,6 +37,7 @@ public class GameScreen extends BaseScreen implements GameListener {
     public static final Color PLAYER_2_COLOR = new Color(0xaaffaaff);
     public static final Color MENU_COLOR = new Color(0xff8000ff);
 
+
     public GameScreen(TicTacToe ttt) {
         super(ttt);
 
@@ -258,18 +259,6 @@ public class GameScreen extends BaseScreen implements GameListener {
     }
 
     @Override
-    public void hide() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
     public void gameStart(GameEvent event) {
         System.out.println("Game Start");
         cleanBoard(stage.getRoot());
@@ -289,7 +278,6 @@ public class GameScreen extends BaseScreen implements GameListener {
     public void gameOver(GameEvent event) {
         System.out.println("Game Over");
         Game game = (Game) event.getSource();
-        Group root = stage.getRoot();
 
         GameScreenOverlay overlay = ttt.getGameScreenOverlay();
         if (game.isMatchDone()) {
@@ -302,31 +290,45 @@ public class GameScreen extends BaseScreen implements GameListener {
                 overlay.setTapSprite(GameScreenOverlay.TAP_DRAW);
             }
 
+            updateScore(game);
+            overlay.matchDone();
+
             ttt.setScreen(overlay);
             System.out.println("Match done");
         } else if (game.hasWinner()) {
-            SpritesActor actor;
             int winner = game.getWinner();
-            Player[] players = game.getPlayers();
-
             if (winner == Player.PLAYER_1) {
-                actor = root.findActor("player_1_score");
-                actor.setIndex(players[winner].score);
                 overlay.setTapSprite(GameScreenOverlay.TAP_PLAYER_1_WINS);
             } else if (winner == Player.PLAYER_2) {
-                actor = root.findActor("player_2_score");
-                actor.setIndex(players[winner].score);
                 overlay.setTapSprite(GameScreenOverlay.TAP_PLAYER_2_WINS);
             } else {
                 overlay.setTapSprite(GameScreenOverlay.TAP_GAME_DRAWN);
             }
 
+            updateScore(game);
+
             ttt.setScreen(overlay);
             System.out.println("Winner");
         } else if (game.isDraw()) {
             overlay.setTapSprite(GameScreenOverlay.TAP_DRAW);
+
             ttt.setScreen(overlay);
             System.out.println("Draw");
+        }
+    }
+
+    private void updateScore(Game game) {
+        Group root = stage.getRoot();
+        SpritesActor actor;
+        int winner = game.getWinner();
+        Player[] players = game.getPlayers();
+
+        if (winner == Player.PLAYER_1) {
+            actor = root.findActor("player_1_score");
+            actor.setIndex(players[winner].score);
+        } else if (winner == Player.PLAYER_2) {
+            actor = root.findActor("player_2_score");
+            actor.setIndex(players[winner].score);
         }
     }
 

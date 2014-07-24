@@ -42,8 +42,12 @@ public class GameScreenOverlay extends BaseScreen {
     private GameScreen gameScreen;
     private SpritesActor tapSprite;
 
+    private boolean matchDone;
+
     public GameScreenOverlay(TicTacToe ttt) {
         super(ttt);
+
+        matchDone = false;
 
         setupBackground();
     }
@@ -62,6 +66,10 @@ public class GameScreenOverlay extends BaseScreen {
 
     public int getTapSprite() {
         return tapSprite.getIndex();
+    }
+
+    public void matchDone() {
+        matchDone = true;
     }
 
     @Override
@@ -97,7 +105,11 @@ public class GameScreenOverlay extends BaseScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("TAP");
-                ttt.setScreen(gameScreen);
+                if (matchDone) {
+                    ttt.exit();
+                } else {
+                    ttt.setScreen(gameScreen);
+                }
             }
 
         });
@@ -109,6 +121,11 @@ public class GameScreenOverlay extends BaseScreen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+    }
+
+    @Override
+    public void hide() {
+        tapSprite.setIndex(NO_PAUSE_TAP);
     }
 
     @Override

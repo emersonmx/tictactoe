@@ -37,6 +37,8 @@ public class Game {
     private int markCount;
     private int[] board;
 
+    private boolean gameDone;
+
     private int match;
     private int matchCount;
 
@@ -123,6 +125,10 @@ public class Game {
         return match;
     }
 
+    public boolean isGameDone() {
+        return gameDone;
+    }
+
     public void setMatch(int match) {
         this.match = match;
     }
@@ -165,8 +171,7 @@ public class Game {
     }
 
     public void restart() {
-        fireGameOver();
-
+        gameDone = false;
         markCount = 0;
 
         cleanBoard();
@@ -177,6 +182,7 @@ public class Game {
         } else {
             randomPlayer();
         }
+
         firePlayerChanged();
     }
 
@@ -267,12 +273,14 @@ public class Game {
     }
 
     private void reset() {
+        gameDone = false;
         markCount = 0;
         currentPlayer = null;
         winner = Player.PLAYER_NONE;
     }
 
     private void fireGameStart() {
+        gameDone = false;
         listener.gameStart(event);
     }
 
@@ -285,6 +293,7 @@ public class Game {
     }
 
     private void fireGameOver() {
+        gameDone = true;
         listener.gameOver(event);
     }
 
