@@ -77,8 +77,16 @@ public class Game {
         return players;
     }
 
+    public boolean hasWinner() {
+        return winner != Player.PLAYER_NONE;
+    }
+
     public int getWinner() {
         return winner;
+    }
+
+    public boolean isDraw() {
+        return markCount == (BOARD_WIDTH * BOARD_HEIGHT);
     }
 
     public int getBoardMark(int i, int j) {
@@ -86,31 +94,28 @@ public class Game {
     }
 
     public void setBoardMark(int i, int j) {
-        if ((i >= 0 && i <= BOARD_HEIGHT) && (j >= 0 && j <= BOARD_WIDTH)) {
-            int boardMark = getBoardMark(i, j);
-            if (boardMark == Player.NO_MARK) {
-                board[indexMark(i, j)] = currentPlayer.mark;
-                markCount++;
+        int boardMark = getBoardMark(i, j);
+        if (boardMark == Player.NO_MARK) {
+            board[indexMark(i, j)] = currentPlayer.mark;
+            markCount++;
 
-                fireMarked();
+            fireMarked();
 
-                int winnerMark = checkVictory();
-                if (winnerMark != Player.NO_MARK) {
-                    winner = Player.byMark(winnerMark, players);
-                    players[winner].score++;
-                    checkMatchWinner();
-                } else if (markCount == (BOARD_WIDTH * BOARD_HEIGHT)) {
-                    winner = Player.PLAYER_NONE;
-                    fireGameDraw();
-                    checkMatchWinner();
-                } else {
-                    changePlayer();
-                }
+            int winnerMark = checkVictory();
+            if (winnerMark != Player.NO_MARK) {
+                winner = Player.byMark(winnerMark, players);
+                players[winner].score++;
+
+                matchCount++;
+                fireGameOver();
+            } else if (isDraw()) {
+                winner = Player.PLAYER_NONE;
+
+                matchCount++;
+                fireGameOver();
             } else {
-                firePositionIsNotEmpty();
+                changePlayer();
             }
-        } else {
-            fireInvalidPosition();
         }
     }
 
@@ -122,6 +127,24 @@ public class Game {
         this.match = match;
     }
 
+    public boolean isMatchDone() {
+        return matchCount >= match;
+    }
+
+    public int getMatchWinner() {
+        if (players[Player.PLAYER_1].score >
+                players[Player.PLAYER_2].score) {
+
+            return Player.PLAYER_1;
+        } else if (players[Player.PLAYER_2].score >
+                players[Player.PLAYER_1].score) {
+
+            return Player.PLAYER_2;
+        }
+
+        return Player.PLAYER_NONE;
+    }
+
     public void setListener(GameListener listener) {
         if (listener != null) {
             this.listener = listener;
@@ -130,16 +153,15 @@ public class Game {
 
     public void start() {
         reset();
+        cleanBoard();
+        fireGameStart();
 
         randomPlayer();
-        cleanBoard();
-
-        fireGameStart();
+        firePlayerChanged();
     }
 
     public void quit() {
         fireGameOver();
-        fireGameEnd();
     }
 
     public void restart() {
@@ -147,13 +169,15 @@ public class Game {
 
         markCount = 0;
 
-        if (winner != Player.PLAYER_NONE) {
+        cleanBoard();
+        fireGameStart();
+
+        if (hasWinner()) {
             currentPlayer = players[winner];
         } else {
             randomPlayer();
         }
-
-        cleanBoard();
+        firePlayerChanged();
     }
 
     private int checkVictory() {
@@ -222,19 +246,6 @@ public class Game {
         }
     }
 
-    private void checkMatchWinner() {
-        matchCount++;
-
-        if (matchCount >= match) {
-            fireGameWinner();
-            fireGameMatchWinner();
-            fireGameEnd();
-        } else {
-            fireGameWinner();
-            restart();
-        }
-    }
-
     private void changePlayer() {
         if (currentPlayer.equals(players[Player.PLAYER_1])) {
             currentPlayer = players[Player.PLAYER_2];
@@ -242,12 +253,11 @@ public class Game {
             currentPlayer = players[Player.PLAYER_1];
         }
 
-        fireCurrentPlayerChanged();
+        firePlayerChanged();
     }
 
     private void randomPlayer() {
         currentPlayer = players[random.nextInt(2)];
-        fireCurrentPlayerChanged();
     }
 
     private void cleanBoard() {
@@ -266,40 +276,16 @@ public class Game {
         listener.gameStart(event);
     }
 
-    private void fireGameOver() {
-        listener.gameOver(event);
-    }
-
-    private void fireGameEnd() {
-        listener.gameEnd(event);
+    private void firePlayerChanged() {
+        listener.playerChanged(event);
     }
 
     private void fireMarked() {
         listener.marked(event);
     }
 
-    private void fireGameWinner() {
-        listener.gameWinner(event);
-    }
-
-    private void fireGameDraw() {
-        listener.gameDraw(event);
-    }
-
-    private void fireGameMatchWinner() {
-        listener.gameMatchWinner(event);
-    }
-
-    private void fireCurrentPlayerChanged() {
-        listener.currentPlayerChanged(event);
-    }
-
-    private void fireInvalidPosition() {
-        listener.invalidPosition(event);
-    }
-
-    private void firePositionIsNotEmpty() {
-        listener.positionIsNotEmpty(event);
+    private void fireGameOver() {
+        listener.gameOver(event);
     }
 
 }

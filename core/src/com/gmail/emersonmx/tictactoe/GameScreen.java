@@ -20,7 +20,6 @@
 package com.gmail.emersonmx.tictactoe;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.GridPoint2;
@@ -38,47 +37,15 @@ public class GameScreen extends BaseScreen implements GameListener {
     public static final Color PLAYER_2_COLOR = new Color(0xaaffaaff);
     public static final Color MENU_COLOR = new Color(0xff8000ff);
 
-    public static final int NO_PAUSE_TAP = -1;
-    public static final int TAP_TO_START = 0;
-    public static final int TAP_PLAYER_1_WINS = 1;
-    public static final int TAP_PLAYER_2_WINS = 2;
-    public static final int TAP_PLAYER_1_MATCH = 3;
-    public static final int TAP_PLAYER_2_MATCH = 4;
-    public static final int TAP_GAME_DRAWN = 5;
-    public static final int TAP_DRAW = 6;
-    public static final int TAP_WINDOW_LIST_SIZE = 7;
-
-    //private int playerTurn;
-
-    private boolean pauseToStart;
-    private int pauseTap;
-
     public GameScreen(TicTacToe ttt) {
         super(ttt);
-
-        pauseToStart = true;
-        pauseTap = NO_PAUSE_TAP;
 
         create();
     }
 
-    public void setPauseToStart(boolean tapToStart) {
-        this.pauseToStart = tapToStart;
-    }
-
-    public boolean isPauseToStart() {
-        return pauseToStart;
-    }
-
-    public void setPauseTap(int pauseTap) {
-        this.pauseTap = pauseTap;
-    }
-
-    public int getPauseTap() {
-        return pauseTap;
-    }
-
     private void create() {
+        super.setupBackground();
+
         stage.addActor(createHash());
         stage.addActor(createPlayerMarks("player_1_marks", PLAYER_1_COLOR));
         stage.addActor(createPlayerMarks("player_2_marks", PLAYER_2_COLOR));
@@ -90,7 +57,6 @@ public class GameScreen extends BaseScreen implements GameListener {
         stage.addActor(createPlayerScore("player_2_score", 362, 87,
                                          PLAYER_2_COLOR));
         stage.addActor(createPlayerTurn());
-        //stage.addActor(createTapWindowList());
     }
 
     private Actor createHash() {
@@ -285,78 +251,14 @@ public class GameScreen extends BaseScreen implements GameListener {
         return actor;
     }
 
-    /*public Drawable createTapWindowList() {
-        return new Drawable() {
-
-            private Sprite[] sprites;
-
-            @Override
-            public void create() {
-                sprites = new Sprite[TAP_WINDOW_LIST_SIZE];
-                sprites[TAP_TO_START] = ttt.atlas.createSprite("tap_to_start");
-                sprites[TAP_PLAYER_1_WINS] =
-                    ttt.atlas.createSprite("player_one_wins");
-                sprites[TAP_PLAYER_2_WINS] =
-                    ttt.atlas.createSprite("player_two_wins");
-                sprites[TAP_PLAYER_1_MATCH] =
-                    ttt.atlas.createSprite("match_winner_one");
-                sprites[TAP_PLAYER_2_MATCH] =
-                    ttt.atlas.createSprite("match_winner_two");
-                sprites[TAP_GAME_DRAWN] = ttt.atlas.createSprite("game_drawn");
-                sprites[TAP_DRAW] = ttt.atlas.createSprite("draw");
-
-                for (int i = 0; i < sprites.length; ++i) {
-                    sprites[i].setCenter(TicTacToe.WINDOW_WIDTH / 2.f,
-                            TicTacToe.WINDOW_HEIGHT / 2.f);
-                }
-            }
-
-            @Override
-            public void draw(Batch batch) {
-                if (pauseTap != NO_PAUSE_TAP) {
-                    Sprite window;
-                    switch (pauseTap) {
-                        case TAP_PLAYER_1_WINS:
-                            window = sprites[TAP_PLAYER_1_WINS];
-                            break;
-                        case TAP_PLAYER_2_WINS:
-                            window = sprites[TAP_PLAYER_2_WINS];
-                            break;
-                        case TAP_PLAYER_1_MATCH:
-                            window = sprites[TAP_PLAYER_1_MATCH];
-                            break;
-                        case TAP_PLAYER_2_MATCH:
-                            window = sprites[TAP_PLAYER_2_MATCH];
-                            break;
-                        case TAP_GAME_DRAWN:
-                            window = sprites[TAP_GAME_DRAWN];
-                            break;
-                        case TAP_DRAW:
-                            window = sprites[TAP_DRAW];
-                            break;
-                        case TAP_TO_START:
-                        default:
-                            window = sprites[TAP_TO_START];
-                            break;
-                    }
-
-                    window.draw(batch);
-                }
-            }
-
-        };
-    }*/
-
     @Override
     public void show() {
-        ttt.playGame();
         Gdx.input.setInputProcessor(stage);
+        ttt.playGame();
     }
 
     @Override
     public void hide() {
-        Gdx.input.setInputProcessor(new InputAdapter());
-        ttt.quitGame();
     }
 
     @Override
@@ -367,25 +269,77 @@ public class GameScreen extends BaseScreen implements GameListener {
     public void pause() {
     }
 
-    public void cleanBoard() {
-    }
-
     @Override
     public void gameStart(GameEvent event) {
         System.out.println("Game Start");
-        //Game game = (Game) event.getSource();
+        cleanBoard(stage.getRoot());
+    }
 
-        pauseTap = TAP_TO_START;
+    private void cleanBoard(Group root) {
+        SpritesActor actor;
+        for (int i = 0; i < 9; i++) {
+            actor = root.findActor("player_1_marks_" + i);
+            actor.setIndex(SpritesActor.HIDDEN);
+            actor = root.findActor("player_2_marks_" + i);
+            actor.setIndex(SpritesActor.HIDDEN);
+        }
     }
 
     @Override
     public void gameOver(GameEvent event) {
         System.out.println("Game Over");
+        Game game = (Game) event.getSource();
+        Group root = stage.getRoot();
+
+        GameScreenOverlay overlay = ttt.getGameScreenOverlay();
+        if (game.isMatchDone()) {
+            int winner = game.getMatchWinner();
+            if (winner == Player.PLAYER_1) {
+                overlay.setTapSprite(GameScreenOverlay.TAP_PLAYER_1_MATCH);
+            } else if (winner == Player.PLAYER_2) {
+                overlay.setTapSprite(GameScreenOverlay.TAP_PLAYER_2_MATCH);
+            } else {
+                overlay.setTapSprite(GameScreenOverlay.TAP_DRAW);
+            }
+
+            ttt.setScreen(overlay);
+            System.out.println("Match done");
+        } else if (game.hasWinner()) {
+            SpritesActor actor;
+            int winner = game.getWinner();
+            Player[] players = game.getPlayers();
+
+            if (winner == Player.PLAYER_1) {
+                actor = root.findActor("player_1_score");
+                actor.setIndex(players[winner].score);
+                overlay.setTapSprite(GameScreenOverlay.TAP_PLAYER_1_WINS);
+            } else if (winner == Player.PLAYER_2) {
+                actor = root.findActor("player_2_score");
+                actor.setIndex(players[winner].score);
+                overlay.setTapSprite(GameScreenOverlay.TAP_PLAYER_2_WINS);
+            } else {
+                overlay.setTapSprite(GameScreenOverlay.TAP_GAME_DRAWN);
+            }
+
+            ttt.setScreen(overlay);
+            System.out.println("Winner");
+        } else if (game.isDraw()) {
+            overlay.setTapSprite(GameScreenOverlay.TAP_DRAW);
+            ttt.setScreen(overlay);
+            System.out.println("Draw");
+        }
     }
 
     @Override
-    public void gameEnd(GameEvent event) {
-        System.out.println("Game End");
+    public void playerChanged(GameEvent event) {
+        System.out.println("Player Changed");
+        Game game = (Game) event.getSource();
+        Player currentPlayer = game.getCurrentPlayer();
+
+        Group root = stage.getRoot();
+        SpritesActor playerTurn = root.findActor("player_turn");
+
+        playerTurn.setIndex(currentPlayer.id);
     }
 
     @Override
@@ -419,64 +373,6 @@ public class GameScreen extends BaseScreen implements GameListener {
                 }
             }
         }
-    }
-
-    @Override
-    public void gameWinner(GameEvent event) {
-        Game game = (Game) event.getSource();
-        System.out.println("Game winner " + game.getWinner());
-        //copyScore(game);
-        //if (game.getWinner() == Player.PLAYER_1) {
-        //    pauseTap = TAP_PLAYER_1_WINS;
-        //} else if (game.getWinner() == Player.PLAYER_2) {
-        //    pauseTap = TAP_PLAYER_2_WINS;
-        //}
-    }
-
-    @Override
-    public void gameDraw(GameEvent event) {
-        System.out.println("Game Draw");
-        pauseTap = TAP_DRAW;
-    }
-
-    @Override
-    public void gameMatchWinner(GameEvent event) {
-        System.out.println("Match Winner");
-        Game game = (Game) event.getSource();
-
-        int matchWinner = Player.matchWinner(game.getMatch(),
-                                             game.getPlayers());
-        if (matchWinner == Player.PLAYER_1) {
-            pauseTap = TAP_PLAYER_1_MATCH;
-        } else if (matchWinner == Player.PLAYER_2) {
-            pauseTap = TAP_PLAYER_2_MATCH;
-        } else {
-            pauseTap = TAP_GAME_DRAWN;
-        }
-
-        Gdx.input.setInputProcessor(new InputAdapter());
-    }
-
-    @Override
-    public void currentPlayerChanged(GameEvent event) {
-        System.out.println("Player Changed");
-        Game game = (Game) event.getSource();
-        Player currentPlayer = game.getCurrentPlayer();
-
-        Group root = stage.getRoot();
-        SpritesActor playerTurn = root.findActor("player_turn");
-
-        playerTurn.setIndex(currentPlayer.id);
-    }
-
-    @Override
-    public void invalidPosition(GameEvent event) {
-        System.out.println("Invalid Position");
-    }
-
-    @Override
-    public void positionIsNotEmpty(GameEvent event) {
-        System.out.println("Position is not Empty");
     }
 
 }

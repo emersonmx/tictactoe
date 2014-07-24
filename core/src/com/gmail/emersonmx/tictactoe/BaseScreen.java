@@ -40,9 +40,6 @@ public class BaseScreen extends ScreenAdapter {
         this.ttt = ttt;
 
         setup();
-
-        stage.addActor(createBackground());
-        stage.addActor(createBlackboard());
     }
 
     protected void setup() {
@@ -55,6 +52,12 @@ public class BaseScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
 
         stage = new Stage(viewport);
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    protected void setupBackground() {
+        stage.addActor(createBackground());
+        stage.addActor(createBlackboard());
     }
 
     protected Actor createBackground() {
