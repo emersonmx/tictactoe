@@ -98,6 +98,10 @@ public class Player {
         return false;
     }
 
+    public void resetScore() {
+        score = 0;
+    }
+
     @Override
     public String toString() {
         String s = "Player " + id + " with mark: ";

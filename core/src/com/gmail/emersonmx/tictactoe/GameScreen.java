@@ -27,6 +27,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
@@ -35,7 +36,8 @@ public class GameScreen extends BaseScreen implements GameListener {
 
     public static final Color PLAYER_1_COLOR = new Color(0xaaaaffff);
     public static final Color PLAYER_2_COLOR = new Color(0xaaffaaff);
-    public static final Color MENU_COLOR = new Color(0xff8000ff);
+    public static final Color MENU_NORMAL_COLOR = new Color(0xffffffff);
+    public static final Color MENU_CLICKED_COLOR = new Color(0xff8000ff);
 
 
     public GameScreen(TicTacToe ttt) {
@@ -201,16 +203,40 @@ public class GameScreen extends BaseScreen implements GameListener {
     private Actor createMenu() {
         Sprite sprite = ttt.atlas.createSprite("menu");
         sprite.setCenter(240, 87);
-        sprite.setColor(MENU_COLOR);
 
         SpriteActor actor = new SpriteActor("menu", sprite);
         actor.setTouchable(Touchable.enabled);
         actor.setBounds(198, 43, 85, 83);
-        actor.addListener(new ClickListener() {
+        actor.addListener(new InputListener() {
 
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Menu touched");
+            public boolean touchDown(InputEvent event, float x, float y,
+                    int pointer, int button) {
+
+                SpriteActor actor = (SpriteActor) event.getTarget();
+                Sprite sprite = actor.getSprite();
+                sprite.setColor(MENU_CLICKED_COLOR);
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y,
+                    int pointer, int button) {
+
+                SpriteActor actor = (SpriteActor) event.getTarget();
+                Sprite sprite = actor.getSprite();
+                sprite.setColor(MENU_NORMAL_COLOR);
+                ttt.quitGame();
+
+                ttt.setScreen(ttt.getMenuScreen());
+
+                cleanBoard();
+
+                Group root = stage.getRoot();
+                SpritesActor scoreActor = root.findActor("player_1_score");
+                scoreActor.setIndex(0);
+                scoreActor = root.findActor("player_2_score");
+                scoreActor.setIndex(0);
             }
 
         });
@@ -260,10 +286,12 @@ public class GameScreen extends BaseScreen implements GameListener {
     @Override
     public void gameStart(GameEvent event) {
         System.out.println("Game Start");
-        cleanBoard(stage.getRoot());
+        cleanBoard();
     }
 
-    private void cleanBoard(Group root) {
+    private void cleanBoard() {
+        Group root = stage.getRoot();
+
         SpritesActor actor;
         for (int i = 0; i < 9; i++) {
             actor = root.findActor("player_1_marks_" + i);
@@ -286,7 +314,7 @@ public class GameScreen extends BaseScreen implements GameListener {
             } else if (winner == Player.PLAYER_2) {
                 overlay.setTapSprite(GameScreenOverlay.TAP_PLAYER_2_MATCH);
             } else {
-                overlay.setTapSprite(GameScreenOverlay.TAP_DRAW);
+                overlay.setTapSprite(GameScreenOverlay.TAP_GAME_DRAWN);
             }
 
             updateScore(game);

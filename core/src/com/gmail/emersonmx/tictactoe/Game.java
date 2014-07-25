@@ -167,7 +167,7 @@ public class Game {
     }
 
     public void quit() {
-        fireGameOver();
+        gameDone = false;
     }
 
     public void restart() {
@@ -275,8 +275,13 @@ public class Game {
     private void reset() {
         gameDone = false;
         markCount = 0;
+        matchCount = 0;
         currentPlayer = null;
         winner = Player.PLAYER_NONE;
+
+        for (Player player : players) {
+            player.resetScore();
+        }
     }
 
     private void fireGameStart() {

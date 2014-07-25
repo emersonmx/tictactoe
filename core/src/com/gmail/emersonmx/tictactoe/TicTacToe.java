@@ -37,10 +37,15 @@ public class TicTacToe extends com.badlogic.gdx.Game {
 
     private Game game;
 
+    private MenuScreen menuScreen;
     private GameScreen gameScreen;
     private GameScreenOverlay gameScreenOverlay;
 
     public TicTacToe() {
+    }
+
+    public MenuScreen getMenuScreen() {
+        return menuScreen;
     }
 
     public GameScreen getGameScreen() {
@@ -63,6 +68,7 @@ public class TicTacToe extends com.badlogic.gdx.Game {
 
         batch = new SpriteBatch();
 
+        menuScreen = new MenuScreen(this);
         gameScreen = new GameScreen(this);
         game = new Game();
         game.setListener(gameScreen);
@@ -70,7 +76,7 @@ public class TicTacToe extends com.badlogic.gdx.Game {
         gameScreenOverlay = new GameScreenOverlay(this);
         gameScreenOverlay.setScreen(gameScreen);
 
-        setScreen(gameScreenOverlay);
+        setScreen(menuScreen);
     }
 
     @Override

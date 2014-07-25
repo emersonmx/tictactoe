@@ -94,7 +94,7 @@ public class GameScreenOverlay extends BaseScreenOverlay {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("TAP");
                 if (matchDone) {
-                    ttt.exit();
+                    ttt.setScreen(ttt.getMenuScreen());
                 } else {
                     ttt.setScreen(ttt.getGameScreen());
                 }
