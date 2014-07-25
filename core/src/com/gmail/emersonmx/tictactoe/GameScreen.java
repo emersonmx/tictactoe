@@ -45,8 +45,6 @@ public class GameScreen extends BaseScreen implements GameListener {
     }
 
     private void create() {
-        super.setupBackground();
-
         stage.addActor(createHash());
         stage.addActor(createPlayerMarks("player_1_marks", PLAYER_1_COLOR));
         stage.addActor(createPlayerMarks("player_2_marks", PLAYER_2_COLOR));

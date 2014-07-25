@@ -40,6 +40,7 @@ public class BaseScreen extends ScreenAdapter {
         this.ttt = ttt;
 
         setup();
+        setupBackground();
     }
 
     protected void setup() {

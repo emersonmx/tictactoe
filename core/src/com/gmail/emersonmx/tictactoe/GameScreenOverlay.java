@@ -48,8 +48,6 @@ public class GameScreenOverlay extends BaseScreen {
         super(ttt);
 
         matchDone = false;
-
-        setupBackground();
     }
 
     public void setGameScreen(GameScreen gameScreen) {
