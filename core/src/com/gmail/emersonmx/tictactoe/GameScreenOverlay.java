@@ -19,7 +19,6 @@
 
 package com.gmail.emersonmx.tictactoe;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -27,7 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 
-public class GameScreenOverlay extends BaseScreen {
+public class GameScreenOverlay extends BaseScreenOverlay {
 
     public static final int NO_PAUSE_TAP = SpritesActor.HIDDEN;
     public static final int TAP_TO_START = 0;
@@ -39,7 +38,6 @@ public class GameScreenOverlay extends BaseScreen {
     public static final int TAP_DRAW = 6;
     public static final int TAP_WINDOW_LIST_SIZE = 7;
 
-    private GameScreen gameScreen;
     private SpritesActor tapSprite;
 
     private boolean matchDone;
@@ -48,14 +46,6 @@ public class GameScreenOverlay extends BaseScreen {
         super(ttt);
 
         matchDone = false;
-    }
-
-    public void setGameScreen(GameScreen gameScreen) {
-        this.gameScreen = gameScreen;
-    }
-
-    public GameScreen getGameScreen() {
-        return gameScreen;
     }
 
     public void setTapSprite(int index) {
@@ -71,7 +61,7 @@ public class GameScreenOverlay extends BaseScreen {
     }
 
     @Override
-    protected void setupBackground() {
+    protected void create() {
         stage.addActor(createTapWindowList());
     }
 
@@ -106,7 +96,7 @@ public class GameScreenOverlay extends BaseScreen {
                 if (matchDone) {
                     ttt.exit();
                 } else {
-                    ttt.setScreen(gameScreen);
+                    ttt.setScreen(ttt.getGameScreen());
                 }
             }
 
@@ -115,21 +105,9 @@ public class GameScreenOverlay extends BaseScreen {
         return tapSprite;
     }
 
-
-    @Override
-    public void show() {
-        Gdx.input.setInputProcessor(stage);
-    }
-
     @Override
     public void hide() {
         tapSprite.setIndex(NO_PAUSE_TAP);
-    }
-
-    @Override
-    public void draw() {
-        gameScreen.draw();
-        stage.draw();
     }
 
 }

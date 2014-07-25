@@ -40,7 +40,7 @@ public class BaseScreen extends ScreenAdapter {
         this.ttt = ttt;
 
         setup();
-        setupBackground();
+        create();
     }
 
     protected void setup() {
@@ -56,7 +56,7 @@ public class BaseScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
     }
 
-    protected void setupBackground() {
+    protected void create() {
         stage.addActor(createBackground());
         stage.addActor(createBlackboard());
     }
