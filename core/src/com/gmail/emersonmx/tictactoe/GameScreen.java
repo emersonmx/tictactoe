@@ -117,8 +117,7 @@ public class GameScreen extends BaseScreen implements GameListener {
 
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    SpritesActor actor =
-                        (SpritesActor) event.getListenerActor();
+                    SpritesActor actor = (SpritesActor) event.getTarget();
                     Integer mark = (Integer) actor.getUserObject();
                     ttt.mark(mark);
                     System.out.println("Mark " + mark + " touched");
